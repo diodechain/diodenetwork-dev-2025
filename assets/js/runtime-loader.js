@@ -20,7 +20,7 @@
     }
     
     const NetworkComponent = defineAsyncComponent(() =>
-        loadModule('/vue/network.vue', options)
+        loadModule('./vue/network.vue', options)
       )
         
     const App = {
