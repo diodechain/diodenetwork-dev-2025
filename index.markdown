@@ -13,9 +13,14 @@ title: "Home"
   </p>
 </div>
 
-<div id="app"></div>
-<!-- {% include_relative network_map.md %}
 
-<!-- {% include_relative current_epoch.md %}
+<div id="app">
+  <!-- <dashboard></dashboard> -->
 
-{% include_relative technology.md %} -->
+</div>
+
+{% include current_epoch.html %}
+{% include technology.html %}
+{% include footer.html %}
+
+

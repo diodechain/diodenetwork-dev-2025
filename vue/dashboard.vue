@@ -1,4 +1,4 @@
-<template id="dashboard">
+<template >
     <div class="dashboard prenet">
         <div class="title row">
             <h1>Epoch <% currentEpoch %> Dashboard</h1>
@@ -102,31 +102,31 @@
 </template>
 
 <script>
-var Dashboard = Vue.component("dashboard", {
-    template: document.getElementById("dashboard").innerHTML,
-    delimiters: ["<%", "%>"],
-    data: () => {
-        return {
-            fleets: [],
-            relays: [],
-            totalBalance: 0,
-            totalScore: web3.utils.toBN(0),
-            registryVersion: '...',
-            currentEpoch: '...',
-            width: 600,
-            height: 400,
-            tooltipVisible: false,
-            tooltipStyle: {
-                left: '0px',
-                top: '0px'
-            },
-            tooltipContent: '',
-            colors: [
-                '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
-                '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB'
-            ]
-        }
-    },
+export default {
+  name: "Dashboard",
+  delimiters: ["<%", "%>"],
+  data() {
+    return {
+      fleets: [],
+      relays: [],
+      totalBalance: 0,
+      totalScore: web3.utils.toBN(0),
+      registryVersion: '...',
+      currentEpoch: '...',
+      width: 600,
+      height: 400,
+      tooltipVisible: false,
+      tooltipStyle: {
+        left: '0px',
+        top: '0px'
+      },
+      tooltipContent: '',
+      colors: [
+        '#FF6B6B','#4ECDC4','#45B7D1','#96CEB4',
+        '#FFEEAD','#D4A5A5','#9B59B6','#3498DB'
+      ]
+    }
+  },
 
     computed: {
         pieSlices() {
@@ -285,7 +285,7 @@ var Dashboard = Vue.component("dashboard", {
             return formatNumber(value);
         }
     }
-});
+};
 </script>
 
 <style scoped>

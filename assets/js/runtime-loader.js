@@ -22,14 +22,19 @@
     const NetworkComponent = defineAsyncComponent(() =>
         loadModule('./vue/network.vue', options)
       )
-        
+      const DashboardComponent = defineAsyncComponent(() =>
+        loadModule('./vue/dashboard.vue', options)
+      )
+    
     const App = {
       components: {
-        'network': NetworkComponent
+        'network': NetworkComponent,
+        'dashboard': DashboardComponent
       },
       template: `
         <div>
           <network></network>
+             
         </div>
       `
     }
