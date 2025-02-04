@@ -34,7 +34,8 @@
       template: `
         <div>
           <network></network>
-             
+          <dashboard></dashboard>
+
         </div>
       `
     }

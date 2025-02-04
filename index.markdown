@@ -15,11 +15,10 @@ title: "Home"
 
 
 <div id="app">
-  <!-- <dashboard></dashboard> -->
+<dashboard></dashboard>
 
 </div>
 
-{% include current_epoch.html %}
 {% include technology.html %}
 {% include footer.html %}
 

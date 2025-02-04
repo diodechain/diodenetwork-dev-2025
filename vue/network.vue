@@ -4,7 +4,7 @@
     </div>
     <div class="map"  >
     <div  class="map-title">Network Map</div>
-      <svg ref="svg" version="1.1" viewBox="0 0 1000 647" preserveAspectRatio="xMinYMin meet"
+      <svg ref="svg"  @mouseleave="hideTooltip"  version="1.1" viewBox="0 0 1000 647" preserveAspectRatio="xMinYMin meet"
         style="stroke-linejoin: round; background-color:#ffff; stroke:#FFF; fill: #EEEEEE;  "
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g x="0" y="0" id="countries" class="draggable">
@@ -541,7 +541,7 @@
             <line v-if="points[baseIp] != undefined" v-for="point in points" v-bind:class="point.type" :key="point.ip"
               v-bind:x1="point.x" v-bind:y1="point.y" v-bind:x2="points[baseIp].x" v-bind:y2="points[baseIp].y" />
           -->
-          <circle v-for="point in points" v-bind:class="point.type" @mouseover="tooltip(point, event, true)"
+          <circle v-for="point in points" v-bind:class="point.type" @mouseover="tooltip(point, $event, true)"
             @click="tooltip(point, event, false)" :key="point.ip" v-bind:cx="point.x" v-bind:cy="point.y" r="4" />
         </g>
        
@@ -598,70 +598,71 @@ export default {
     }
   },
   methods: {
-    tooltip(point, event, hovered) {
-      let text = "Location: " + (point.city || "Unknown") + " (" + point.ip + ")</br>";
-      text += "Version: " + point.version + " </br>";
-
-      if (point.last_seen && point.type == "notConnected") text += "Last Seen: " + point.last_seen + "</br>";
-      if (point.uptime && point.type != "notConnected") {
-        text += "Uptime: " + point.uptime + " / ";
-        text += point.retries + " reconnects";
-      }
-
-      let tooltipContent = `<div class="tooltip-inner">
-                                <a target="_blank" href="${getAddressLink(point.node_id)}">${point.name}</a>
-                                <br>${text}<br>
-                              </div>`;
-
-      let tooltipLayout = document.getElementById("map-tooltip");
-
-      if (tooltipLayout.innerHTML !== tooltipContent) {
-        tooltipLayout.innerHTML = tooltipContent;
-        let offsetLeft = tooltipLayout.clientWidth > 350 ? 80 : 40;
-        tooltipLayout.style.transform = `translate3d(${event.layerX - offsetLeft}px, ${event.layerY + 80}px, 0px)`;
-      }
-
-      tooltipLayout.style.display = 'block';
-
-      if (this.timeoutId) { clearTimeout(this.timeoutId); }
-
-      //if (hovered) {
-      if (false) {
-        this.timeoutId = setTimeout(function () {
-          document.getElementById("map-tooltip").style.display = "none";
-        }, 3000);
-      }
-
+     hideTooltip() {
+      const tooltipLayout = document.getElementById("map-tooltip");
+      tooltipLayout.style.display = 'none';
     },
-load: async function () {
-  console.log("Coinbase:", await web3.eth.getCoinbase());
-
-  try {
-    let ret = await web3.eth.getNode(base);
-    if (!ret) {
-      console.log("getNode returned undefined or null");
-      // Maybe handle it or skip
-    } else {
-      this.baseIp = ret[1];
-      this.putPoint(base, ret, "self", 0);
+ tooltip(point, event, hovered) {
+    let tooltipLayout = document.getElementById("map-tooltip");
+    
+    if (!hovered) {
+      tooltipLayout.style.display = 'none';
+      return;
     }
-  } catch (err) {
-    console.error("getNode error:", err);
-  }
 
-  try {
-    this.network = await web3.eth.network();
-    console.log("network result:", this.network);
-  } catch (err) {
-    console.log("network error:", err);
-    return;
-  }
+  let text = "<strong>Location:</strong> <span>" + (point.city || "Unknown") + " (" + point.ip + ")</span></br>";
+text += "<strong>Version:</strong> <span>" + point.version + "</span></br>";
 
-  for (let entry of this.network) {
-    let type = entry.connected ? "connected" : "notConnected";
-    this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
-  }
-},
+if (point.last_seen && point.type == "notConnected") 
+  text += "<strong>Last Seen:</strong> <span>" + point.last_seen + "</span></br>";
+if (point.uptime && point.type != "notConnected") {
+  text += "<strong>Uptime:</strong> <span>" + point.uptime + " / ";
+  text += point.retries + " reconnects</span>";
+}
+
+let tooltipContent = `<div class="tooltip-inner">
+                          <a target="_blank" href="${getAddressLink(point.node_id)}">${point.name}</a>
+                          <br>${text}<br>
+                        </div>`;
+
+    if (tooltipLayout.innerHTML !== tooltipContent) {
+      tooltipLayout.innerHTML = tooltipContent;
+      tooltipLayout.style.display = 'block';
+      
+      let left = event.clientX + 10;
+      let top = event.clientY + 10;
+      
+      tooltipLayout.style.left = left + 'px';
+      tooltipLayout.style.top = top + 'px';
+    }
+  },
+load: async function () {
+
+    try {
+      let ret = await web3.eth.getNode(base);
+      if (!ret) {
+        console.log("getNode returned undefined or null");
+      } else {
+        this.baseIp = ret[1];
+        this.putPoint(base, ret, "self", 0);
+      }
+    } catch (err) {
+      console.error("getNode error:", err);
+    }
+
+    try {
+      this.network = await web3.eth.network();
+      console.log("network result:", this.network);
+    } catch (err) {
+      console.log("network error:", err);
+      return;
+    }
+
+    for (let entry of this.network) {
+      let type = entry.connected ? "connected" : "notConnected";
+      this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
+    }
+  },
 
     makeDraggable: function (svg) {
       let selectedElement;
@@ -787,7 +788,6 @@ load: async function () {
 
       x = Math.round(((x + 3141.59) / 6283.19) * mapWidth);
       y = Math.round(((y + 2891.13) / 4064.12) * mapHeight);
-  console.log('Mapped coordinates:', x, y); // Add this line
 
       return {
         x,

@@ -357,6 +357,66 @@ body {
   width: 100%;
 }
 
+
+.tooltip-inner {
+  background-color: #fff;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  white-space: nowrap;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  min-width: 330px;
+  text-align: left; 
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+.tooltip-inner a {
+  background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  font-size: 12px;
+  display: block; 
+}
+
+.tooltip-inner strong {
+  color: black;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.tooltip-inner span {
+  color: #5E5E5E;
+  font-weight: normal;
+  font-size: 12px;
+}
+.tooltip {
+  position: fixed; 
+  z-index: 9999;
+  pointer-events: none;
+  display: block;
+  font-family: "Titillium Web", Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 15px;
+  padding: 20px;
+}
+
+
+
 /* Epoch section */
 
 
@@ -821,4 +881,42 @@ body {
   .percentage-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.chart-container {
+  display: flex; 
+  gap: 20px;
+}
+
+.percentage-grid {
+  display: flex;
+  flex-wrap: wrap; 
+  width: 120px;   
+  gap: 10px;
+}
+
+.percentage-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.color-square {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  background-color: red; 
+}
+
+.balance-value {
+  font-size: 14px;
+}
+
+.chart-image {
+  
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 0rem;
+  margin: 0rem;
 }
