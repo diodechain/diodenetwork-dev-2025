@@ -595,12 +595,11 @@ body {
 .technology-section {
   min-height: 600px;
   margin: 0rem;
-  background-color: #0f0f0f; 
+  background-color: #000000; 
   background: url("../images/4.png") center center / cover no-repeat;
   color: #fff;
   padding: 16px 32px;
   text-align: center;
-  margin-bottom: 40px; 
 }
 
 .tech-title {
@@ -628,7 +627,6 @@ body {
   color: #ccc; 
   padding: 20px;
   border-radius: 8px;
-
   width: 324px;
   height: 358px;
   flex: 1 1 300px; 
@@ -748,6 +746,88 @@ body {
   .epoch-content {
     margin-left: 20px;
     margin-right: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .layout-container {
+    flex-direction: column;
+    overflow-x: hidden; 
+  }
+
+  .main-content {
+    overflow-x: hidden; 
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+  }
+
+  .sidebar-profile,
+  .sidebar-footer,
+  .sidebar-footer-text,
+  .sidebar-divider {
+    display: none;
+  }
+
+  .nav-links {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .nav-link {
+    margin-bottom: 0;
+    padding: 3px;
+    font-size: 12px;
+  }
+
+  .sidebar-logo {
+    padding: 12px;
+  }
+
+  .icon-logo {
+    width: 140px;
+  }
+
+  .sidebar-navigation {
+    margin-top: 0;
+    padding: 0 16px;
+  }
+
+  .hero-section {
+    height: auto;
+    min-height: 100vh;
+    padding: 60px 20px;
+    justify-content: flex-start; 
+    background: url("../images/bg-mobile.png") center center / cover no-repeat;
+    overflow-x: hidden;
+  }
+
+  .hero-heading {
+    position: static;
+    font-size: 40px;
+    margin-top: 60px; 
+    margin-bottom: 20px;
+  }
+
+  .hero-subtext {
+    flex-direction: column;
+    padding: 0 20px;
+    margin-top: 0; 
+  }
+
+  .launch-app-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    margin: 0;
   }
 }
 

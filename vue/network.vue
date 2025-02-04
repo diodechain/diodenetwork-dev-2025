@@ -547,8 +547,7 @@
        
       <g transform="translate(50, 550)" id="labels">
          
-          <text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: <% total_nodes %></text>
-          <circle class="connected" r="6" cy="0" />
+<text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: {{ total_nodes }}</text>          <circle class="connected" r="6" cy="0" />
           <text class="map-info" dominant-baseline="middle" y="0" x="12">Connected nodes</text>
           <circle class="notConnected" r="6" cy="30" />
           <text class="map-info" dominant-baseline="middle" y="30" x="12">Not connected nodes</text>
@@ -562,7 +561,6 @@
 <script>
 export default {
   name: "Network",
-  delimiters: ["<%", "%>"],
   data() {
     return {
       base: "",
@@ -581,14 +579,12 @@ export default {
     };
   },
 
-  created: function () {
-    let self = this;
-    getBase(function (base) {
-      self.base = base;
-    });
-
+   created() {
+  getBase((base) => {
+    this.base = base;
     this.load();
-  },
+  });
+},
   mounted: function () {
     this.makeDraggable(this.$refs.svg);
   },
@@ -597,6 +593,7 @@ export default {
         this.total_nodes = Object.keys(this.points).length + " public, "+ (this.network.length - Object.keys(this.points).length) + " private"
     }
   },
+
   methods: {
      hideTooltip() {
       const tooltipLayout = document.getElementById("map-tooltip");
@@ -636,33 +633,33 @@ let tooltipContent = `<div class="tooltip-inner">
       tooltipLayout.style.top = top + 'px';
     }
   },
-load: async function () {
-
-    try {
-      let ret = await web3.eth.getNode(base);
-      if (!ret) {
-        console.log("getNode returned undefined or null");
-      } else {
-        this.baseIp = ret[1];
-        this.putPoint(base, ret, "self", 0);
-      }
-    } catch (err) {
-      console.error("getNode error:", err);
+load: async function() {
+  try {
+    const ret = await web3.eth.getNode(this.base); // use this.base, not base
+    if (!ret) {
+      console.log("getNode returned undefined or null");
+    } else {
+      this.baseIp = ret[1];
+      this.putPoint(this.base, ret, "self", 0);
     }
+  } catch (err) {
+    console.error("getNode error:", err);
+  }
 
-    try {
-      this.network = await web3.eth.network();
-      console.log("network result:", this.network);
-    } catch (err) {
-      console.log("network error:", err);
-      return;
-    }
+  try {
+    this.network = await web3.eth.network();
+    console.log("network result:", this.network);
+  } catch (err) {
+    console.log("network error:", err);
+    return;
+  }
 
-    for (let entry of this.network) {
-      let type = entry.connected ? "connected" : "notConnected";
-      this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
-    }
-  },
+  for (let entry of this.network) {
+    let type = entry.connected ? "connected" : "notConnected";
+    this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
+  }
+},
+
 
     makeDraggable: function (svg) {
       let selectedElement;
@@ -754,7 +751,9 @@ load: async function () {
           this.collisionMap[key] = Math.PI / 2;
         }
 
-    this.points[ip] = point;
+         this.points[ip] = point;
+
+
 
 
       });
