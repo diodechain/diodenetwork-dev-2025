@@ -678,3 +678,147 @@ body {
  border-radius: 10px;
 
 }
+
+/* Responsive Design */
+@media screen and (max-width: 1200px) {
+  .tech-cards {
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .tech-card {
+    flex: 0 1 calc(50% - 20px);
+    min-width: 280px;
+  }
+
+  .epoch-content {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .nav-links {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .nav-link {
+    margin-bottom: 10px;
+  }
+
+  .profile-image-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hero-section {
+    height: auto;
+    min-height: 100vh;
+    padding: 80px 20px;
+  }
+
+  .hero-heading {
+    position: relative;
+    top: auto;
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .hero-subtext {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-left, .col-right {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tech-card {
+    flex: 0 1 100%;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .footer-right {
+    justify-content: center;
+  }
+
+  .navbar-epoch {
+    margin-left: 10px;
+    margin-right: 10px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card.balance-distribution .chart-container {
+    flex-direction: column;
+  }
+
+  .percentage-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .launch-app-btn {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 20px auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hero-heading {
+    font-size: 32px;
+  }
+
+  .tech-title {
+    font-size: 32px;
+  }
+
+  .sidebar-footer {
+    flex-wrap: wrap;
+  }
+
+  .card.active-fleets table,
+  .card.relay-nodes table {
+    font-size: 8px;
+  }
+
+  .card {
+    margin-bottom: 10px;
+  }
+
+  .percentage-grid {
+    grid-template-columns: 1fr;
+  }
+}

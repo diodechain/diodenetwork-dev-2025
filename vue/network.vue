@@ -618,7 +618,7 @@ export default {
       if (tooltipLayout.innerHTML !== tooltipContent) {
         tooltipLayout.innerHTML = tooltipContent;
         let offsetLeft = tooltipLayout.clientWidth > 350 ? 80 : 40;
-        // tooltipLayout.style.transform = `translate3d(${event.layerX - offsetLeft}px, ${event.layerY + 80}px, 0px)`;
+        tooltipLayout.style.transform = `translate3d(${event.layerX - offsetLeft}px, ${event.layerY + 80}px, 0px)`;
       }
 
       tooltipLayout.style.display = 'block';
@@ -633,30 +633,35 @@ export default {
       }
 
     },
-    load: async function () {
-      let ret = undefined;
-      let base = await web3.eth.getCoinbase();
-      this.base = base;
-      try {
-        ret = await web3.eth.getNode(base);
-      } catch (err) {
-        console.log("getNode error:", base, err);
-        return;
-      }
+load: async function () {
+  console.log("Coinbase:", await web3.eth.getCoinbase());
+
+  try {
+    let ret = await web3.eth.getNode(base);
+    if (!ret) {
+      console.log("getNode returned undefined or null");
+      // Maybe handle it or skip
+    } else {
       this.baseIp = ret[1];
       this.putPoint(base, ret, "self", 0);
-      try {
-        this.network = await web3.eth.network();
-      } catch (err) {
-        console.log("network error:", err);
-        return;
-      }
+    }
+  } catch (err) {
+    console.error("getNode error:", err);
+  }
 
-      for (entry of this.network) {
-        let type = entry.connected ? "connected" : "notConnected";
-        this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
-      }
-    },
+  try {
+    this.network = await web3.eth.network();
+    console.log("network result:", this.network);
+  } catch (err) {
+    console.log("network error:", err);
+    return;
+  }
+
+  for (let entry of this.network) {
+    let type = entry.connected ? "connected" : "notConnected";
+    this.putPoint(entry.node_id, entry.node, type, entry.retries, entry);
+  }
+},
 
     makeDraggable: function (svg) {
       let selectedElement;
@@ -748,7 +753,9 @@ export default {
           this.collisionMap[key] = Math.PI / 2;
         }
 
-        this.$set(this.points, ip, point);
+    this.points[ip] = point;
+
+
       });
     },
     mapLatLon: function (lat, lon) {
@@ -780,6 +787,7 @@ export default {
 
       x = Math.round(((x + 3141.59) / 6283.19) * mapWidth);
       y = Math.round(((y + 2891.13) / 4064.12) * mapHeight);
+  console.log('Mapped coordinates:', x, y); // Add this line
 
       return {
         x,
