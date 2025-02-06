@@ -290,9 +290,14 @@ export default {
       return `${web3.utils.fromWei(value)} DIO`;
     },
 
-    formatNumber(num) {
-      return parseInt(num).toLocaleString();
-    }
+   formatNumber(num) {
+  let numStr = num.toString();
+  if (numStr.length > 24) {
+    numStr = numStr.slice(0, 24);
+  }
+  return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
   }
 };
 </script>

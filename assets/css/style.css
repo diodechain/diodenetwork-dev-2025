@@ -785,7 +785,7 @@ body {
   .nav-link {
     margin-bottom: 0;
     padding: 3px;
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .sidebar-logo {
@@ -793,7 +793,7 @@ body {
   }
 
   .icon-logo {
-    width: 140px;
+    width: 120px;
   }
 
   .sidebar-navigation {
