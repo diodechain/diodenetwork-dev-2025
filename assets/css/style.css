@@ -205,6 +205,7 @@ body {
   border: none;
   cursor: pointer;
   font-size: 14px;
+  text-decoration: none;
   font-weight: 500;
   color: #fff;
   background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
@@ -282,7 +283,8 @@ body {
   font-size: 54px;
   color: #fff;
   position: absolute;
-  top: 27vh;
+  top: 25%;
+  margin-bottom: 2rem;
 }
 
 .hero-subtext {
@@ -804,7 +806,6 @@ body {
   .hero-section {
     height: auto;
     min-height: 100vh;
-    padding: 60px 20px;
     justify-content: flex-start; 
     background: url("../images/bg-mobile.png") center center / cover no-repeat;
     overflow-x: hidden;
@@ -813,7 +814,7 @@ body {
   .hero-heading {
     position: static;
     font-size: 40px;
-    margin-top: 60px; 
+    margin-top: 10px; 
     margin-bottom: 20px;
   }
 
@@ -821,6 +822,7 @@ body {
     flex-direction: column;
     padding: 0 20px;
     margin-top: 0; 
+    font-size: 16px;
   }
 
   .launch-app-btn {
@@ -868,7 +870,6 @@ body {
   .hero-section {
     height: auto;
     min-height: 100vh;
-    padding: 80px 20px;
   }
 
   .hero-heading {
@@ -926,7 +927,8 @@ body {
     position: relative;
     top: auto;
     right: auto;
-    margin: 20px auto;
+    margin-top: 20vh;
+    margin-bottom: 20px;
   }
 }
 

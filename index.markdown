@@ -3,23 +3,27 @@ layout: default
 title: "Home"
 ---
 
-
-<!-- MAIN SECTION -->
-<div class="hero-section">
-  <button class="launch-app-btn">Launch App</button>
+<!-- HERO SECTION -->
+<div id="hero-section" class="hero-section">
+  <a href="{{ '/app/' | relative_url }}" class="launch-app-btn">Launch App</a>
   <h1 class="hero-heading">Uncompromising Privacy.</h1>
   <p class="hero-subtext">
-  Diode Network delivers privacy-first communication solutions for  <br/> executives, expats, and operations teams, ensuring secure  <br/>messaging and remote access across the globe.
+    Diode Network delivers privacy-first communication solutions for  <br/> 
+    executives, expats, and operations teams, ensuring secure  <br/>
+    messaging and remote access across the globe.
   </p>
 </div>
 
-
-<div id="app">
-<dashboard></dashboard>
-
+<!-- NETWORK MAP SECTION (Network.vue component) -->
+<div id="network-map-section">
+  <div id="app">
+    <dashboard></dashboard>
+  </div>
 </div>
 
-{% include technology.html %}
+<!-- TECHNOLOGY SECTION -->
+<div id="technology-section">
+  {% include technology.html %}
+</div>
+
 {% include footer.html %}
-
-
