@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,6 +10,7 @@
       font-family: Arial, sans-serif;
       background-color: #111;
     }
+
     .navbar {
       display: flex;
       align-items: center;
@@ -18,24 +20,29 @@
       color: white;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .navbar-left {
       display: flex;
       align-items: center;
     }
+
     .logo-img {
       height: 40px;
     }
+
     .navbar-middle {
       display: flex;
       flex-direction: column;
       align-items: center;
       font-size: 14px;
     }
+
     .navbar-middle .username {
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 4px;
     }
+
     .address-copy {
       display: flex;
       align-items: center;
@@ -44,11 +51,13 @@
       border-radius: 5px;
       background-color: #323131;
     }
+
     .address-text {
       font-family: monospace;
       font-size: 14px;
       color: #ffffff;
     }
+
     .copy-button {
       background: rgba(255, 255, 255, 0.1);
       color: white;
@@ -58,33 +67,39 @@
       cursor: pointer;
       border-radius: 4px;
     }
+
     .navbar-right {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
     }
+
     .wallet-info {
       display: flex;
       flex-direction: column;
       font-size: 14px;
       text-align: right;
     }
+
     .wallet-address {
       font-family: monospace;
       font-size: 12px;
       color: #ffffff;
     }
+
     .wallet-balance {
       font-size: 20px;
       color: #ffffff;
       text-align: left;
     }
+
     .profile-image {
       width: 56px;
       height: 56px;
@@ -93,6 +108,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .profile-image-wrapper {
       position: relative;
       display: flex;
@@ -107,14 +123,11 @@
     }
   </style>
 </head>
+
 <body>
   <div class="navbar">
     <div class="navbar-left">
-        <img
-        src="{{ '/assets/images/logo.svg' | relative_url }}"
-        alt="Logo"
-        class="icon-logo"
-      />
+      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Logo" class="icon-logo" />
     </div>
     <div class="navbar-middle">
       <div class="username">@drphil</div>
@@ -125,14 +138,10 @@
       </div>
     </div>
     <div class="navbar-right">
-        <div class="profile-image-wrapper">
-        <img
-        src="{{ '/assets/images/avatar.png' | relative_url }}"
-        alt="User Avatar"
-        class="profile-image"
-      />   
-    </div>
-      
+      <div class="profile-image-wrapper">
+        <img src="{{ '/assets/images/avatar.png' | relative_url }}" alt="User Avatar" class="profile-image" />
+      </div>
+
       <div class="wallet-info">
         <div class="wallet-address">0x2a6c90816...</div>
         <div class="wallet-balance">12 diode</div>
@@ -140,4 +149,5 @@
     </div>
   </div>
 </body>
+
 </html>

@@ -1,215 +1,218 @@
 </script>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     {% include head.html %}
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="layout-container">
-      <aside class="sidebar">
-        {% include sidebar.html %}
-      </aside>
+        <aside class="sidebar">
+            {% include sidebar.html %}
+        </aside>
 
-      <main class="main-content">
-        {{ content }}
-      </main>
+        <main class="main-content">
+            {{ content }}
+        </main>
     </div>
-    
-  <!-- 1) Vue from CDN -->
-  <script src="https://unpkg.com/vue@3"></script>
 
-  <!-- 2) SFC loader -->
-  <script src="https://unpkg.com/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
-  <script src="dist/web3.min.js"></script>
-  <script src="dist/axios.min.js"></script>
-  <script src="dist/d3.v3.min.js"></script>
-  <script src="dist/abi.js"></script>
-  <script src="dist/wallet.js"></script>
-  <script src="dist/geo.js"></script>
-  <script src="dist/storage.js"></script>
-  <script src="dist/donut.js"></script>
-  <script src="dist/blocklist.js"></script>
-  <!-- 3) network.vue at runtime -->
-  <script src="{{ '/assets/js/runtime-loader.js' | relative_url }}"></script>
+    <!-- 1) Vue from CDN -->
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <!-- 2) SFC loader -->
+    <script src="https://unpkg.com/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+    <script src="dist/web3.min.js"></script>
+    <script src="dist/axios.min.js"></script>
+    <script src="dist/d3.v3.min.js"></script>
+    <script src="dist/abi.js"></script>
+    <script src="dist/wallet.js"></script>
+    <script src="dist/geo.js"></script>
+    <script src="dist/storage.js"></script>
+    <script src="dist/donut.js"></script>
+    <script src="dist/blocklist.js"></script>
+    <!-- 3) network.vue at runtime -->
+    <script src="{{ '/assets/js/runtime-loader.js' | relative_url }}"></script>
 
     <script src="{{ '/assets/js/script.js' | relative_url }}"></script>
     <script>
-      let app = {};
-      let web3 = NewWeb3('wss://prenet.diode.io:8443/ws');
-      let web3_subscriptions = [];
-      let url = "wss://moonbeam.api.onfinality.io/ws?apikey=49e8baf7-14c3-4d0f-916a-94abf1c4c14a";
-      let moonbeam = new Web3(url);
+        let app = {};
+        let web3 = NewWeb3('wss://prenet.diode.io:8443/ws');
+        let web3_subscriptions = [];
+        let url = "wss://moonbeam.api.onfinality.io/ws?apikey=49e8baf7-14c3-4d0f-916a-94abf1c4c14a";
+        let moonbeam = new Web3(url);
 
-      function subscribe(event, callback) {
-          web3_subscriptions.push([event, callback])
-          if (web3.currentProvider.connected && app.connected == 1) web3.eth.subscribe(event, callback);
-      }
+        function subscribe(event, callback) {
+            web3_subscriptions.push([event, callback])
+            if (web3.currentProvider.connected && app.connected == 1) web3.eth.subscribe(event, callback);
+        }
 
-      function valueToAddress(value) {
-          if (value == undefined) return undefined
-          let addr
-          if (value.length == 42)
-              addr = value;
-          else if (!value.startsWith('0x000000000000000000000000'))
-              return undefined;
-          else
-              addr = '0x' + value.substr(26, 40)
+        function valueToAddress(value) {
+            if (value == undefined) return undefined
+            let addr
+            if (value.length == 42)
+                addr = value;
+            else if (!value.startsWith('0x000000000000000000000000'))
+                return undefined;
+            else
+                addr = '0x' + value.substr(26, 40)
 
-          if (!isAddress(addr))
-              return undefined;
+            if (!isAddress(addr))
+                return undefined;
 
-          return Web3.utils.toChecksumAddress(addr)
-      }
+            return Web3.utils.toChecksumAddress(addr)
+        }
 
-      function addressAdd(bn, num) {
-          return '0x' + bn.add(web3.utils.toBN(num)).toString(16).padStart(64, '0')
-      }
+        function addressAdd(bn, num) {
+            return '0x' + bn.add(web3.utils.toBN(num)).toString(16).padStart(64, '0')
+        }
 
-      function valueToString(value) {
-          let ret = value.match(/^0x(([0-9A-F][1-9A-F]|[1-9A-F][0-9A-F])+)0+([0-9A-F]{2})$/i);
-          if (ret) {
-              let string = ret[1]
-              let len = web3.utils.hexToNumber('0x' + ret[3])
-              if (string.length == len) {
-                  return web3.utils.hexToString('0x' + string)
-              }
-          }
-          return undefined
-      }
+        function valueToString(value) {
+            let ret = value.match(/^0x(([0-9A-F][1-9A-F]|[1-9A-F][0-9A-F])+)0+([0-9A-F]{2})$/i);
+            if (ret) {
+                let string = ret[1]
+                let len = web3.utils.hexToNumber('0x' + ret[3])
+                if (string.length == len) {
+                    return web3.utils.hexToString('0x' + string)
+                }
+            }
+            return undefined
+        }
 
-      function getBase(callback) {
-          web3.eth.getCoinbase().then((base) => {
-              callback(base);
-          });
-      }
+        function getBase(callback) {
+            web3.eth.getCoinbase().then((base) => {
+                callback(base);
+            });
+        }
 
-      function balanceStringToValue(balance) {
-          return web3.utils.fromWei(balance);
-      }
+        function balanceStringToValue(balance) {
+            return web3.utils.fromWei(balance);
+        }
 
-      function getRandomColor() {
-          return "#" + ((1 << 24) * Math.random() | 0).toString(16);
-      }
+        function getRandomColor() {
+            return "#" + ((1 << 24) * Math.random() | 0).toString(16);
+        }
 
-      function getAddressLink(address) {
-          if (window.location.pathname !== '/') {
-              return `${window.location.pathname}#/node/${address}`;
-          } else {
-              return `/#/address/${address}`;
-          }
-      }
+        function getAddressLink(address) {
+            if (window.location.pathname !== '/') {
+                return `${window.location.pathname}#/node/${address}`;
+            } else {
+                return `/#/address/${address}`;
+            }
+        }
 
-      function valueToBalance(balance) {
-          if (balance == undefined) return 'error loading';
-          let value = web3.utils.fromWei(balance)
-          let unit = ' DIODE'
+        function valueToBalance(balance) {
+            if (balance == undefined) return 'error loading';
+            let value = web3.utils.fromWei(balance)
+            let unit = ' DIODE'
 
-          // if (value == 0) {
-          //     value = web3.utils.hexToNumber(balance)
-          //     unit = ' WEI'
-          // }
+            // if (value == 0) {
+            //     value = web3.utils.hexToNumber(balance)
+            //     unit = ' WEI'
+            // }
 
-          // Adding thousands separators
-          value = value.toString()
+            // Adding thousands separators
+            value = value.toString()
 
-          let [front, back] = value.split(".")
+            let [front, back] = value.split(".")
 
-          front = front.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            front = front.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-          if (back != undefined) {
-              back = back.split("").reverse().join("");
-              back = back.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              back = "." + back.split("").reverse().join("");
-              // cutting down to the most significant digits
-              back = back.replace(/([1-9][1-9][1-9]|0[1-9][1-9]|[1-9][1-9]0|[1-9]0[1-9]|00[1-9]|[1-9]00|0[1-9]0).*/, "$1")
-          } else {
-              back = "";
-          }
+            if (back != undefined) {
+                back = back.split("").reverse().join("");
+                back = back.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                back = "." + back.split("").reverse().join("");
+                // cutting down to the most significant digits
+                back = back.replace(/([1-9][1-9][1-9]|0[1-9][1-9]|[1-9][1-9]0|[1-9]0[1-9]|00[1-9]|[1-9]00|0[1-9]0).*/, "$1")
+            } else {
+                back = "";
+            }
 
-          if (front.length > 4)
-              return front + unit
-          else
-              return front + back + unit
-      }
+            if (front.length > 4)
+                return front + unit
+            else
+                return front + back + unit
+        }
 
-      function isAddress(value) {
-          return value == '0x0000000000000000000000000000000000000000' ||
-              (web3.utils.isAddress(value) && !value.startsWith('0x000000'))
-      }
+        function isAddress(value) {
+            return value == '0x0000000000000000000000000000000000000000' ||
+                (web3.utils.isAddress(value) && !value.startsWith('0x000000'))
+        }
 
-      function formatStorageKey(key) {
-          if (key.startsWith('0x000000000000000000000000000000000000000'))
-              return web3.utils.hexToNumber(key)
-          return key.substr(0, 5) + "..." + key.substr(64, 2)
-      }
+        function formatStorageKey(key) {
+            if (key.startsWith('0x000000000000000000000000000000000000000'))
+                return web3.utils.hexToNumber(key)
+            return key.substr(0, 5) + "..." + key.substr(64, 2)
+        }
 
-      function resolveName(name) {
-          if (!name) return "null"
-          let key = name.toLowerCase()
-          if (DNSAlias[key]) return DNSAlias[key]
-          if (DNSCache[key]) return DNSCache[key].name
-          return name;
-      }
+        function resolveName(name) {
+            if (!name) return "null"
+            let key = name.toLowerCase()
+            if (DNSAlias[key]) return DNSAlias[key]
+            if (DNSCache[key]) return DNSCache[key].name
+            return name;
+        }
 
-      function shorten(str, length) {
-          if (!length) length = 10;
-          if (str.length > length) return str.substr(0, length - 3) + '...';
-          return str;
-      }
+        function shorten(str, length) {
+            if (!length) length = 10;
+            if (str.length > length) return str.substr(0, length - 3) + '...';
+            return str;
+        }
 
-      function formatNumber(num) {
-          // return Math.floor(num).toString()
-          return Math.floor(num).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-      }
+        function formatNumber(num) {
+            // return Math.floor(num).toString()
+            return Math.floor(num).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
 
-      function formatAddr(addr, mode, length) {
-          if (mode == 'address')
-              return shorten(addr, length);
+        function formatAddr(addr, mode, length) {
+            if (mode == 'address')
+                return shorten(addr, length);
 
-          let alias = resolveName(addr);
-          if (mode == 'full' && alias != addr)
-              return shorten(addr, length) + ' (' + alias + ')';
-          return shorten(alias, length);
-      }
+            let alias = resolveName(addr);
+            if (mode == 'full' && alias != addr)
+                return shorten(addr, length) + ' (' + alias + ')';
+            return shorten(alias, length);
+        }
 
-      function formatTime(unix_timestamp) {
-          return formatDateTime(unix_timestamp, 'time')
-      }
+        function formatTime(unix_timestamp) {
+            return formatDateTime(unix_timestamp, 'time')
+        }
 
-      function formatDate(unix_timestamp) {
-          return formatDateTime(unix_timestamp, 'date')
-      }
+        function formatDate(unix_timestamp) {
+            return formatDateTime(unix_timestamp, 'date')
+        }
 
-      function formatDateTime(unix_timestamp, mode) {
-          let format = (str) => {
-              return ("0" + str).substr(-2)
-          }
+        function formatDateTime(unix_timestamp, mode) {
+            let format = (str) => {
+                return ("0" + str).substr(-2)
+            }
 
-          // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-          let date = new Date(unix_timestamp * 1000);
-          let year = date.getFullYear();
-          let month = format(date.getMonth() + 1);
-          let day = format(date.getDate());
-          let hours = format(date.getHours());
-          let minutes = format(date.getMinutes());
-          let seconds = format(date.getSeconds());
+            // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
+            let date = new Date(unix_timestamp * 1000);
+            let year = date.getFullYear();
+            let month = format(date.getMonth() + 1);
+            let day = format(date.getDate());
+            let hours = format(date.getHours());
+            let minutes = format(date.getMinutes());
+            let seconds = format(date.getSeconds());
 
-          switch (mode) {
-              case 'date':
-                  return year + '/' + month + '/' + day;
-              case 'time':
-                  return hours + ':' + minutes + ':' + seconds;
-              case 'datetime':
-              default:
-                  return hours + ':' + minutes + ':' + seconds + ' ' + year + '/' + month + '/' + day;
-          }
-      }
+            switch (mode) {
+                case 'date':
+                    return year + '/' + month + '/' + day;
+                case 'time':
+                    return hours + ':' + minutes + ':' + seconds;
+                case 'datetime':
+                default:
+                    return hours + ':' + minutes + ':' + seconds + ' ' + year + '/' + month + '/' + day;
+            }
+        }
 
-      function uptime(seconds) {
-          let hours = Math.floor(seconds / 3600) % 24
-          let days = Math.floor(seconds / (3600 * 24))
-          return days + "d " + hours + "h " + (seconds % 60) + "s"
-      }
-  </script>
-  </body>
+        function uptime(seconds) {
+            let hours = Math.floor(seconds / 3600) % 24
+            let days = Math.floor(seconds / (3600 * 24))
+            return days + "d " + hours + "h " + (seconds % 60) + "s"
+        }
+    </script>
+</body>
+
 </html>

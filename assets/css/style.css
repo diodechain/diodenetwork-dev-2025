@@ -358,9 +358,9 @@ body {
   border-radius: 10px !important;
   font-size: 12px !important;
   white-space: nowrap;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 330px;
-  text-align: left; 
+  text-align: left;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 1rem;
@@ -372,7 +372,7 @@ body {
   -webkit-text-fill-color: transparent;
   text-decoration: none;
   font-size: 12px;
-  display: block; 
+  display: block;
 }
 
 .tooltip-inner strong {
@@ -386,8 +386,9 @@ body {
   font-weight: normal;
   font-size: 12px;
 }
+
 .tooltip {
-  position: fixed; 
+  position: fixed;
   z-index: 9999;
   pointer-events: none;
   display: block;
@@ -435,6 +436,7 @@ body {
   margin-left: 64px;
   margin-right: 64px;
 }
+
 .epoch-section {
   padding: 2rem;
   color: #fff;
@@ -469,6 +471,7 @@ body {
   font-weight: regular;
   text-transform: uppercase;
 }
+
 .row {
   display: flex;
   gap: 1rem;
@@ -597,7 +600,7 @@ body {
 .technology-section {
   min-height: 600px;
   margin: 0rem;
-  background-color: #000000; 
+  background-color: #000000;
   background: url("../images/4.png") center center / cover no-repeat;
   color: #fff;
   padding: 16px 32px;
@@ -620,20 +623,20 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px; 
+  gap: 8px;
 }
 
 
 .tech-card {
-  background-color: #1e1e1e ;
-  color: #ccc; 
+  background-color: #1e1e1e;
+  color: #ccc;
   padding: 20px;
   border-radius: 8px;
   width: 324px;
   height: 358px;
-  flex: 1 1 300px; 
+  flex: 1 1 300px;
   position: relative;
-  text-align: left; 
+  text-align: left;
 }
 
 .tech-icon {
@@ -676,7 +679,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .footer-left .copyright {
@@ -719,17 +722,18 @@ body {
 .icon-button:first-child {
   margin-left: 0;
 }
+
 .footer-icon-svg {
   height: 16px;
   width: auto;
 }
 
 .footer-icon {
- background-color: #FAFAFA;
- height: 35;
- width: 35;
- padding: 10px;
- border-radius: 10px;
+  background-color: #FAFAFA;
+  height: 35;
+  width: 35;
+  padding: 10px;
+  border-radius: 10px;
 
 }
 
@@ -754,11 +758,11 @@ body {
 @media screen and (max-width: 992px) {
   .layout-container {
     flex-direction: column;
-    overflow-x: hidden; 
+    overflow-x: hidden;
   }
 
   .main-content {
-    overflow-x: hidden; 
+    overflow-x: hidden;
   }
 
   .sidebar {
@@ -806,7 +810,7 @@ body {
   .hero-section {
     height: auto;
     min-height: 100vh;
-    justify-content: flex-start; 
+    justify-content: flex-start;
     background: url("../images/bg-mobile.png") center center / cover no-repeat;
     overflow-x: hidden;
   }
@@ -814,14 +818,14 @@ body {
   .hero-heading {
     position: static;
     font-size: 40px;
-    margin-top: 10px; 
+    margin-top: 10px;
     margin-bottom: 20px;
   }
 
   .hero-subtext {
     flex-direction: column;
     padding: 0 20px;
-    margin-top: 0; 
+    margin-top: 0;
     font-size: 16px;
   }
 
@@ -888,7 +892,8 @@ body {
     flex-direction: column;
   }
 
-  .col-left, .col-right {
+  .col-left,
+  .col-right {
     width: 100%;
   }
 }
@@ -960,14 +965,14 @@ body {
 }
 
 .chart-container {
-  display: flex; 
+  display: flex;
   gap: 20px;
 }
 
 .percentage-grid {
   display: flex;
-  flex-wrap: wrap; 
-  width: 120px;   
+  flex-wrap: wrap;
+  width: 120px;
   gap: 10px;
 }
 
@@ -981,7 +986,7 @@ body {
   width: 12px;
   height: 12px;
   display: inline-block;
-  background-color: red; 
+  background-color: red;
 }
 
 .balance-value {
@@ -989,7 +994,7 @@ body {
 }
 
 .chart-image {
-  
+
   justify-content: center;
   align-items: center;
   display: flex;
