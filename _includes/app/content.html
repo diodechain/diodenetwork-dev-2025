@@ -119,14 +119,19 @@
     }
 
     .button-view-all {
-      background-color: black;
+      background-color: #ffffff;
+      cursor: pointer;
+      
       font-family: 'Poppins', sans-serif;
-      color: white;
-      width: 90;
-      border: none;
+      color: #000000;
+      border: 1px solid #000000;
       padding: 8px 26px;
       border-radius: 5px;
-      font-size: 10px
+      font-size: 10px;
+    }
+    .button-view-all:hover {
+      background-color: #000000;
+      color: #ffffff;
     }
 
     .dashboard-header {
@@ -141,7 +146,7 @@
 
     .dashboard-header .title {
       font-size: 20px;
-      font-weight: bold;
+      font-weight: medium;
     }
 
     .dashboard-header .buttons {
@@ -186,9 +191,8 @@
       color: white;
       font-size: 16px;
       font-weight: bold;
-      min-width: 560px;
       height: 121px;
-      flex: 1;
+      flex: 1 1 auto;
     }
 
     .epoch-rank {
@@ -345,7 +349,7 @@
   }
   
   .content-box {
-    width: 100% !important;
+ max-width: 350px;
     margin-bottom: 20px;
   }
 }
@@ -355,6 +359,7 @@
 .dashboard {
     padding: 0 20px;
    overflow-x: hidden;
+   margin: 0px;
   }
 
   .dashboard-header {
@@ -362,6 +367,7 @@
     justify-content: space-between;
     align-items: flex-start; 
     padding: 20px;
+    margin-bottom: 23px;
   }
   
   .dashboard-header .title {
@@ -388,11 +394,11 @@
   }
   
   .boost-box {
-    order: 1;
+    order: 3;
     margin: 0;
     min-width: 90px;
     height: 90px;
-    margin-bottom: 20px;
+    margin-top: 20px;
   }
   .boost {
     min-width: 80px;
@@ -407,7 +413,7 @@
   }
   
   .rank-box.overall-rank {
-    order: 3;
+    order: 1;
     min-height: 74px;
     max-width: 94%;
   }
@@ -531,7 +537,7 @@ display: flex;
 
 <body>
   <div class="dashboard-header">
-    <div class="title">About this dashboard</div>
+    <div class="title">Epoch 670 Stats</div>
     <div class="buttons">
       <button class="open-campaign">Open Campaign</button>
       <button class="read-more">Read More</button>
@@ -539,7 +545,6 @@ display: flex;
   </div>
   <div class="dashboard">
     <div class="row">
-      <div class="left-column">
         <div class="rank-container">
           <div class="rank-box epoch-rank">
             <span class="rank-title">Epoch Rank</span>
@@ -560,7 +565,6 @@ display: flex;
 
           </div>
 
-        </div>
       </div>
     </div>
 

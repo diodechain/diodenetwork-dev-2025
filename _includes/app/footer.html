@@ -1,13 +1,12 @@
 <style>
   .site-footer {
     background: rgb(0, 0, 0);
-    padding: 20px 20px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     overflow-x: hidden;
-
   }
 
   .footer-left .copyright {
@@ -18,7 +17,6 @@
 
   .footer-center .foundation-link {
     background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
-
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
@@ -33,12 +31,14 @@
 
   .footer-icon {
     background-color: #FAFAFA;
-    padding: 10px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    height: 35px;
+    width: 35px;
+    border-radius: 10px;
   }
 
   .footer-icon img {
@@ -47,24 +47,30 @@
     display: block;
   }
 
-  .icon-button:first-child {
-    margin-left: 0;
-  }
-
   .footer-icon-svg {
     height: 16px;
     width: auto;
   }
 
-  .footer-icon {
-    background-color: #FAFAFA;
-    height: 35;
-    width: 35;
-    padding: 10px;
-    border-radius: 10px;
 
+
+  @media (max-width: 768px) {
+    .site-footer {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+    }
+
+    .footer-right {
+      justify-content: center;
+    }
+
+    .footer-left, .footer-center, .footer-right {
+      width: 100%;
+    }
   }
 </style>
+
 <footer class="site-footer">
   <div class="footer-left">
     <span class="copyright">© 2025 All rights reserved</span>
@@ -75,13 +81,11 @@
   </div>
 
   <div class="footer-right">
-    <a href="https://www.youtube.com/channel/UC3b5voADiipUmq1Q-vtPKsA" title="YouTube" target="_blank"
-      rel="noopener noreferrer">
+    <a href="https://www.youtube.com/channel/UC3b5voADiipUmq1Q-vtPKsA" title="YouTube" target="_blank" rel="noopener noreferrer">
       <img width="35px" src="{{ '/assets/images/youtube.svg' | relative_url }}" alt="YouTube" />
     </a>
 
-    <a href="https://x.com/diode_chain" title="X (Twitter)" target="_blank" rel="noopener noreferrer"
-      class="footer-icon">
+    <a href="https://x.com/diode_chain" title="X (Twitter)" target="_blank" rel="noopener noreferrer" class="footer-icon">
       <img src="{{ 'assets/images/x-black.svg' | relative_url }}" alt="X" />
     </a>
 
@@ -89,8 +93,7 @@
       <img src="{{ '/assets/images/telegram-black.svg' | relative_url }}" alt="Telegram" />
     </a>
 
-    <a href="https://github.com/diodechain" title="GitHub" target="_blank" rel="noopener noreferrer"
-      class="footer-icon">
+    <a href="https://github.com/diodechain" title="GitHub" target="_blank" rel="noopener noreferrer" class="footer-icon">
       <img src="{{ '/assets/images/github-black.svg' | relative_url }}" alt="GitHub" />
     </a>
   </div>
