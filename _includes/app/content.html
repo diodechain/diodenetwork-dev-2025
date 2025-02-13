@@ -23,7 +23,6 @@
       display: flex;
       justify-content: space-between;
       gap: 24px;
-      margin-bottom: 20px;
     }
 
     .left-column {
@@ -38,7 +37,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
       flex: 1;
-      width: 500px;
+
     }
 
     .content-box h3 {
@@ -52,11 +51,10 @@
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      margin-top: 25px;
+      margin-top: 24px;
       margin-bottom: 20px;
       background-color: hsl(0, 0%, 100%);
     }
-
 
     .table {
       width: 100%;
@@ -65,7 +63,6 @@
       border-spacing: 0px 8px;
       margin-top: 10px;
       text-align: left;
-
     }
 
     .table-box {
@@ -82,7 +79,6 @@
       text-transform: uppercase;
       padding: 7px;
       text-align: left;
-
     }
 
     .table td {
@@ -106,7 +102,6 @@
       text-transform: uppercase;
     }
 
-
     .button-open-camp {
       background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
       color: white;
@@ -121,7 +116,6 @@
     .button-view-all {
       background-color: #ffffff;
       cursor: pointer;
-      
       font-family: 'Poppins', sans-serif;
       color: #000000;
       border: 1px solid #000000;
@@ -129,6 +123,7 @@
       border-radius: 5px;
       font-size: 10px;
     }
+
     .button-view-all:hover {
       background-color: #000000;
       color: #ffffff;
@@ -138,7 +133,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 23px 30px;
+      padding: 16px 30px;
       background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
       color: white;
       border-radius: 0px;
@@ -320,220 +315,324 @@
       border-top-right-radius: 10px;
     }
 
-@media (max-width: 1200px) {
-  .rank-container {
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .rank-box {
-    min-width: calc(50% - 10px);
-    height: 100px;
-  }
-  
-  .boost-box {
-    margin: 0 auto;
-  }
-}
+    /* Modal Styles (common) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-@media (max-width: 992px) {
-  .container {
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .card {
-    width: calc(50% - 10px);
-  }
-  
-  .tables-row {
-    flex-direction: column;
-  }
-  
-  .content-box {
- max-width: 350px;
-    margin-bottom: 20px;
-  }
-}
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
 
-@media (max-width: 768px) {
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
 
-.dashboard {
-    padding: 0 20px;
-   overflow-x: hidden;
-   margin: 0px;
-  }
+    .close-modal,
+    .close-view-all-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
 
-  .dashboard-header {
-    flex-direction: row; 
-    justify-content: space-between;
-    align-items: flex-start; 
-    padding: 20px;
-    margin-bottom: 23px;
-  }
-  
-  .dashboard-header .title {
-    text-align: left;
-  }
-  
-  .dashboard-header .buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-end;
-  }
-  
-  .dashboard-header button {
-    font-size: 12px;
-    width: 150px; 
-    min-height: 34px;
-    font-size: 12px;
-  }
+    .modal-content.modal-large {
+      max-width: 95%;
+      max-height: 90vh;
+      overflow: auto;
+    }
 
-  .rank-container {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .boost-box {
-    order: 3;
-    margin: 0;
-    min-width: 90px;
-    height: 90px;
-    margin-top: 20px;
-  }
-  .boost {
-    min-width: 80px;
-    height: 80px;
-  }
-  
-  .rank-box.epoch-rank {
-    order: 2;
-    min-height: 74px;
-    max-width: 94%;
+    .modal-large .table {
+      table-layout: auto;
+      width: auto;
+      min-width: 1000px;
+    }
 
-  }
-  
-  .rank-box.overall-rank {
-    order: 1;
-    min-height: 74px;
-    max-width: 94%;
-  }
-  .rank-container {
-    flex-direction: column;
-    gap: 12px;
-  }
+    .full-table td,
+    .full-table th {
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+      word-break: break-word !important;
+    }
 
-  .rank-box {
-    width: 100% !important;
-    min-width: unset;
-    height: 73px; 
-    padding: 0 15px;
-  }
-  
+    /* Sidebar Styles */
+    .airlyft-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      z-index: 999;
+    }
 
-  .rank-title {
-    font-size: 16px;
-  }
-  
-  .rank-value {
-    font-size: 24px;
-  }
-  
+    .airlyft-sidebar.active {
+      right: 0;
+    }
 
-  .boost-p-number {
-    font-size: 24px;
-  }
-  
-  .boost-p-text {
-    font-size: 12px;
-  }
-  .card {
-    width: 100%;
-  }
-  
-  .table-title {
-    font-size: 14px !important;
-  }
-  
-  .button-view-all {
-    padding: 6px 20px;
-  }
-}
+    .close-sidebar {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      z-index: 1001;
+      cursor: pointer;
+    }
 
-@media (max-width: 480px) {
-  .dashboard {
-    padding: 0 10px;
-  }
-  .dashboard-header {
-    padding: 15px;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-  }
-  
-  .dashboard-header .title {
-    font-size: 16px;
-    width: 100%;
-  }
-  .address-copy {
-background-color: #1E1E1E;
-height: 43px;
-font-size: 10px;
-justify-content:  center ;
-align-items: center;
-display: flex;
- }
-  
-  .dashboard-header button {
-    font-size: 12px;
-    width: 150px; 
-    min-height: 34px;
-    font-size: 12px;
-  }
-  .rank-container {
-    gap: 10px;
-  }
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .airlyft-sidebar {
+        width: 100%;
+        right: -100%;
+      }
 
-  .rank-box {
-    padding: 0 10px;
-  }
-  
-  .rank-title {
-    font-size: 16px;
-  }
-  
-  .rank-value {
-    font-size: 24px;
-  }
-  .row {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .left-column {
-    width: 100% !important;
-    margin-bottom: 30px;
-  }
-  .card-number {
-    font-size: 28px;
-  }
-  
-  .table th,
-  .table td {
-    font-size: 10px;
-    padding: 8px;
-  }
-  
-  .dashboard-header .buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-  
+      .modal-content {
+        margin: 20px;
+      }
+    }
 
-  
-  
-}
+    @media (max-width: 1200px) {
+      .rank-container {
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        gap: 20px;
+      }
+
+      .rank-box {
+        width: 100%;
+        ;
+        height: 100px;
+      }
+
+      .boost-box {
+        margin: 0 auto;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .card {
+        width: 100%;
+      }
+
+      .tables-row {
+        flex-direction: column;
+      }
+
+      .content-box {
+
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 0 20px;
+        overflow-x: hidden;
+        margin: 0;
+      }
+
+      .dashboard-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+        margin-bottom: 23px;
+      }
+
+      .dashboard-header .title {
+        text-align: left;
+      }
+
+      .dashboard-header .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .dashboard-header button {
+        font-size: 12px;
+        width: 150px;
+        min-height: 34px;
+      }
+
+      .rank-container {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .boost-box {
+        order: 3;
+        margin: 0;
+        min-width: 90px;
+        height: 90px;
+        margin-top: 20px;
+      }
+
+      .boost {
+        min-width: 80px;
+        height: 80px;
+      }
+
+      .rank-box.epoch-rank {
+        order: 2;
+        min-height: 74px;
+        max-width: 94%;
+      }
+
+      .rank-box.overall-rank {
+        order: 1;
+        min-height: 74px;
+        max-width: 94%;
+      }
+
+      .rank-container {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      .rank-box {
+        width: 100% !important;
+        min-width: unset;
+        height: 73px;
+        padding: 0 15px;
+      }
+
+      .rank-title {
+        font-size: 16px;
+      }
+
+      .rank-value {
+        font-size: 24px;
+      }
+
+      .boost-p-number {
+        font-size: 24px;
+      }
+
+      .boost-p-text {
+        font-size: 12px;
+      }
+
+      .card {
+        width: 100%;
+      }
+
+      .table-title {
+        font-size: 14px !important;
+      }
+
+      .button-view-all {
+        padding: 6px 20px;
+      }
+
+      .read-more {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard {
+        padding: 0 10px;
+      }
+
+      .dashboard-header {
+        padding: 15px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+
+      .dashboard-header .title {
+        font-size: 16px;
+        width: 100%;
+      }
+
+      .address-copy {
+        background-color: #1E1E1E;
+        height: 43px;
+        font-size: 10px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+
+      .dashboard-header button {
+        font-size: 12px;
+        width: 150px;
+        min-height: 34px;
+      }
+
+      .rank-container {
+        gap: 10px;
+      }
+
+      .rank-box {
+        padding: 0 10px;
+      }
+
+      .rank-title {
+        font-size: 16px;
+      }
+
+      .rank-value {
+        font-size: 24px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .left-column {
+        width: 100% !important;
+        margin-bottom: 30px;
+      }
+
+      .card-number {
+        font-size: 28px;
+      }
+
+      .table th,
+      .table td {
+        font-size: 10px;
+        padding: 8px;
+      }
+
+      .dashboard-header .buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+
+    }
   </style>
 </head>
 
@@ -541,58 +640,53 @@ display: flex;
   <div class="dashboard-header">
     <div class="title">Epoch 670 Stats</div>
     <div class="buttons">
-      <button class="open-campaign">Open Campaign</button>
+      <button class="open-campaign">View Campaign</button>
       <button class="read-more">Read More</button>
     </div>
   </div>
   <div class="dashboard">
     <div class="row">
-        <div class="rank-container">
-          <div class="rank-box epoch-rank">
-            <span class="rank-title">Epoch Rank</span>
-            <span class="rank-value">10th of 217</span>
-          </div>
-          <div class="rank-box overall-rank">
-            <span class="rank-title">Overall Rank</span>
-            <span class="rank-value">34th of 240</span>
-          </div>
-
-          <div class="boost-box">
-            <div class="boost">
-              <div class="boost-inner">
-                <p class="boost-p-number">15%</p>
-                <p class="boost-p-text">BOOST</p>
-              </div>
+      <div class="rank-container">
+        <div class="rank-box epoch-rank">
+          <span class="rank-title">Epoch Rank</span>
+          <span class="rank-value">10th of 217</span>
+        </div>
+        <div class="rank-box overall-rank">
+          <span class="rank-title">Overall Rank</span>
+          <span class="rank-value">34th of 240</span>
+        </div>
+        <div class="boost-box">
+          <div class="boost">
+            <div class="boost-inner">
+              <p class="boost-p-number">15%</p>
+              <p class="boost-p-text">BOOST</p>
             </div>
-
           </div>
-
+        </div>
       </div>
     </div>
 
     <div class="container">
+      <!-- Card: NODES -->
       <div class="card">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="X" />
+            <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="Node Icon" />
             <div>
               <p class="card-main-title">NODES</p>
             </div>
           </div>
           <div
-            style="   margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
             <p class="card-number">3</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 54GB
-              Bandwidth</p>
+            <p style="font-size: 12px; color: #5E5E5E;">with 54GB Bandwidth</p>
           </div>
         </div>
-
         <div class="table-box">
           <table class="table">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="table-title" > YOUR NODES</h3>
-              <button class="button-view-all"> View All</button>
-
+              <h3 class="table-title">YOUR NODES</h3>
+              <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
             <tr>
@@ -616,27 +710,26 @@ display: flex;
           </table>
         </div>
       </div>
+      <!-- Card: ZONES -->
       <div class="card" style="border: 1px solid #A04992;">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="X" />
+            <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="Location Icon" />
             <div>
               <p class="card-main-title">ZONES</p>
             </div>
           </div>
           <div
-            style="  margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
             <p class="card-number">10</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 75 Active
-              Users</p>
+            <p style="font-size: 12px; color: #5E5E5E;">with 75 Active Users</p>
           </div>
         </div>
-
         <div class="table-box">
           <table class="table">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="table-title"> YOUR ZONES</h3>
-              <button class="button-view-all"> View All</button>
+              <h3 class="table-title">YOUR ZONES</h3>
+              <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
             <tr>
@@ -660,28 +753,26 @@ display: flex;
           </table>
         </div>
       </div>
+      <!-- Card: REFERRALS -->
       <div class="card" style="border: 1px solid #615BA8;">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="X" />
+            <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
             <div>
               <p class="card-main-title">REFERRALS</p>
             </div>
           </div>
           <div
-            style=" margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
             <p class="card-number">7</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 120
-              Descendants</p>
+            <p style="font-size: 12px; color: #5E5E5E;">with 120 Descendants</p>
           </div>
         </div>
-
         <div class="table-box">
           <table class="table">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h3 class="table-title"> Your child referalls</h3>
-              <button class="button-view-all"> View All</button>
-
+              <h3 class="table-title">Your Child Referrals</h3>
+              <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
             <tr>
@@ -706,16 +797,13 @@ display: flex;
         </div>
       </div>
     </div>
-
     <div class="tables-row">
       <div class="content-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <h3 class="table-title" style="font-size: 16px;" >  YOUR BOOSTS</h3>
-          <button class="button-view-all"> View All</button>
-
+          <h3 class="table-title" style="font-size: 16px;">YOUR BOOSTS</h3>
+          <button class="button-view-all">View All</button>
         </div>
-        <hr style="border: 0.3px solid #E6E6E6; margin: 0px 0;">
-
+        <hr style="border: 0.3px solid #E6E6E6; margin: 0;">
         <table class="table">
           <tr>
             <th>NFT</th>
@@ -736,11 +824,10 @@ display: flex;
       </div>
       <div class="content-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <h3 class="table-title" style="font-size: 16px;" > YOUR PAST REWARDS</h3>
-          <button class="button-view-all"> View All</button>
+          <h3 class="table-title" style="font-size: 16px;">YOUR PAST REWARDS</h3>
+          <button class="button-view-all">View All</button>
         </div>
-        <hr style="border: 0.3px solid #E6E6E6; margin: 0px 0;">
-
+        <hr style="border: 0.3px solid #E6E6E6; margin: 0;">
         <table class="table">
           <tr>
             <th>Epoch</th>
@@ -761,6 +848,112 @@ display: flex;
       </div>
     </div>
   </div>
+
+  <!-- Modal for Read More -->
+  <div class="modal-overlay" id="readMoreModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>About Epoch 670</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>How It Works</h3>
+        <p>
+          This is placeholder content explaining the epoch system. Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <h3>Key Features</h3>
+        <ul>
+          <li>Node performance tracking</li>
+          <li>Real-time ranking system</li>
+          <li>Boost mechanics</li>
+          <li>Reward distribution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Airlyft Sidebar Widget -->
+  <div class="airlyft-sidebar" id="airlyftWidget">
+    <button class="close-sidebar">&times;</button>
+    <iframe src="https://widget.airlyft.one/demo/sidebar/simple" style="width:100%; height:100%; border:none;"></iframe>
+  </div>
+
+  <div class="modal-overlay" id="viewAllModal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2></h2>
+        <button class="close-view-all-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="viewAllContent">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const readMoreBtn = document.querySelector('.read-more');
+      const readMoreModal = document.getElementById('readMoreModal');
+      const closeModalBtn = document.querySelector('.close-modal');
+
+      readMoreBtn.addEventListener('click', () => {
+        readMoreModal.style.display = 'flex';
+      });
+
+      closeModalBtn.addEventListener('click', () => {
+        readMoreModal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === readMoreModal) {
+          readMoreModal.style.display = 'none';
+        }
+      });
+
+      // Airlyft Sidebar
+      const openCampaignBtn = document.querySelector('.open-campaign');
+      const airlyftWidget = document.getElementById('airlyftWidget');
+      const closeSidebarBtn = document.querySelector('.close-sidebar');
+
+      openCampaignBtn.addEventListener('click', () => {
+        airlyftWidget.classList.add('active');
+      });
+
+      closeSidebarBtn.addEventListener('click', () => {
+        airlyftWidget.classList.remove('active');
+      });
+
+      const viewAllModal = document.getElementById('viewAllModal');
+      const viewAllContent = document.getElementById('viewAllContent');
+      const closeViewAllBtn = document.querySelector('.close-view-all-modal');
+
+      const viewAllButtons = document.querySelectorAll('.button-view-all');
+      viewAllButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const tableBox = this.closest('.table-box');
+          const clone = tableBox.cloneNode(true);
+          clone.classList.add('full-table');
+          const innerViewAllBtns = clone.querySelectorAll('.button-view-all');
+          innerViewAllBtns.forEach(function (innerBtn) {
+            innerBtn.remove();
+          });
+          viewAllContent.innerHTML = "";
+          viewAllContent.appendChild(clone);
+          viewAllModal.style.display = 'flex';
+        });
+      });
+
+      closeViewAllBtn.addEventListener('click', () => {
+        viewAllModal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === viewAllModal) {
+          viewAllModal.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

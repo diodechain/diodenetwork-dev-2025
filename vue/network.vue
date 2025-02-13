@@ -569,7 +569,6 @@ export default {
       nodes: {},
       points: {},
       collisionMap: {},
-      base: undefined,
       baseIp: undefined,
       timeoutId: null,
       searchTerm: "",
@@ -618,7 +617,8 @@ if (point.uptime && point.type != "notConnected") {
 }
 
 let tooltipContent = `<div class="tooltip-inner">
-                          <a target="_blank" href="${getAddressLink(point.node_id)}">${point.name}</a>
+                          <a target="_blank" href="https://diode.io/network/#/node/${point.node_id}">${point.name}</a>
+
                           <br>${text}<br>
                         </div>`;
 
