@@ -547,7 +547,8 @@
        
       <g transform="translate(50, 550)" id="labels">
          
-<text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: {{ total_nodes }}</text>          <circle class="connected" r="6" cy="0" />
+          <text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: {{total_nodes}}</text>          
+          <circle class="connected" r="6" cy="0" />
           <text class="map-info" dominant-baseline="middle" y="0" x="12">Connected nodes</text>
           <circle class="notConnected" r="6" cy="30" />
           <text class="map-info" dominant-baseline="middle" y="30" x="12">Not connected nodes</text>
