@@ -11,6 +11,7 @@
       background-color: #ffffff;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
     .dashboard {
@@ -315,90 +316,7 @@
       border-top-right-radius: 10px;
     }
 
-    /* Modal Styles (common) */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .close-modal,
-    .close-view-all-modal {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .modal-content.modal-large {
-      max-width: 95%;
-      max-height: 90vh;
-      overflow: auto;
-    }
-
-    .modal-large .table {
-      table-layout: auto;
-      width: auto;
-      min-width: 1000px;
-    }
-
-    .full-table td,
-    .full-table th {
-      white-space: normal !important;
-      overflow-wrap: break-word !important;
-      word-break: break-word !important;
-    }
-
-    /* Sidebar Styles */
-    .airlyft-sidebar {
-      position: fixed;
-      top: 0;
-      right: -400px;
-      width: 400px;
-      height: 100vh;
-      background: white;
-      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-      transition: right 0.3s ease;
-      z-index: 999;
-    }
-
-    .airlyft-sidebar.active {
-      right: 0;
-    }
-
-    .close-sidebar {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      z-index: 1001;
-      cursor: pointer;
-    }
+  
 
     /* Responsive Styles */
     @media (max-width: 768px) {
@@ -635,30 +553,40 @@
     }
   </style>
 </head>
-
 <body>
-  <div class="dashboard-header">
-    <div class="title">Epoch 670 Stats</div>
-    <div class="buttons">
-      <button class="open-campaign">View Campaign</button>
-      <button class="read-more">Read More</button>
-    </div>
-  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!window.ethereum) {
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (!accounts || accounts.length === 0) {
+          window.location.href = "{{ '/wallet/' | relative_url }}";
+        }
+      } catch (err) {
+        console.error('Failed to retrieve accounts:', err);
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+      }
+    });
+  </script>
+
   <div class="dashboard">
     <div class="row">
-      <div class="rank-container">
+      <div class="rank-container" id="rankContainer">
         <div class="rank-box epoch-rank">
           <span class="rank-title">Epoch Rank</span>
-          <span class="rank-value">10th of 217</span>
+          <span class="rank-value" id="epochRankValue">Loading...</span>
         </div>
         <div class="rank-box overall-rank">
           <span class="rank-title">Overall Rank</span>
-          <span class="rank-value">34th of 240</span>
+          <span class="rank-value" id="overallRankValue">Loading...</span>
         </div>
         <div class="boost-box">
           <div class="boost">
             <div class="boost-inner">
-              <p class="boost-p-number">15%</p>
+              <p class="boost-p-number" id="boostValue">--%</p>
               <p class="boost-p-text">BOOST</p>
             </div>
           </div>
@@ -667,8 +595,7 @@
     </div>
 
     <div class="container">
-      <!-- Card: NODES -->
-      <div class="card">
+      <div class="card" id="nodesCard">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="Node Icon" />
@@ -676,10 +603,9 @@
               <p class="card-main-title">NODES</p>
             </div>
           </div>
-          <div
-            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number">3</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 54GB Bandwidth</p>
+          <div style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="nodesCount">...</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="nodesBandwidth">Fetching...</p>
           </div>
         </div>
         <div class="table-box">
@@ -689,29 +615,24 @@
               <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
-            <tr>
-              <th>Epoch Rank</th>
-              <th>Bandwidth</th>
-              <th>ID</th>
-              <th>Meta</th>
-            </tr>
-            <tr>
-              <td>35</td>
-              <td>124 GB</td>
-              <td>0x92f1...</td>
-              <td>Denver, CO</td>
-            </tr>
-            <tr>
-              <td>345</td>
-              <td>70 GB</td>
-              <td>0x2021...</td>
-              <td>São Paulo</td>
-            </tr>
+
+            <thead>
+              <tr>
+                <th>Epoch Rank</th>
+                <th>Bandwidth</th>
+                <th>ID</th>
+                <th>Meta</th>
+              </tr>
+            </thead>
+            <tbody id="nodesTableBody">
+              <tr><td colspan="4">Loading data...</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
+
       <!-- Card: ZONES -->
-      <div class="card" style="border: 1px solid #A04992;">
+      <div class="card" style="border: 1px solid #A04992;" id="zonesCard">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="Location Icon" />
@@ -719,10 +640,9 @@
               <p class="card-main-title">ZONES</p>
             </div>
           </div>
-          <div
-            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number">10</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 75 Active Users</p>
+          <div style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="zonesCount">0</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">0 Active Users</p>
           </div>
         </div>
         <div class="table-box">
@@ -732,29 +652,23 @@
               <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
-            <tr>
-              <th>Epoch Rank</th>
-              <th>Active Users ETD</th>
-              <th>ID</th>
-              <th>Meta</th>
-            </tr>
-            <tr>
-              <td>35</td>
-              <td>124 GB</td>
-              <td>0x92f1...</td>
-              <td>Denver, CO</td>
-            </tr>
-            <tr>
-              <td>345</td>
-              <td>70 GB</td>
-              <td>0x2021...</td>
-              <td>São Paulo</td>
-            </tr>
+            <thead>
+              <tr>
+                <th>Epoch Rank</th>
+                <th>Active Users ETD</th>
+                <th>ID</th>
+                <th>Meta</th>
+              </tr>
+            </thead>
+            <tbody id="zonesTableBody">
+              <tr><td colspan="4">Loading data...</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
+
       <!-- Card: REFERRALS -->
-      <div class="card" style="border: 1px solid #615BA8;">
+      <div class="card" style="border: 1px solid #615BA8;" id="referralsCard">
         <div class="card-title">
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
@@ -762,10 +676,9 @@
               <p class="card-main-title">REFERRALS</p>
             </div>
           </div>
-          <div
-            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number">7</p>
-            <p style="font-size: 12px; color: #5E5E5E;">with 120 Descendants</p>
+          <div style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="referralCount">--</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount">-- Descendants</p>
           </div>
         </div>
         <div class="table-box">
@@ -775,28 +688,22 @@
               <button class="button-view-all">View All</button>
             </div>
             <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
-            <tr>
-              <th>Username</th>
-              <th>Nodes</th>
-              <th>Descendants</th>
-              <th>Descendant Nodes</th>
-            </tr>
-            <tr>
-              <td>35</td>
-              <td>124 GB</td>
-              <td>0x92f1...</td>
-              <td>Denver, CO</td>
-            </tr>
-            <tr>
-              <td>345</td>
-              <td>70 GB</td>
-              <td>0x2021...</td>
-              <td>São Paulo</td>
-            </tr>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Nodes</th>
+                <th>Descendants</th>
+                <th>Descendant Nodes</th>
+              </tr>
+            </thead>
+            <tbody id="referralsTableBody">
+              <tr><td colspan="4">Loading data...</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
+
     <div class="tables-row">
       <div class="content-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -849,109 +756,102 @@
     </div>
   </div>
 
-  <!-- Modal for Read More -->
-  <div class="modal-overlay" id="readMoreModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>About Epoch 670</h2>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <h3>How It Works</h3>
-        <p>
-          This is placeholder content explaining the epoch system. Lorem ipsum dolor sit amet, consectetur adipiscing
-          elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <h3>Key Features</h3>
-        <ul>
-          <li>Node performance tracking</li>
-          <li>Real-time ranking system</li>
-          <li>Boost mechanics</li>
-          <li>Reward distribution</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Airlyft Sidebar Widget -->
-  <div class="airlyft-sidebar" id="airlyftWidget">
-    <button class="close-sidebar">&times;</button>
-    <iframe src="https://widget.airlyft.one/demo/sidebar/simple" style="width:100%; height:100%; border:none;"></iframe>
-  </div>
-
-  <div class="modal-overlay" id="viewAllModal">
-    <div class="modal-content modal-large">
-      <div class="modal-header">
-        <h2></h2>
-        <button class="close-view-all-modal">&times;</button>
-      </div>
-      <div class="modal-body" id="viewAllContent">
-      </div>
-    </div>
-  </div>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const readMoreBtn = document.querySelector('.read-more');
-      const readMoreModal = document.getElementById('readMoreModal');
-      const closeModalBtn = document.querySelector('.close-modal');
+    document.addEventListener('DOMContentLoaded', async () => {
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      if (!accounts || accounts.length === 0) return;
+      const walletAddress = accounts[0];
 
-      readMoreBtn.addEventListener('click', () => {
-        readMoreModal.style.display = 'flex';
-      });
+      const baseURL = "https://0xb6a70432a8bbbcb9ce019c9a9c82fd0f651be121.diode.link:8080";
 
-      closeModalBtn.addEventListener('click', () => {
-        readMoreModal.style.display = 'none';
-      });
-
-      window.addEventListener('click', (e) => {
-        if (e.target === readMoreModal) {
-          readMoreModal.style.display = 'none';
-        }
-      });
-
-      // Airlyft Sidebar
-      const openCampaignBtn = document.querySelector('.open-campaign');
-      const airlyftWidget = document.getElementById('airlyftWidget');
-      const closeSidebarBtn = document.querySelector('.close-sidebar');
-
-      openCampaignBtn.addEventListener('click', () => {
-        airlyftWidget.classList.add('active');
-      });
-
-      closeSidebarBtn.addEventListener('click', () => {
-        airlyftWidget.classList.remove('active');
-      });
-
-      const viewAllModal = document.getElementById('viewAllModal');
-      const viewAllContent = document.getElementById('viewAllContent');
-      const closeViewAllBtn = document.querySelector('.close-view-all-modal');
-
-      const viewAllButtons = document.querySelectorAll('.button-view-all');
-      viewAllButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const tableBox = this.closest('.table-box');
-          const clone = tableBox.cloneNode(true);
-          clone.classList.add('full-table');
-          const innerViewAllBtns = clone.querySelectorAll('.button-view-all');
-          innerViewAllBtns.forEach(function (innerBtn) {
-            innerBtn.remove();
+      async function getData(endpoint) {
+        try {
+          const res = await fetch(`${baseURL}${endpoint}`, {
+            method: "GET",
+            headers: {
+              "Authorization": walletAddress
+            }
           });
-          viewAllContent.innerHTML = "";
-          viewAllContent.appendChild(clone);
-          viewAllModal.style.display = 'flex';
-        });
-      });
-
-      closeViewAllBtn.addEventListener('click', () => {
-        viewAllModal.style.display = 'none';
-      });
-
-      window.addEventListener('click', (e) => {
-        if (e.target === viewAllModal) {
-          viewAllModal.style.display = 'none';
+          if (!res.ok) {
+            console.warn("Fetch failed:", res.status, res.statusText);
+            return null;
+          }
+          return await res.json();
+        } catch (err) {
+          console.error("Fetch error at", endpoint, err);
+          return null;
         }
-      });
+      }
+
+      const referralData = await getData("/user/referral");
+      console.log("referralData:", referralData);
+
+      if (referralData) {
+        document.getElementById('referralCount').textContent = referralData.count ?? "--";
+        document.getElementById('descendantCount').textContent = (referralData.totalDescendants ?? 0) + " Descendants";
+
+        const referralsTbody = document.getElementById("referralsTableBody");
+        if (referralData.children && referralData.children.length > 0) {
+          referralsTbody.innerHTML = ""; 
+          referralData.children.forEach(child => {
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+              <td>${child.username}</td>
+              <td>${child.nodeCount}</td>
+              <td>${child.descendants}</td>
+              <td>${child.descendantNodes}</td>
+            `;
+            referralsTbody.appendChild(tr);
+          });
+        } else {
+          referralsTbody.innerHTML = "<tr><td colspan='4'>No referrals yet.</td></tr>";
+        }
+      }
+
+      const nodesData = await getData("/nodes/list");
+      console.log("nodesData:", nodesData);
+      if (nodesData) {
+        document.getElementById('nodesCount').textContent = nodesData.total ?? 0;
+        document.getElementById('nodesBandwidth').textContent = `with ${nodesData.totalBandwidth} Bandwidth`;
+
+        const nodesTbody = document.getElementById("nodesTableBody");
+        if (nodesData.items && nodesData.items.length > 0) {
+          nodesTbody.innerHTML = ""; 
+          nodesData.items.forEach(node => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${node.rank}</td>
+              <td>${node.bandwidth}</td>
+              <td>${node.id}</td>
+              <td>${node.meta}</td>
+            `;
+            nodesTbody.appendChild(tr);
+          });
+        } else {
+          nodesTbody.innerHTML = "<tr><td colspan='4'>No nodes found.</td></tr>";
+        }
+      }
+
+  
+      const epochRankData = await getData("/user/epoch-rank");
+      const overallRankData = await getData("/user/overall-rank");
+
+      if (epochRankData) {
+        document.getElementById("epochRankValue").textContent = `${epochRankData.rank}th of ${epochRankData.total}`;
+      }
+      if (overallRankData) {
+        document.getElementById("overallRankValue").textContent = `${overallRankData.rank}th of ${overallRankData.total}`;
+      }
+
+      const boostValueEl = document.getElementById("boostValue");
+      if (epochRankData && epochRankData.boost) {
+        boostValueEl.textContent = epochRankData.boost + "%";
+      } else {
+        boostValueEl.textContent = "0%";
+      }
+
+
     });
   </script>
 </body>

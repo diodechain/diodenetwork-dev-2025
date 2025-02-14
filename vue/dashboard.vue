@@ -1,5 +1,6 @@
+
 <template>
-  <div style="background-color: #FAFAFA; min-height:700px; padding-top: 50px;">
+  <div id="current-epoch-section" style="background-color: #FAFAFA; min-height:700px; padding-top: 50px;">
     <div class="navbar-epoch">
       <h2 style="margin: 0;">Current Epoch</h2>
       <span style="margin: 0;">Epoch {{ currentEpoch }} Dashboard</span>

@@ -5,7 +5,8 @@ title: "Home"
 
 <!-- HERO SECTION -->
 <div id="hero-section" class="hero-section">
-  <a href="{{ '/app/' | relative_url }}" class="launch-app-btn">Launch App</a>
+
+  <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Launch App</a>
   <h1 class="hero-heading">Uncompromising Privacy.</h1>
   <p class="hero-subtext">
     Diode Network delivers privacy-first communication solutions for  <br/> 

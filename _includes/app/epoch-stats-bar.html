@@ -1,0 +1,302 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diode Network Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #000000;
+    }
+    .dashboard {
+      max-width: 1392px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      color: white;
+      border-radius: 0;
+      margin-bottom: 30px;
+    }
+    .dashboard-header .title {
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .dashboard-header .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .dashboard-header button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .open-campaign {
+      background-color: black;
+      color: white;
+    }
+    .read-more {
+      background-color: white;
+      color: black;
+    }
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 0 20px;
+        overflow-x: hidden;
+        margin: 0;
+      }
+
+      .dashboard-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+        margin-bottom: 23px;
+      }
+
+      .dashboard-header .title {
+        text-align: left;
+      }
+
+      .dashboard-header .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .dashboard-header button {
+        font-size: 12px;
+        width: 150px;
+        min-height: 34px;
+      }
+
+      .rank-container {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .boost-box {
+        order: 3;
+        margin: 0;
+        min-width: 90px;
+        height: 90px;
+        margin-top: 20px;
+      }
+
+      .read-more {
+        display: none;
+      }
+    }
+
+/* Modal Styles (common) */
+.modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .close-modal,
+    .close-view-all-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .modal-content.modal-large {
+      max-width: 95%;
+      max-height: 90vh;
+      overflow: auto;
+    }
+    .modal-large .table {
+      table-layout: auto;
+      width: auto;
+      min-width: 1000px;
+    }
+    .full-table td,
+    .full-table th {
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+      word-break: break-word !important;
+    }
+    /* Sidebar Styles */
+    .airlyft-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      transition: right 0.3s ease;
+      z-index: 999;
+    }
+    .airlyft-sidebar.active {
+      right: 0;
+    }
+    .close-sidebar {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      z-index: 1001;
+      cursor: pointer;
+    }
+  
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <div class="title">Epoch 670 Stats</div>
+    <div class="buttons">
+      <button class="open-campaign">View Campaign</button>
+      <button class="read-more">Read More</button>
+    </div>
+  </div>
+
+    <!-- Airlyft Sidebar Widget -->
+    <div class="airlyft-sidebar" id="airlyftWidget">
+      <button class="close-sidebar">&times;</button>
+      <iframe src="https://widget.airlyft.one/demo/sidebar/simple" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+  
+    <div class="modal-overlay" id="viewAllModal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2></h2>
+          <button class="close-view-all-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="viewAllContent">
+        </div>
+      </div>
+    </div>
+    <!-- Modal for Read More -->
+    <div class="modal-overlay" id="readMoreModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>About Epoch 670</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <h3>How It Works</h3>
+          <p>
+            This is placeholder content explaining the epoch system. Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+          <h3>Key Features</h3>
+          <ul>
+            <li>Node performance tracking</li>
+            <li>Real-time ranking system</li>
+            <li>Boost mechanics</li>
+            <li>Reward distribution</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const readMoreBtn = document.querySelector('.read-more');
+        const readMoreModal = document.getElementById('readMoreModal');
+        const closeModalBtn = document.querySelector('.close-modal');
+  
+        if (readMoreBtn) {
+          readMoreBtn.addEventListener('click', () => {
+            readMoreModal.style.display = 'flex';
+          });
+        }
+  
+        if (closeModalBtn) {
+          closeModalBtn.addEventListener('click', () => {
+            readMoreModal.style.display = 'none';
+          });
+        }
+  
+        window.addEventListener('click', (e) => {
+          if (e.target === readMoreModal) {
+            readMoreModal.style.display = 'none';
+          }
+        });
+  
+        // Airlyft Sidebar
+        const openCampaignBtn = document.querySelector('.open-campaign');
+        const airlyftWidget = document.getElementById('airlyftWidget');
+        const closeSidebarBtn = document.querySelector('.close-sidebar');
+  
+        if (openCampaignBtn) {
+          openCampaignBtn.addEventListener('click', () => {
+            airlyftWidget.classList.add('active');
+          });
+        }
+  
+        closeSidebarBtn.addEventListener('click', () => {
+          airlyftWidget.classList.remove('active');
+        });
+  
+        const viewAllModal = document.getElementById('viewAllModal');
+        const viewAllContent = document.getElementById('viewAllContent');
+        const closeViewAllBtn = document.querySelector('.close-view-all-modal');
+        const viewAllButtons = document.querySelectorAll('.button-view-all');
+  
+        viewAllButtons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            const tableBox = this.closest('.table-box');
+            const clone = tableBox.cloneNode(true);
+            clone.classList.add('full-table');
+            const innerViewAllBtns = clone.querySelectorAll('.button-view-all');
+            innerViewAllBtns.forEach(function (innerBtn) {
+              innerBtn.remove();
+            });
+            viewAllContent.innerHTML = "";
+            viewAllContent.appendChild(clone);
+            viewAllModal.style.display = 'flex';
+          });
+        });
+  
+        if (closeViewAllBtn) {
+          closeViewAllBtn.addEventListener('click', () => {
+            viewAllModal.style.display = 'none';
+          });
+        }
+  
+        window.addEventListener('click', (e) => {
+          if (e.target === viewAllModal) {
+            viewAllModal.style.display = 'none';
+          }
+        });
+      
+      });
+    </script>
+</body>
+</html>

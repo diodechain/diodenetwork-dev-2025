@@ -6,8 +6,8 @@ permalink: /wallet/
 
 <div id="wallet">
   {% include app/navbar.html %}
-    {% include wallet/connect-wallet.html %}
-        {% include app/footer.html %}
-
+  {% include app/epoch-stats-bar.html %}
+  {% include wallet/connect-wallet.html %}
+  {% include app/footer.html %}
 </div>
 

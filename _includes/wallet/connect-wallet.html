@@ -8,45 +8,7 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #ffffff;
-    }
-    .dashboard {
-      max-width: 1392px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 30px;
-      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
-      color: white;
-      border-radius: 0;
-      margin-bottom: 30px;
-    }
-    .dashboard-header .title {
-      font-size: 20px;
-      font-weight: 500;
-    }
-    .dashboard-header .buttons {
-      display: flex;
-      gap: 10px;
-    }
-    .dashboard-header button {
-      padding: 8px 15px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .open-campaign {
-      background-color: black;
-      color: white;
-    }
-    .read-more {
-      background-color: white;
-      color: black;
+      background-color: #000000;
     }
     .center-container {
       display: flex;
@@ -54,32 +16,103 @@
       align-items: center;
       height: calc(100vh - 270px); 
     }
-
-    .connect-metamask {
-      padding: 29px 67px;
-      font-size: 24px;
-      font-weight: semi-bold;
-      width: 460px;
-      height: 94px;
+    .wallet-card {
+      background-color: #141414;
       color: white;
-      border: none;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 500px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .wallet-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+    .wallet-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .wallet-info {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
+    .connect-button {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to right, #D73E53, #A04992, #615BA8);
+      color: white;
+      padding: 12px 20px;
       border-radius: 10px;
+      font-size: 24px;
+      font-weight: 500;
+      border: none;
       cursor: pointer;
-      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      width: 100%;
+    }
+    .connect-button .icon {
+      margin-right: 10px;
+      font-size: 18px;
     }
   </style>
 </head>
+
 <body>
-  <div class="dashboard-header">
-    <div class="title">Epoch 670 Stats</div>
-    <div class="buttons">
-      <button class="open-campaign">Open Campaign</button>
-      <button class="read-more">Read More</button>
-    </div>
-  </div>
-  
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            window.location.href = '{{ "/app/" | relative_url }}';
+          }
+        } catch (error) {
+          console.error("Error checking connected accounts:", error);
+        }
+      }
+    });
+  </script>
+
   <div class="center-container">
-    <button class="connect-metamask">Connect Metamask Wallet</button>
+    <div class="wallet-card">
+      <div class="wallet-icon">
+        <img src="{{ '/assets/images/icons/wallet-div.png' | relative_url }}"/>
+      </div>
+      <div class="wallet-title">Connect Wallet</div>
+      <div class="wallet-info">Connect your wallet to start interacting with the Diode Network</div>
+      <button class="connect-button" id="connectWalletBtn">
+        <img
+          src="{{ '/assets/images/icons/wallet.svg' | relative_url }}"
+          style="margin-right: 10px;"
+          alt="Wallet Icon"
+        />
+        Connect Metamask Wallet
+      </button>
+    </div>  
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const connectWalletBtn = document.getElementById('connectWalletBtn');
+      connectWalletBtn.addEventListener('click', async () => {
+        if (window.ethereum) {
+          try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            window.location.href = '{{ "/app/" | relative_url }}';
+          } catch (error) {
+            console.error("User rejected request or error occurred:", error);
+          }
+        } else {
+          alert('Metamask not detected. Please install Metamask extension and try again.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
