@@ -6,21 +6,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
+   
       font-family: 'Poppins', sans-serif;
       background-color: #000000;
     }
     .center-container {
       display: flex;
+         margin-top: -30px;
+      background: url('{{ "assets/images/bg-wallet.png" | relative_url }}') center center / cover no-repeat;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 270px); 
+      height: 90vh;
     }
     .wallet-card {
       background-color: #141414;
       color: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 15px;
+      margin-left: 50px;
+      margin-top: 100px;
       text-align: center;
       width: 500px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);

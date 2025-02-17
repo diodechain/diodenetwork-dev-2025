@@ -375,6 +375,7 @@ body {
   align-items: flex-start;
   padding: 1rem;
   z-index: 9999;
+
 }
 
 .tooltip-inner a {
@@ -385,6 +386,7 @@ body {
   font-size: 12px;
   display: block;
   cursor: pointer;
+
 }
 
 .tooltip-inner strong {
@@ -401,7 +403,7 @@ body {
 
 .tooltip {
   position: fixed;
-  pointer-events: auto;
+
   z-index: 9999;
   display: block;
   font-family: "Titillium Web", Arial, sans-serif;
@@ -870,7 +872,9 @@ body {
   .nav-link {
     margin-bottom: 10px;
   }
-
+  .nav-link.selected::before {
+    left: -10px; 
+  }
   .profile-image-wrapper {
     width: 120px;
     height: 120px;

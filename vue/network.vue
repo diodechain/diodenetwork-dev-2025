@@ -542,11 +542,12 @@
               v-bind:x1="point.x" v-bind:y1="point.y" v-bind:x2="points[baseIp].x" v-bind:y2="points[baseIp].y" />
           -->
           <circle v-for="point in points" v-bind:class="point.type" @mouseover="tooltip(point, $event, true)"
-            @click="tooltip(point, event, false)" :key="point.ip" v-bind:cx="point.x" v-bind:cy="point.y" r="4" />
+            @click="tooltip(point, $event, false)" :key="point.ip" v-bind:cx="point.x" v-bind:cy="point.y" r="4" />
         </g>
        
       <g transform="translate(50, 550)" id="labels">
          
+          
           <text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: {{total_nodes}}</text>          
           <circle class="connected" r="6" cy="0" />
           <text class="map-info" dominant-baseline="middle" y="0" x="12">Connected nodes</text>
@@ -588,24 +589,63 @@ export default {
   mounted: function () {
     this.makeDraggable(this.$refs.svg);
   },
-  watch: {
-    points: function() {
-        this.total_nodes = Object.keys(this.points).length + " public, "+ (this.network.length - Object.keys(this.points).length) + " private"
-    }
-  },
+watch: {
+  points: {
+    handler() {
+      this.total_nodes = Object.keys(this.points).length + " public, " +
+                         (this.network.length - Object.keys(this.points).length) + " private";
+    },
+    deep: true
+  }
+},
 
-  methods: {
-     hideTooltip() {
-      const tooltipLayout = document.getElementById("map-tooltip");
-      tooltipLayout.style.display = 'none';
+methods: {
+   handleScroll() {
+    this.isScrolling = true;
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      this.isScrolling = false;
+    }, 200);
+  },
+    tooltip(point, event, hovered) {
+      let text = "Location: " + point.city + " (" + point.ip + ")</br>";
+      text += "Version: " + point.version + " </br>";
+
+      if (point.uptime) text += "Uptime: " + point.uptime + "s uptime / ";
+
+      text += point.retries + " reconnects";
+
+      let tooltipContent = `<div class="tooltip-inner">
+                                <a href="${getAddressLink(point.node_id)}">${point.name}</a>
+                                <br>${text}<br>
+                              </div>`;
+
+      let tooltipLayout = document.getElementById("map-tooltip");
+
+      if (tooltipLayout.innerHTML !== tooltipContent) {
+        tooltipLayout.innerHTML = tooltipContent;
+        let offsetLeft = tooltipLayout.clientWidth > 350 ? 80 : 40;
+        tooltipLayout.style.transform = `translate3d(${event.layerX - offsetLeft}px, ${event.layerY + 80}px, 0px)`;
+      }
+
+      tooltipLayout.style.display = 'block';
+
+      if (this.timeoutId) { clearTimeout(this.timeoutId); }
+ if (this.isScrolling) {
+       document.getElementById("map-tooltip").style.display = "none";
+    }
+      if (hovered) {
+        this.timeoutId = setTimeout(function() {
+          document.getElementById("map-tooltip").style.display = "none";
+        }, 2);
+      }
+
+      console.log(event);
     },
  tooltip(point, event, hovered) {
     let tooltipLayout = document.getElementById("map-tooltip");
     
-    if (!hovered) {
-      tooltipLayout.style.display = 'none';
-      return;
-    }
+ 
 
   let text = "<strong>Location:</strong> <span>" + (point.city || "Unknown") + " (" + point.ip + ")</span></br>";
 text += "<strong>Version:</strong> <span>" + point.version + "</span></br>";
@@ -633,6 +673,13 @@ let tooltipContent = `<div class="tooltip-inner">
       tooltipLayout.style.left = left + 'px';
       tooltipLayout.style.top = top + 'px';
     }
+          tooltipLayout.style.display = 'block';
+          if (this.timeoutId) { clearTimeout(this.timeoutId); }
+      if (hovered) {
+        this.timeoutId = setTimeout(function() {
+          document.getElementById("map-tooltip").style.display = "none";
+        }, 1000);
+      }
   },
 load: async function() {
   try {

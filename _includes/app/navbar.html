@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,10 +14,10 @@
 
     .navbar {
       display: flex;
+      padding: 10px 20px;
       align-items: center;
       justify-content: space-between;
       background: url('{{ "assets/images/bg-app2.png" | relative_url }}') center center / cover no-repeat;
-      padding: 10px 20px;
       color: white;
     }
 
@@ -35,6 +36,7 @@
       align-items: center;
       font-size: 14px;
     }
+
     .navbar-middle .username {
       font-weight: 500;
       font-size: 20px;
@@ -47,21 +49,22 @@
       padding: 12px 20px;
       border-radius: 5px;
       background-color: #323131;
-      display: flex;
-      align-items: center;
       justify-content: center;
     }
+
     .address-text {
       font-family: monospace;
       font-size: 12px;
       color: #ffffff;
     }
+
     .copy-button {
       background: none;
       border: none;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     .copy-button img {
       width: 12px;
       height: 14px;
@@ -74,6 +77,7 @@
       align-items: center;
       gap: 12px;
     }
+
     .profile-image-wrapper {
       position: relative;
       display: flex;
@@ -86,26 +90,30 @@
       border-image-slice: 1;
       border-image-source: linear-gradient(to right, #d73e53 0%, #a04992 48%, #615ba8 100%);
     }
+
     .profile-image {
-      width: 56px;
-      height: 56px;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       object-fit: cover;
     }
+
     .wallet-info {
       display: flex;
       flex-direction: column;
       font-size: 14px;
       text-align: right;
     }
+
     .wallet-address {
       font-family: monospace;
       font-size: 12px;
       color: #ffffff;
     }
+
     .wallet-balance {
       font-size: 20px;
       color: #ffffff;
@@ -119,46 +127,55 @@
           'left right'
           'middle middle';
         gap: 20px;
-        padding: 15px;
       }
+
       .navbar-left {
         grid-area: left;
         width: auto;
       }
+
       .navbar-right {
         grid-area: right;
         width: auto;
         justify-content: flex-end;
         gap: 8px;
       }
+
       .navbar-middle {
         grid-area: middle;
         width: 100%;
       }
+
       .wallet-info {
         align-items: flex-end;
         font-size: 12px;
       }
+
       .wallet-address {
         font-size: 10px;
       }
+
       .wallet-balance {
         font-size: 14px;
       }
+
       .address-copy {
         width: 100%;
         max-width: 350px;
         margin: 0 auto;
         box-sizing: border-box;
       }
+
       .icon-logo {
         width: 180px;
         height: auto;
       }
+
       .profile-image-wrapper {
         border: 2px solid;
         border-radius: 20px;
       }
+
       .profile-image {
         width: 34px;
         height: 34px;
@@ -167,16 +184,15 @@
     }
 
     @media (max-width: 480px) {
-      .navbar {
-        padding: 20px;
-      }
       .wallet-info {
         font-size: 10px;
         align-items: flex-start;
       }
+
       .wallet-balance {
         font-size: 16px;
       }
+
       .profile-image-wrapper {
         width: 40px;
         height: 40px;
@@ -185,6 +201,7 @@
         border-image-slice: 1;
         border-image-source: linear-gradient(to right, #d73e53 0%, #a04992 48%, #615ba8 100%);
       }
+
       .profile-image {
         width: 32px;
         height: 32px;
@@ -196,38 +213,26 @@
 
 <body>
   <div class="navbar">
-    <!-- Always visible: logo part -->
-     <a href="/../diodenetwork-dev-2025/#hero-section"  >   <div class="navbar-left">
-      <img
-        style="width: 180px;"
-        src="{{ '/assets/images/logo.svg' | relative_url }}"
-        alt="Logo"
-        class="icon-logo"
-      />
-    </div></a>
- 
+    <a href="/../diodenetwork-dev-2025/#hero-section">
+      <div class="navbar-left">
+        <img style="width: 180px;" src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Logo" class="icon-logo" />
+      </div>
+    </a>
 
     <div class="navbar-middle" id="navbarMiddle">
       <div class="username" id="username"></div>
       <div class="address-copy" id="addressCopy">
         <span class="address-text" id="fullAddress"></span>
         <button class="copy-button" id="copyButton">
-          <img
-            src="{{ '/assets/images/icons/copy.png' | relative_url }}"
-            alt="Copy Address"
-          />
+          <img src="{{ '/assets/images/icons/copy.png' | relative_url }}" alt="Copy Address" />
         </button>
       </div>
     </div>
 
     <div class="navbar-right" id="navbarRight">
       <div class="profile-image-wrapper">
-        <img
-         src="{{ '/assets/images/avatar-logo.svg' | relative_url }}"
-          alt="User Avatar"
-          class="profile-image"
-          id="profileImage"
-        />
+        <img src="{{ '/assets/images/avatar-logo.svg' | relative_url }}" alt="User Avatar" class="profile-image"
+          id="profileImage" />
       </div>
       <div class="wallet-info">
         <div class="wallet-address" id="shortWalletAddress"></div>
@@ -238,10 +243,10 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const navbar = document.querySelector('.navbar');
       const navbarMiddle = document.getElementById('navbarMiddle');
       const navbarRight = document.getElementById('navbarRight');
       const usernameEl = document.getElementById('username');
-      const addressCopy = document.getElementById('addressCopy');
       const fullAddressEl = document.getElementById('fullAddress');
       const shortAddressEl = document.getElementById('shortWalletAddress');
       const walletBalanceEl = document.getElementById('walletBalance');
@@ -258,7 +263,7 @@
       }
 
       function getDiceBearAvatarUrl(address) {
-        return `https://api.dicebear.com/7.x/thumbs/svg?seed=${encodeURIComponent(address)}&size=64`;
+        return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(address)}&size=64`;
       }
 
       if (window.ethereum) {
@@ -271,11 +276,9 @@
               const walletAddress = accounts[0];
 
               usernameEl.textContent = "@user";
-
               fullAddressEl.textContent = walletAddress;
               shortAddressEl.textContent = shortenAddress(walletAddress);
-
-              walletBalanceEl.textContent = SAMPLE_BALANCE; // or result from a balance fetch
+              walletBalanceEl.textContent = SAMPLE_BALANCE;
 
               profileImg.src = getDiceBearAvatarUrl(walletAddress);
 
@@ -294,7 +297,11 @@
                 });
               }
             } else {
-              console.warn('No Metamask accounts found. The user may not be connected.');
+              navbarMiddle.style.display = 'none';
+              navbarRight.style.display = 'none';
+              navbar.style.backgroundImage = 'none';
+              navbar.style.padding = '20px 30px';
+              console.warn('No Metamask accounts found. Wallet is not connected.');
             }
           })
           .catch((err) => console.error('Failed to retrieve accounts:', err));
@@ -304,4 +311,5 @@
     });
   </script>
 </body>
+
 </html>
