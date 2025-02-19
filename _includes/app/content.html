@@ -995,7 +995,7 @@
         try {
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
-            headers: { "Authorization": "0xa32738db31044df642eed7e973a0f7dd6654eccd" }
+            headers: { "Authorization": walletAddress }
           });
           if (!res.ok) {
             console.warn("Fetch failed:", res.status, res.statusText);
