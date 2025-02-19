@@ -640,6 +640,7 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   </head>
 
   <body>
@@ -1196,6 +1197,84 @@
         `).join('');
         showModal('rewardsModal');
       };
+
+      const provider = new ethers.providers.JsonRpcProvider("https://rpc.api.moonbeam.network");
+
+      const NFT_BOOSTS = {
+        "0xf79e90e148b19f63ecbe7f2e2f846730122ae881": {
+          name: "OG Ambassador",
+          baseBoost: 2,
+        },
+        "0x1234abcd1234abcd1234abcd1234abcd1234abcd": {
+          name: "OG Node",
+          baseBoost: 3,
+        }
+      };
+
+      const ERC721_ABI = [
+        "function balanceOf(address owner) view returns (uint256)"
+      ];
+
+      let userBoosts = [];
+      let totalBoostPercent = 0;
+
+      for (const [nftAddress, data] of Object.entries(NFT_BOOSTS)) {
+        try {
+          const nftContract = new ethers.Contract(nftAddress, ERC721_ABI, provider);
+          const bal = await nftContract.balanceOf(walletAddress);
+
+          if (bal.gt(0)) {
+            const quantity = bal.toNumber();
+            const nftBoost = data.baseBoost * quantity;
+            userBoosts.push({
+              nft: data.name,
+              quantity: quantity,
+              totalBoost: nftBoost + "%"
+            });
+            totalBoostPercent += nftBoost;
+          }
+        } catch (err) {
+          console.error(`Error checking balanceOf for ${data.name}:`, err);
+        }
+      }
+
+      const boostsTable = document.querySelector(".tables-row .content-box table.table");
+      const oldRows = boostsTable.querySelectorAll("tr:not(:first-child)");
+      oldRows.forEach(row => row.remove());
+
+      if (userBoosts.length === 0) {
+        const row = boostsTable.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 3;
+        cell.textContent = "No matching NFTs found";
+      } else {
+        userBoosts.forEach(boostItem => {
+          const row = boostsTable.insertRow();
+          let cell = row.insertCell();
+          cell.textContent = boostItem.nft;
+          cell = row.insertCell();
+          cell.textContent = boostItem.quantity;
+          cell = row.insertCell();
+          cell.textContent = boostItem.totalBoost;
+        });
+      }
+
+      document.getElementById("boostValue").textContent = totalBoostPercent + "%";
+
+      document.querySelector('.content-box:first-of-type .button-view-all').onclick = function() {
+        const boostsModalBody = document.getElementById('boostsModalBody');
+        boostsModalBody.innerHTML = userBoosts.length === 0 
+          ? '<tr><td colspan="3">No matching NFTs found</td></tr>'
+          : userBoosts.map(boost => `
+              <tr>
+                <td>${boost.nft}</td>
+                <td>${boost.quantity}</td>
+                <td>${boost.totalBoost}</td>
+              </tr>
+            `).join('');
+        document.getElementById('boostsModal').style.display = 'block';
+      };
+
     });
   </script>
   </body>
