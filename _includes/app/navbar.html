@@ -242,58 +242,88 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const navbar = document.querySelector('.navbar');
       const navbarMiddle = document.getElementById('navbarMiddle');
       const navbarRight = document.getElementById('navbarRight');
       const usernameEl = document.getElementById('username');
-      const fullAddressEl = document.getElementById('fullAddress');
-      const shortAddressEl = document.getElementById('shortWalletAddress');
+      const fullAddressEl = document.getElementById('fullAddress'); 
+      const shortAddressEl = document.getElementById('shortWalletAddress'); 
       const walletBalanceEl = document.getElementById('walletBalance');
       const profileImg = document.getElementById('profileImage');
       const copyBtn = document.getElementById('copyButton');
-
+  
       const copyIconUrl = "{{ '/assets/images/icons/copy.png' | relative_url }}";
       const checkIconUrl = "{{ '/assets/images/icons/check-white.png' | relative_url }}";
-
+  
       const SAMPLE_BALANCE = "12 DIODE";
-
+  
       function shortenAddress(address) {
         return address.slice(0, 6) + '...' + address.slice(-4);
       }
-
+  
       function getDiceBearAvatarUrl(address) {
         return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(address)}&size=64`;
       }
-
+      
+      async function getData(endpoint) {
+        try {
+          const baseURL = "https://registrar-prod.diode.link:8008"; 
+          const res = await fetch(`${baseURL}${endpoint}`, {
+            method: "GET",
+            headers: { "Authorization": "0x7102533B13b950c964efd346Ee15041E3e55413f" }
+          });
+          if (!res.ok) {
+            console.warn("Fetch failed:", res.status, res.statusText);
+            return null;
+          }
+          return await res.json();
+        } catch (err) {
+          console.error("Error fetching", endpoint, err);
+          return null;
+        }
+      }
+  
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_accounts' })
-          .then((accounts) => {
+          .then(async (accounts) => {
             if (accounts && accounts.length > 0) {
               navbarMiddle.style.display = 'flex';
               navbarRight.style.display = 'flex';
-
+  
               const walletAddress = accounts[0];
-
-              usernameEl.textContent = "@user";
-              fullAddressEl.textContent = walletAddress;
+              
+              const userData = await getData("/user/username");
+              if (userData && userData.username) {
+                usernameEl.textContent = "@" + userData.username;
+              } else {
+                usernameEl.textContent = "@user"; 
+              }
+  
+              let referralCode = walletAddress;
+              const userReferral = await getData("/user/referral");
+              if (userReferral && userReferral.referral) {
+                console.log("Your referral code:", userReferral.referral);
+                referralCode = userReferral.referral;
+              }
+              
+              fullAddressEl.textContent = referralCode;
               shortAddressEl.textContent = shortenAddress(walletAddress);
               walletBalanceEl.textContent = SAMPLE_BALANCE;
-
               profileImg.src = getDiceBearAvatarUrl(walletAddress);
-
+  
               if (copyBtn) {
                 copyBtn.addEventListener('click', () => {
-                  navigator.clipboard.writeText(walletAddress)
+                  navigator.clipboard.writeText(referralCode)
                     .then(() => {
-                      console.log('Address copied to clipboard:', walletAddress);
+                      console.log('Referral code copied to clipboard:', referralCode);
                       const iconImg = copyBtn.querySelector('img');
                       iconImg.src = checkIconUrl;
                       setTimeout(() => {
                         iconImg.src = copyIconUrl;
                       }, 3000);
                     })
-                    .catch(err => console.error('Failed to copy address:', err));
+                    .catch(err => console.error('Failed to copy referral code:', err));
                 });
               }
             } else {
@@ -310,6 +340,8 @@
       }
     });
   </script>
+  
+  
 </body>
 
 </html>

@@ -697,7 +697,7 @@
               style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
               <p class="card-number" id="nodesCount">0</p>
               <p style="font-size: 12px; color: #5E5E5E;"
-                id="nodesBandwidth">with 54GB Bandwidth</p>
+                id="nodesBandwidth"></p>
             </div>
           </div>
           <div class="table-header"
@@ -743,8 +743,8 @@
             <div
               style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
               <p class="card-number" id="zonesCount">0</p>
-              <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">with
-                75 Active Users</p>
+              <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">
+                </p>
             </div>
           </div>
           <div class="table-header"
@@ -791,7 +791,7 @@
               style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
               <p class="card-number" id="childrenCount">--</p>
               <p style="font-size: 12px; color: #5E5E5E;"
-                id="descendantCount">with 120 Descendants</p>
+                id="descendantCount"></p>
             </div>
           </div>
           <div class="table-header"
@@ -1007,13 +1007,14 @@
         }
       }
 
-
-
       const nodesData = await getData("/nodes/list");
       const nodesTbody = document.getElementById("nodesTableBody");
 
       if (Array.isArray(nodesData) && nodesData.length > 0) {
         nodesTbody.innerHTML = "";
+        const totalBandwidth = nodesData.reduce((sum, node) => sum + (node.bandwidth_rank || 0), 0);
+        document.getElementById("nodesBandwidth").textContent = `with ${totalBandwidth} GB Bandwidth`;
+        
         nodesData.forEach(node => {
           console.log(node);
           console.log(node.rank);
@@ -1023,7 +1024,7 @@
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
             <td style="color: #5E5E5E">${node.rank}</td>
-            <td style="color: #5E5E5E">${node.bandwidth_rank}</td>
+            <td style="color: #5E5E5E">${node.bandwidth_rank} GB</td>
             <td style="color: #5E5E5E">${node.address}</td>
             <td style="color: #5E5E5E">${node.meta}</td>
           `;
@@ -1031,14 +1032,17 @@
         });
       } else {
         nodesTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
       }
-
 
       const zonesData = await getData("/zones/list");
       const zonesTbody = document.getElementById("zonesTableBody");
 
       if (Array.isArray(zonesData) && zonesData.length > 0) {
         zonesTbody.innerHTML = "";
+        const totalActiveUsers = zonesData.reduce((sum, zone) => sum + (zone.activeusers || 0), 0);
+        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active Users`;
+        
         zonesData.forEach(zone => {
           const tr = document.createElement("tr");
           tr.style.marginBottom = "8px";
@@ -1046,7 +1050,7 @@
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
            <td style="color: #5E5E5E">${zone.rank}</td>
-            <td style="color: #5E5E5E">${zone.activeusers}</td>
+            <td style="color: #5E5E5E">${zone.activeusers} GB</td>
             <td style="color: #5E5E5E">${zone.address}</td>
             <td style="color: #5E5E5E">${zone.meta}</td>
           `;
@@ -1054,6 +1058,7 @@
         });
       } else {
         zonesTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
       }
 
       const rankData = await getData("/user/rank");
@@ -1063,17 +1068,20 @@
         document.getElementById("epochRankValue").textContent = "N/A";
       }
 
-
       const childrenData = await getData("/children/list");
       const referralsTbody = document.getElementById("referralsTableBody");
 
       if (Array.isArray(childrenData) && childrenData.length > 0) {
+        document.getElementById("childrenCount").textContent = childrenData.length;
         referralsTbody.innerHTML = "";
+        const totalDescendants = childrenData.reduce((sum, child) => sum + (child.descendants || 0), 0);
+        document.getElementById("descendantCount").textContent = `with ${totalDescendants} Descendants`;
+        
         childrenData.forEach(child => {
           const tr = document.createElement("tr");
           tr.style.marginBottom = "8px";
           tr.style.backgroundColor = "#ffffff";
-          tr.style.color = "#5E5E5E";  // Added text color
+          tr.style.color = "#5E5E5E";  
           tr.innerHTML = `
             <td style="color: #5E5E5E">@${child.username}</td> 
             <td style="color: #5E5E5E">${(child.nodes !== undefined) ? child.nodes : "N/A"}</td>
@@ -1084,6 +1092,8 @@
         });
       } else {
         referralsTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        document.getElementById("childrenCount").textContent = "0";
+        document.getElementById("descendantCount").textContent = `with 0 Descendants`;
       }
 
       let currentData = {
