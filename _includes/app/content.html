@@ -667,11 +667,11 @@
         <div class="rank-container" id="rankContainer">
           <div class="rank-box epoch-rank">
             <span class="rank-title">Epoch Rank</span>
-            <span class="rank-value" id="epochRankValue">N/A</span>
+            <span class="rank-value" id="epochRankValue">0</span>
           </div>
           <div class="rank-box overall-rank">
             <span class="rank-title">Overall Rank</span>
-            <span class="rank-value" id="overallRankValue">N/A</span>
+            <span class="rank-value" id="overallRankValue">0</span>
           </div>
           <div class="boost-box">
             <div class="boost">
@@ -790,7 +790,7 @@
             </div>
             <div
               style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-              <p class="card-number" id="childrenCount">--</p>
+              <p class="card-number" id="childrenCount">0</p>
               <p style="font-size: 12px; color: #5E5E5E;"
                 id="descendantCount"></p>
             </div>
@@ -995,7 +995,7 @@
         try {
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
-            headers: { "Authorization": walletAddress }
+            headers: { "Authorization": "0xa32738db31044df642eed7e973a0f7dd6654eccd" }
           });
           if (!res.ok) {
             console.warn("Fetch failed:", res.status, res.statusText);
@@ -1032,7 +1032,7 @@
           nodesTbody.appendChild(tr);
         });
       } else {
-        nodesTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        nodesTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
         document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
       }
 
@@ -1058,7 +1058,7 @@
           zonesTbody.appendChild(tr);
         });
       } else {
-        zonesTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        zonesTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
         document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
       }
 
@@ -1066,7 +1066,7 @@
       if (rankData && rankData.rank !== undefined) {
         document.getElementById("epochRankValue").textContent = rankData.rank;
       } else {
-        document.getElementById("epochRankValue").textContent = "N/A";
+        document.getElementById("epochRankValue").textContent = "0";
       }
 
       const childrenData = await getData("/children/list");
@@ -1085,14 +1085,14 @@
           tr.style.color = "#5E5E5E";  
           tr.innerHTML = `
             <td style="color: #5E5E5E">@${child.username}</td> 
-            <td style="color: #5E5E5E">${(child.nodes !== undefined) ? child.nodes : "N/A"}</td>
-            <td style="color: #5E5E5E">${(child.descendants !== undefined) ? child.descendants : "N/A"}</td>
-            <td style="color: #5E5E5E">${(child.zones !== undefined) ? child.zones : "N/A"}</td>
+            <td style="color: #5E5E5E">${(child.nodes !== undefined) ? child.nodes : "0"}</td>
+            <td style="color: #5E5E5E">${(child.descendants !== undefined) ? child.descendants : "0"}</td>
+            <td style="color: #5E5E5E">${(child.zones !== undefined) ? child.zones : "0"}</td>
           `;
           referralsTbody.appendChild(tr);
         });
       } else {
-        referralsTbody.innerHTML = `<tr><td colspan="4">N/A</td></tr>`;
+        referralsTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
         document.getElementById("descendantCount").textContent = `with 0 Descendants`;
       }
@@ -1167,9 +1167,9 @@
           document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
             <tr>
               <td>@${child.username}</td>
-              <td>${child.nodes !== undefined ? child.nodes : 'N/A'}</td>
-              <td>${child.descendants !== undefined ? child.descendants : 'N/A'}</td>
-              <td>${child.zones !== undefined ? child.zones : 'N/A'}</td>
+              <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
+              <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+              <td>${child.zones !== undefined ? child.zones : '0'}</td>
             </tr>
           `).join('');
           showModal('referralsModal');
