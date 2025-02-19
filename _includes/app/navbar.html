@@ -271,7 +271,7 @@
           const baseURL = "https://registrar-prod.diode.link:8008"; 
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
-            headers: { "Authorization": "0x7102533B13b950c964efd346Ee15041E3e55413f" }
+            headers: { "Authorization": walletAddress }
           });
           if (!res.ok) {
             console.warn("Fetch failed:", res.status, res.statusText);
