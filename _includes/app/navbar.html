@@ -1,10 +1,10 @@
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Diode Network</title>
-  <style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diode Network</title>
+    <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
@@ -73,6 +73,10 @@
     }
 
     .navbar-right {
+
+      background-color: #323131;
+      padding: 10px 20px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -86,14 +90,15 @@
       width: 67px;
       height: 67px;
       border-radius: 50px;
-      border: 4px solid;
       border-image-slice: 1;
-      border-image-source: linear-gradient(to right, #d73e53 0%, #a04992 48%, #615ba8 100%);
+      border-image-source: transparent;
+      background-color: transparent;
+
     }
 
     .profile-image {
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -209,66 +214,72 @@
       }
     }
   </style>
-</head>
+  </head>
 
-<body>
-  <div class="navbar">
-    <a href="/../diodenetwork-dev-2025/#hero-section">
-      <div class="navbar-left">
-        <img style="width: 180px;" src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Logo" class="icon-logo" />
+  <body>
+    <div class="navbar">
+      <a href="/../diodenetwork-dev-2025/#hero-section">
+        <div class="navbar-left">
+          <img style="width: 180px;"
+            src="{{ '/assets/images/logo.svg' | relative_url }}" alt="Logo"
+            class="icon-logo" />
+        </div>
+      </a>
+
+      <div class="navbar-middle" id="navbarMiddle">
+        <div class="username" id="username"></div>
+        <div class="address-copy" id="addressCopy">
+          <span class="address-text" id="fullAddress"></span>
+          <button class="copy-button" id="copyButton">
+            <img src="{{ '/assets/images/icons/copy.png' | relative_url }}"
+              alt="Copy Address" />
+          </button>
+        </div>
       </div>
-    </a>
 
-    <div class="navbar-middle" id="navbarMiddle">
-      <div class="username" id="username"></div>
-      <div class="address-copy" id="addressCopy">
-        <span class="address-text" id="fullAddress"></span>
-        <button class="copy-button" id="copyButton">
-          <img src="{{ '/assets/images/icons/copy.png' | relative_url }}" alt="Copy Address" />
-        </button>
+      <div class="navbar-right" id="navbarRight">
+        <div class="profile-image-wrapper">
+          <img src="{{ '/assets/images/avatar-logo.svg' | relative_url }}"
+            alt="User Avatar" class="profile-image"
+            id="profileImage" />
+        </div>
+        <div class="wallet-info">
+          <div class="wallet-address" id="shortWalletAddress"></div>
+          <div class="wallet-balance" id="walletBalance"></div>
+        </div>
       </div>
     </div>
 
-    <div class="navbar-right" id="navbarRight">
-      <div class="profile-image-wrapper">
-        <img src="{{ '/assets/images/avatar-logo.svg' | relative_url }}" alt="User Avatar" class="profile-image"
-          id="profileImage" />
-      </div>
-      <div class="wallet-info">
-        <div class="wallet-address" id="shortWalletAddress"></div>
-        <div class="wallet-balance" id="walletBalance"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
+    <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const navbar = document.querySelector('.navbar');
       const navbarMiddle = document.getElementById('navbarMiddle');
       const navbarRight = document.getElementById('navbarRight');
       const usernameEl = document.getElementById('username');
-      const fullAddressEl = document.getElementById('fullAddress'); 
-      const shortAddressEl = document.getElementById('shortWalletAddress'); 
+      const fullAddressEl = document.getElementById('fullAddress');
+      const shortAddressEl = document.getElementById('shortWalletAddress');
       const walletBalanceEl = document.getElementById('walletBalance');
       const profileImg = document.getElementById('profileImage');
       const copyBtn = document.getElementById('copyButton');
-  
+
       const copyIconUrl = "{{ '/assets/images/icons/copy.png' | relative_url }}";
       const checkIconUrl = "{{ '/assets/images/icons/check-white.png' | relative_url }}";
-  
+
       const SAMPLE_BALANCE = "12 DIODE";
-  
+
       function shortenAddress(address) {
         return address.slice(0, 6) + '...' + address.slice(-4);
       }
-  
+
       function getDiceBearAvatarUrl(address) {
         return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(address)}&size=64`;
       }
-      
+
       async function getData(endpoint) {
         try {
-          const baseURL = "https://registrar-prod.diode.link:8008"; 
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          const walletAddress = accounts[0];
+          const baseURL = "https://registrar-prod.diode.link:8008";
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
             headers: { "Authorization": walletAddress }
@@ -283,47 +294,43 @@
           return null;
         }
       }
-  
+
       if (window.ethereum) {
         window.ethereum.request({ method: 'eth_accounts' })
           .then(async (accounts) => {
             if (accounts && accounts.length > 0) {
               navbarMiddle.style.display = 'flex';
               navbarRight.style.display = 'flex';
-  
+
               const walletAddress = accounts[0];
-              
+
               const userData = await getData("/user/username");
-              if (userData && userData.username) {
-                usernameEl.textContent = "@" + userData.username;
-              } else {
-                usernameEl.textContent = "@user"; 
-              }
-  
-              let referralCode = walletAddress;
+              usernameEl.textContent = userData && userData.username ?
+                "@" + userData.username : "@nousername";
+
               const userReferral = await getData("/user/referral");
-              if (userReferral && userReferral.referral) {
-                console.log("Your referral code:", userReferral.referral);
-                referralCode = userReferral.referral;
-              }
-              
+              const referralCode = userReferral && userReferral.referral ?
+                userReferral.referral : "no referral";
+
               fullAddressEl.textContent = referralCode;
               shortAddressEl.textContent = shortenAddress(walletAddress);
               walletBalanceEl.textContent = SAMPLE_BALANCE;
               profileImg.src = getDiceBearAvatarUrl(walletAddress);
-  
+
               if (copyBtn) {
                 copyBtn.addEventListener('click', () => {
-                  navigator.clipboard.writeText(referralCode)
-                    .then(() => {
-                      console.log('Referral code copied to clipboard:', referralCode);
-                      const iconImg = copyBtn.querySelector('img');
-                      iconImg.src = checkIconUrl;
-                      setTimeout(() => {
-                        iconImg.src = copyIconUrl;
-                      }, 3000);
-                    })
-                    .catch(err => console.error('Failed to copy referral code:', err));
+                  if (referralCode !== "no data") {
+                    navigator.clipboard.writeText(referralCode)
+                      .then(() => {
+                        console.log('Referral code copied to clipboard:', referralCode);
+                        const iconImg = copyBtn.querySelector('img');
+                        iconImg.src = checkIconUrl;
+                        setTimeout(() => {
+                          iconImg.src = copyIconUrl;
+                        }, 3000);
+                      })
+                      .catch(err => console.error('Failed to copy referral code:', err));
+                  }
                 });
               }
             } else {
@@ -340,8 +347,7 @@
       }
     });
   </script>
-  
-  
-</body>
+
+  </body>
 
 </html>

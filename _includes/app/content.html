@@ -85,10 +85,7 @@
       text-transform: uppercase;
       padding: 7px;
       text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 100px;
       height: 40px;
     }
 
@@ -100,12 +97,29 @@
       background-color: #ffffff;
       text-align: left;
       align-items: flex-start;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 50px;
       height: 40px;
       margin-bottom: 8px;
+      word-wrap: none;
+      white-space: nowrap; 
+    }
+
+    .table th.address-col {
+      width: 140px;
+      max-width: 140px;
+    }
+
+    .table th.description-col {
+      width: auto;
+      min-width: 150px;
+    }
+
+    .table td.description-col {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .table td.address-col {
+      font-family: monospace;
     }
 
     .table-title {
@@ -215,8 +229,8 @@
       gap: 15px;
       margin-bottom: 64px;
       align-items: center;
+      justify-content: center;
       width: 100%;
-      justify-content: space-between;
     }
 
     .rank-box {
@@ -229,15 +243,11 @@
       font-size: 16px;
       font-weight: bold;
       height: 121px;
-      flex: 1 1 auto;
+      min-width: 480px;
     }
 
     .epoch-rank {
       background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
-    }
-
-    .overall-rank {
-      background-color: black;
     }
 
     .rank-title {
@@ -361,7 +371,7 @@
       position: fixed;
       z-index: 1000;
       left: 0;
-      top: 0;
+      top: 50;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
@@ -376,6 +386,8 @@
       max-width: 1200px;
       max-height: 80vh;
       overflow-y: auto;
+      width: 95%;  
+      max-width: 1400px; 
     }
 
     .modal-header {
@@ -405,6 +417,19 @@
     .modal .table th {
       max-width: none;
       white-space: normal;
+    }
+
+    .modal .table td.address-col {
+      white-space: normal;  
+      font-family: monospace;
+      word-break: break-all;  
+      min-width: 350px;     
+      max-width: 400px;     
+    }
+
+    .modal .table td.description-col {
+      white-space: normal;
+      min-width: 200px;  
     }
 
     /* Responsive Styles */
@@ -491,30 +516,19 @@
       }
 
       .rank-container {
-        flex-direction: column;
+        flex-direction: row; 
         gap: 12px;
+        margin-bottom: 30px;
       }
 
       .boost-box {
-        order: 3;
+        order: 2;
         margin: 0;
         min-width: 90px;
-        height: 90px;
-        margin-top: 20px;
-      }
-
-      .boost {
-        min-width: 80px;
-        height: 80px;
+     margin-top: 20px;
       }
 
       .rank-box.epoch-rank {
-        order: 2;
-        min-height: 74px;
-        max-width: 94%;
-      }
-
-      .rank-box.overall-rank {
         order: 1;
         min-height: 74px;
         max-width: 94%;
@@ -640,7 +654,6 @@
       }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   </head>
 
   <body>
@@ -668,10 +681,6 @@
           <div class="rank-box epoch-rank">
             <span class="rank-title">Epoch Rank</span>
             <span class="rank-value" id="epochRankValue">0</span>
-          </div>
-          <div class="rank-box overall-rank">
-            <span class="rank-title">Overall Rank</span>
-            <span class="rank-value" id="overallRankValue">0</span>
           </div>
           <div class="boost-box">
             <div class="boost">
@@ -715,10 +724,10 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Epoch Rank</th>
-                    <th>Bandwidth ETD</th>
-                    <th>Address</th>
-                    <th>DESCRIPTION</th>
+                    <th>Rank</th>
+                    <th>Bandwidth</th>
+                    <th class="address-col">Address</th>
+                    <th class="description-col">DESCRIPTION</th>
                   </tr>
                 </thead>
                 <tbody id="nodesTableBody">
@@ -745,7 +754,7 @@
               style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
               <p class="card-number" id="zonesCount">0</p>
               <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">
-                </p>
+              </p>
             </div>
           </div>
           <div class="table-header"
@@ -762,10 +771,10 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Epoch Rank</th>
-                    <th>Active Users ETD</th>
-                    <th>ADDRESS</th>
-                    <th>DESCRIPTION</th>
+                    <th>Rank</th>
+                    <th>Active</th>
+                    <th class="address-col">ADDRESS</th>
+                    <th class="description-col">DESCRIPTION</th>
                   </tr>
                 </thead>
                 <tbody id="zonesTableBody">
@@ -811,12 +820,11 @@
                     <th>Username</th>
                     <th>Nodes</th>
                     <th>Descendants</th>
-                    <th>Descendant Nodes</th>
                   </tr>
                 </thead>
                 <tbody id="referralsTableBody">
                   <tr>
-                    <td colspan="4">Loading data...</td>
+                    <td colspan="3">Loading data...</td>
                   </tr>
                 </tbody>
               </table>
@@ -841,16 +849,7 @@
               <th>Quantity</th>
               <th>Total Boost</th>
             </tr>
-            <tr>
-              <td>OG Ambassador</td>
-              <td>1</td>
-              <td>2%</td>
-            </tr>
-            <tr>
-              <td>OG Node</td>
-              <td>6</td>
-              <td>3%</td>
-            </tr>
+            <tbody id="boostsTableBody"></tbody>
           </table>
         </div>
         <div class="content-box">
@@ -893,8 +892,8 @@
             <tr>
               <th>Epoch Rank</th>
               <th>Bandwidth ETD</th>
-              <th>Address</th>
-              <th>Description</th>
+              <th class="address-col">Address</th>
+              <th class="description-col">Description</th>
             </tr>
           </thead>
           <tbody id="nodesModalBody"></tbody>
@@ -913,8 +912,8 @@
             <tr>
               <th>Epoch Rank</th>
               <th>Active Users ETD</th>
-              <th>Address</th>
-              <th>Description</th>
+              <th class="address-col">Address</th>
+              <th class="description-col">Description</th>
             </tr>
           </thead>
           <tbody id="zonesModalBody"></tbody>
@@ -934,7 +933,6 @@
               <th>Username</th>
               <th>Nodes</th>
               <th>Descendants</th>
-              <th>Descendant Nodes</th>
             </tr>
           </thead>
           <tbody id="referralsModalBody"></tbody>
@@ -986,16 +984,47 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      function formatAddress(address) {
+        if (!address) return '';
+        if (address.length < 10) return address;
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      }
+
+      function formatBandwidth(bandwidth) {
+        if (!bandwidth) return '0';
+        return (bandwidth / 1000000000).toFixed(1);
+      }
+
+      if (!window.ethereum) {
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (!accounts || accounts.length === 0) {
+          window.location.href = "{{ '/wallet/' | relative_url }}";
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to retrieve accounts:', err);
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+
       const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      if (!accounts || accounts.length === 0) return;
-      const walletAddress = accounts[0];
+      const walletAddress = (accounts && accounts[0]) ? accounts[0] : null;
+      if (!walletAddress) return;
+
       const baseURL = "https://registrar-prod.diode.link:8008";
 
       async function getData(endpoint) {
         try {
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
-            headers: { "Authorization": walletAddress }
+            headers: { 
+              "Authorization":  walletAddress
+            }
           });
           if (!res.ok) {
             console.warn("Fetch failed:", res.status, res.statusText);
@@ -1010,60 +1039,63 @@
 
       const nodesData = await getData("/nodes/list");
       const nodesTbody = document.getElementById("nodesTableBody");
-
       if (Array.isArray(nodesData) && nodesData.length > 0) {
-        nodesTbody.innerHTML = "";
-        const totalBandwidth = nodesData.reduce((sum, node) => sum + (node.bandwidth_rank || 0), 0);
-        document.getElementById("nodesBandwidth").textContent = `with ${totalBandwidth} GB Bandwidth`;
+        const sortedNodes = [...nodesData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
         
-        nodesData.forEach(node => {
-          console.log(node);
-          console.log(node.rank);
+        nodesTbody.innerHTML = "";
+        const totalBandwidth = sortedNodes.reduce((sum, node) => sum + (parseFloat(node.bandwidth) || 0), 0);
+        const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
+        document.getElementById("nodesBandwidth").textContent = `with ${roundedTotalBandwidth} GB Bandwidth`;
+        document.getElementById("nodesCount").textContent = sortedNodes.length;
+
+        sortedNodes.forEach(node => {
           const tr = document.createElement("tr");
-          tr.style.marginBottom = "8px";
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-            <td style="color: #5E5E5E">${node.rank}</td>
-            <td style="color: #5E5E5E">${node.bandwidth_rank} GB</td>
-            <td style="color: #5E5E5E">${node.address}</td>
-            <td style="color: #5E5E5E">${node.meta}</td>
+            <td>${node.rank}</td>
+            <td>${formatBandwidth(node.bandwidth)} GB</td>
+            <td class="address-col">${formatAddress(node.address)}</td>
+            <td class="description-col">${node.meta}</td>
           `;
           nodesTbody.appendChild(tr);
         });
       } else {
-        nodesTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
+        nodesTbody.innerHTML = `<tr><td colspan="4">No Nodes Found</td></tr>`;
         document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
+        document.getElementById("nodesCount").textContent = "0";
       }
+
 
       const zonesData = await getData("/zones/list");
       const zonesTbody = document.getElementById("zonesTableBody");
-
       if (Array.isArray(zonesData) && zonesData.length > 0) {
         zonesTbody.innerHTML = "";
-        const totalActiveUsers = zonesData.reduce((sum, zone) => sum + (zone.activeusers || 0), 0);
+        const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
         document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active Users`;
-        
+        document.getElementById("zonesCount").textContent = zonesData.length;
+
         zonesData.forEach(zone => {
           const tr = document.createElement("tr");
-          tr.style.marginBottom = "8px";
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-           <td style="color: #5E5E5E">${zone.rank}</td>
-            <td style="color: #5E5E5E">${zone.activeusers} GB</td>
-            <td style="color: #5E5E5E">${zone.address}</td>
-            <td style="color: #5E5E5E">${zone.meta}</td>
+            <td>${zone.rank}</td>
+            <td>${zone.activeusers} users</td>
+            <td class="address-col">${formatAddress(zone.address)}</td>
+            <td class="description-col">${zone.meta}</td>
           `;
           zonesTbody.appendChild(tr);
         });
       } else {
-        zonesTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
+        zonesTbody.innerHTML = `<tr><td colspan="4">No Zones Found</td></tr>`;
         document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
+        document.getElementById("zonesCount").textContent = "0";
       }
 
+
       const rankData = await getData("/user/rank");
-      if (rankData && rankData.rank !== undefined) {
+      if (rankData && typeof rankData.rank !== "undefined") {
         document.getElementById("epochRankValue").textContent = rankData.rank;
       } else {
         document.getElementById("epochRankValue").textContent = "0";
@@ -1071,212 +1103,203 @@
 
       const childrenData = await getData("/children/list");
       const referralsTbody = document.getElementById("referralsTableBody");
-
       if (Array.isArray(childrenData) && childrenData.length > 0) {
-        document.getElementById("childrenCount").textContent = childrenData.length;
         referralsTbody.innerHTML = "";
-        const totalDescendants = childrenData.reduce((sum, child) => sum + (child.descendants || 0), 0);
+        document.getElementById("childrenCount").textContent = childrenData.length; 
+        const totalDescendants = childrenData.reduce((sum, c) => sum + (c.descendants || 0), 0);
         document.getElementById("descendantCount").textContent = `with ${totalDescendants} Descendants`;
-        
+
         childrenData.forEach(child => {
           const tr = document.createElement("tr");
-          tr.style.marginBottom = "8px";
           tr.style.backgroundColor = "#ffffff";
-          tr.style.color = "#5E5E5E";  
+          tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-            <td style="color: #5E5E5E">@${child.username}</td> 
-            <td style="color: #5E5E5E">${(child.nodes !== undefined) ? child.nodes : "0"}</td>
-            <td style="color: #5E5E5E">${(child.descendants !== undefined) ? child.descendants : "0"}</td>
-            <td style="color: #5E5E5E">${(child.zones !== undefined) ? child.zones : "0"}</td>
+            <td>@${child.username}</td>
+            <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
+            <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
           `;
           referralsTbody.appendChild(tr);
         });
       } else {
-        referralsTbody.innerHTML = `<tr><td colspan="4">0</td></tr>`;
+        referralsTbody.innerHTML = `<tr><td colspan="3">No Referrals Found</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
         document.getElementById("descendantCount").textContent = `with 0 Descendants`;
       }
-
       let currentData = {
-        nodes: [],
-        zones: [],
-        referrals: [],
-        boosts: [
-          { nft: 'OG Ambassador', quantity: 1, totalBoost: '2%' },
-          { nft: 'OG Node', quantity: 6, totalBoost: '3%' }
-        ],
+        nodes: Array.isArray(nodesData) ? nodesData : [],
+        zones: Array.isArray(zonesData) ? zonesData : [],
+        referrals: Array.isArray(childrenData) ? childrenData : [],
+        boosts: [],
         rewards: [
           { epoch: 670, reward: '100 DIODE', rank: 745 },
-          { epoch: 669, reward: '400 DIODE', rank: 12 }
-        ]
+          { epoch: 669, reward: '400 DIODE', rank: 12 },
+        ],
       };
 
       function showModal(modalId) {
         document.getElementById(modalId).style.display = 'block';
       }
-
       function closeModal(modalId) {
         document.getElementById(modalId).style.display = 'none';
       }
-
       document.querySelectorAll('.close-modal').forEach(button => {
         button.onclick = function () {
           this.closest('.modal').style.display = 'none';
-        }
+        };
       });
-
       window.onclick = function (event) {
         if (event.target.classList.contains('modal')) {
           event.target.style.display = 'none';
         }
-      }
+      };
 
-      if (Array.isArray(nodesData)) {
-        currentData.nodes = nodesData;
+      if (currentData.nodes.length) {
         document.querySelector('#nodesCard .button-view-all').onclick = function () {
-          document.getElementById('nodesModalBody').innerHTML = currentData.nodes.map(node => `
+          const sortedModalNodes = [...currentData.nodes].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+          document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
             <tr>
               <td>${node.rank}</td>
-              <td>${node.bandwidth_rank}</td>
-              <td>${node.address}</td>
-              <td>${node.meta}</td>
+              <td>${formatBandwidth(node.bandwidth_rank)} GB</td>
+              <td class="address-col">${node.address}</td>  <!-- Show full address -->
+              <td class="description-col">${node.meta}</td>
             </tr>
           `).join('');
           showModal('nodesModal');
         };
       }
-
-      if (Array.isArray(zonesData)) {
-        currentData.zones = zonesData;
+      if (currentData.zones.length) {
         document.querySelector('#zonesCard .button-view-all').onclick = function () {
           document.getElementById('zonesModalBody').innerHTML = currentData.zones.map(zone => `
             <tr>
               <td>${zone.rank}</td>
               <td>${zone.activeusers}</td>
-              <td>${zone.address}</td>
-              <td>${zone.meta}</td>
+              <td class="address-col">${zone.address}</td>  <!-- Show full address -->
+              <td class="description-col">${zone.meta}</td>
             </tr>
           `).join('');
           showModal('zonesModal');
         };
       }
-
-      if (Array.isArray(childrenData)) {
-        currentData.referrals = childrenData;
+      if (currentData.referrals.length) {
         document.querySelector('#referralsCard .button-view-all').onclick = function () {
           document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
             <tr>
               <td>@${child.username}</td>
               <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
               <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
-              <td>${child.zones !== undefined ? child.zones : '0'}</td>
             </tr>
           `).join('');
           showModal('referralsModal');
         };
       }
 
+
+      const ERC721_ABI = [{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
+      const moonbeamRPC = "https://rpc.api.moonbeam.network";
+      
+      const NFT_BOOSTS = [{
+          contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
+          name: "Ambassador Pre Launch",
+          baseBoost: 2,
+        },
+        {
+          contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
+          name: "OG Ambassador",
+          baseBoost: 4,
+        }
+      ];
+      const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
+        const response = await fetch(moonbeamRPC, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "eth_call",
+            params: [{
+              to: nft.contractAddress,
+              data: '0x70a08231' + walletAddress.substring(2).padStart(64, '0')
+            }, "latest"]
+          })
+        });
+        const result = await response.json();
+        return {
+          name: nft.name,
+          balance: result.result ? parseInt(result.result, 16) : 0,
+          baseBoost: nft.baseBoost
+        };
+      })).catch(err => {
+        console.error("Failed to fetch NFTs", err);
+        return null;
+      });
+      
+
+      const boostsTbody = document.getElementById("boostsTableBody");
+      let userBoosts = [];
+      if (nftBalances && nftBalances.length > 0) {
+        userBoosts = nftBalances
+          .filter(item => item.balance > 0)
+          .map(item => {
+            const quantity = item.balance;
+            const totalBoost = (item.baseBoost * quantity) + "%";
+            return { nft: item.name, quantity, totalBoost };
+          });
+      }
+      if (userBoosts.length > 0) {
+        userBoosts.forEach(item => {
+          boostsTbody.innerHTML += `
+            <tr>
+              <td>${item.nft}</td>
+              <td>${item.quantity}</td>
+              <td>${item.totalBoost}</td>
+            </tr>
+          `;
+        });
+      } else {
+        boostsTbody.innerHTML = `<tr><td colspan="3">No NFT</td></tr>`;
+      }
+
+     
       document.querySelector('.content-box:first-of-type .button-view-all').onclick = function () {
-        document.getElementById('boostsModalBody').innerHTML = currentData.boosts.map(boost => `
-          <tr>
-            <td>${boost.nft}</td>
-            <td>${boost.quantity}</td>
-            <td>${boost.totalBoost}</td>
-          </tr>
-        `).join('');
+        const boostsModalBody = document.getElementById('boostsModalBody');
+        boostsModalBody.innerHTML = '';
+
+        if (userBoosts.length > 0) {
+          userBoosts.forEach(item => {
+            boostsModalBody.innerHTML += `
+              <tr>
+                <td>${item.nft}</td>
+                <td>${item.quantity}</td>
+                <td>${item.totalBoost}</td>
+              </tr>
+            `;
+          });
+        } else {
+          boostsModalBody.innerHTML = `<tr><td colspan="3">No matching NFTs found</td></tr>`;
+        }
+
         showModal('boostsModal');
       };
 
+      currentData.rewards = [
+        { epoch: 670, reward: '100 DIODE', rank: 745 },
+        { epoch: 669, reward: '400 DIODE', rank: 12 },
+      ];
       document.querySelector('.content-box:last-of-type .button-view-all').onclick = function () {
-        document.getElementById('rewardsModalBody').innerHTML = currentData.rewards.map(reward => `
+        document.getElementById('rewardsModalBody').innerHTML = currentData.rewards.map(r => `
           <tr>
-            <td>${reward.epoch}</td>
-            <td>${reward.reward}</td>
-            <td>${reward.rank}</td>
+            <td>${r.epoch}</td>
+            <td>${r.reward}</td>
+            <td>${r.rank}</td>
           </tr>
         `).join('');
         showModal('rewardsModal');
       };
-
-      const provider = new ethers.providers.JsonRpcProvider("https://rpc.api.moonbeam.network");
-
-      const NFT_BOOSTS = {
-        "0xf79e90e148b19f63ecbe7f2e2f846730122ae881": {
-          name: "OG Ambassador",
-          baseBoost: 2,
-        },
-        "0x1234abcd1234abcd1234abcd1234abcd1234abcd": {
-          name: "OG Node",
-          baseBoost: 3,
-        }
-      };
-
-      const ERC721_ABI = [
-        "function balanceOf(address owner) view returns (uint256)"
-      ];
-
-      let userBoosts = [];
-      let totalBoostPercent = 0;
-
-      for (const [nftAddress, data] of Object.entries(NFT_BOOSTS)) {
-        try {
-          const nftContract = new ethers.Contract(nftAddress, ERC721_ABI, provider);
-          const bal = await nftContract.balanceOf(walletAddress);
-
-          if (bal.gt(0)) {
-            const quantity = bal.toNumber();
-            const nftBoost = data.baseBoost * quantity;
-            userBoosts.push({
-              nft: data.name,
-              quantity: quantity,
-              totalBoost: nftBoost + "%"
-            });
-            totalBoostPercent += nftBoost;
-          }
-        } catch (err) {
-          console.error(`Error checking balanceOf for ${data.name}:`, err);
-        }
-      }
-
-      const boostsTable = document.querySelector(".tables-row .content-box table.table");
-      const oldRows = boostsTable.querySelectorAll("tr:not(:first-child)");
-      oldRows.forEach(row => row.remove());
-
-      if (userBoosts.length === 0) {
-        const row = boostsTable.insertRow();
-        const cell = row.insertCell();
-        cell.colSpan = 3;
-        cell.textContent = "No matching NFTs found";
-      } else {
-        userBoosts.forEach(boostItem => {
-          const row = boostsTable.insertRow();
-          let cell = row.insertCell();
-          cell.textContent = boostItem.nft;
-          cell = row.insertCell();
-          cell.textContent = boostItem.quantity;
-          cell = row.insertCell();
-          cell.textContent = boostItem.totalBoost;
-        });
-      }
-
-      document.getElementById("boostValue").textContent = totalBoostPercent + "%";
-
-      document.querySelector('.content-box:first-of-type .button-view-all').onclick = function() {
-        const boostsModalBody = document.getElementById('boostsModalBody');
-        boostsModalBody.innerHTML = userBoosts.length === 0 
-          ? '<tr><td colspan="3">No matching NFTs found</td></tr>'
-          : userBoosts.map(boost => `
-              <tr>
-                <td>${boost.nft}</td>
-                <td>${boost.quantity}</td>
-                <td>${boost.totalBoost}</td>
-              </tr>
-            `).join('');
-        document.getElementById('boostsModal').style.display = 'block';
-      };
-
     });
   </script>
+
   </body>
 
 </html>
