@@ -229,7 +229,7 @@
       <div class="navbar-middle" id="navbarMiddle">
         <div class="username" id="username"></div>
         <div class="address-copy" id="addressCopy">
-          <span class="address-text" id="fullAddress"></span>
+          <span class="address-text"><span style="color: #d6cfcf;">Referral: </span><span id="fullAddress"></span></span>
           <button class="copy-button" id="copyButton">
             <img src="{{ '/assets/images/icons/copy.png' | relative_url }}"
               alt="Copy Address" />
@@ -279,7 +279,7 @@
         try {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           const walletAddress = accounts[0];
-          const baseURL = "https://registrar-prod.diode.link:8008";
+          const baseURL = "https://registrar-prod.diode.link:8008/v1";
           const res = await fetch(`${baseURL}${endpoint}`, {
             method: "GET",
             headers: { "Authorization": walletAddress }
@@ -293,6 +293,38 @@
           console.error("Error fetching", endpoint, err);
           return null;
         }
+      }
+
+      const DIODE_CONTRACT = "0x434116a99619f2B465A137199C38c1Aab0353913";
+        
+      async function getDiodeBalance(walletAddress) {
+          try {
+              const response = await fetch("https://rpc.api.moonbeam.network", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                      jsonrpc: "2.0",
+                      id: 1,
+                      method: "eth_call",
+                      params: [{
+                          to: DIODE_CONTRACT,
+                          data: `0x70a08231000000000000000000000000${walletAddress.substring(2)}`
+                      }, "latest"]
+                  })
+              });
+
+              const result = await response.json();
+              if (result.result) {
+                  const balance = parseInt(result.result, 16);
+                  return `${(balance / 10**18).toFixed(2)} Diode`;
+              }
+              return "0 DIODE";
+          } catch (err) {
+              console.error("Failed to fetch DIODE balance:", err);
+              return "0 DIODE";
+          }
       }
 
       if (window.ethereum) {
@@ -314,7 +346,8 @@
 
               fullAddressEl.textContent = referralCode;
               shortAddressEl.textContent = shortenAddress(walletAddress);
-              walletBalanceEl.textContent = SAMPLE_BALANCE;
+              const walletBalance = await getDiodeBalance(walletAddress);
+              walletBalanceEl.textContent = walletBalance;
               profileImg.src = getDiceBearAvatarUrl(walletAddress);
 
               if (copyBtn) {
