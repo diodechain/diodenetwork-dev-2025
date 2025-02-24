@@ -586,9 +586,18 @@ export default {
     this.load();
   });
 },
-  mounted: function () {
-    this.makeDraggable(this.$refs.svg);
-  },
+mounted() {
+  window.addEventListener('scroll', () => {
+    const tooltipLayout = document.getElementById("map-tooltip");
+    if (tooltipLayout) {
+      tooltipLayout.style.display = 'none';
+    }
+  }, { passive: true });
+},
+
+beforeDestroy() {
+  window.removeEventListener('scroll', this.hideTooltip);
+},
 watch: {
   points: {
     handler() {
@@ -600,13 +609,17 @@ watch: {
 },
 
 methods: {
-   handleScroll() {
-    this.isScrolling = true;
-    clearTimeout(this.scrollTimeout);
-    this.scrollTimeout = setTimeout(() => {
-      this.isScrolling = false;
-    }, 200);
+  hideTooltip() {
+    const tooltipLayout = document.getElementById("map-tooltip");
+    if (tooltipLayout) {
+      tooltipLayout.style.display = 'none';
+    }
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
   },
+
     tooltip(point, event, hovered) {
       let text = "Location: " + point.city + " (" + point.ip + ")</br>";
       text += "Version: " + point.version + " </br>";
@@ -631,22 +644,14 @@ methods: {
       tooltipLayout.style.display = 'block';
 
       if (this.timeoutId) { clearTimeout(this.timeoutId); }
- if (this.isScrolling) {
-       document.getElementById("map-tooltip").style.display = "none";
+  if (event && event.type === 'scroll') {
+      this.hideTooltip();
+      return;
     }
-      if (hovered) {
-        this.timeoutId = setTimeout(function() {
-          document.getElementById("map-tooltip").style.display = "none";
-        }, 2);
-      }
-
       console.log(event);
     },
  tooltip(point, event, hovered) {
     let tooltipLayout = document.getElementById("map-tooltip");
-    
- 
-
   let text = "<strong>Location:</strong> <span>" + (point.city || "Unknown") + " (" + point.ip + ")</span></br>";
 text += "<strong>Version:</strong> <span>" + point.version + "</span></br>";
 
@@ -675,11 +680,7 @@ let tooltipContent = `<div class="tooltip-inner">
     }
           tooltipLayout.style.display = 'block';
           if (this.timeoutId) { clearTimeout(this.timeoutId); }
-      if (hovered) {
-        this.timeoutId = setTimeout(function() {
-          document.getElementById("map-tooltip").style.display = "none";
-        }, 1000);
-      }
+ 
   },
 load: async function() {
   try {
