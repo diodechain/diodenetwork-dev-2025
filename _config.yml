@@ -1,6 +1,6 @@
 title: "Diode Network"
 description: "A privacy-first communication solution"
-baseurl: "/diodenetwork-dev-2025" 
+baseurl: "/" 
 url: "https://diodenetwork.io" 
 theme: minima   
 favicon: "/assets/images/favicon.ico"
