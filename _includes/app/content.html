@@ -1,0 +1,1325 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diode Network Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .dashboard {
+      max-width: 1392px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .left-column {
+      width: 920px;
+      margin-bottom: 55px;
+      margin-top: 20px;
+    }
+
+    .content-box {
+      background-color: #FAFAFA;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+      flex: 1;
+    }
+
+    .content-box h3 {
+      font-size: 20px;
+      font-weight: 500;
+      color: #141414;
+      margin-top: 0;
+    }
+
+    .tables-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 24px;
+      margin-bottom: 20px;
+      background-color: hsl(0, 0%, 100%);
+    }
+
+    .table {
+      width: 100%;
+      background-color: #FAFAFA;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .table tr {
+      margin-bottom: 8px;
+    }
+
+    .table-box {
+      padding: 10px 16px;
+      background-color: #FAFAFA;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .table th {
+      font-size: 12px;
+      color: #141414;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 7px;
+      text-align: left;
+      white-space: nowrap;
+      height: 40px;
+    }
+
+    .table td {
+      font-size: 12px;
+      color: #5E5E5E;
+      font-weight: 400;
+      padding: 10px;
+      background-color: #ffffff;
+      text-align: left;
+      align-items: flex-start;
+      height: 40px;
+      margin-bottom: 8px;
+      word-wrap: none;
+      white-space: nowrap;
+    }
+
+    .table th.address-col {
+      width: 140px;
+      max-width: 140px;
+    }
+
+    .table th.description-col {
+      width: auto;
+      min-width: 150px;
+    }
+
+    .table td.description-col {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .table td.address-col {
+      font-family: monospace;
+    }
+
+    .table-title {
+      font-size: 16px;
+      margin: 0px;
+      color: #141414;
+      font-weight: 500;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+    }
+
+    .table-box::-webkit-scrollbar {
+      width: 5px;
+      max-height: 10px;
+    }
+
+    .table-box::-webkit-scrollbar-track {
+      background: white;
+      max-height: 10px;
+    }
+
+    .table-box::-webkit-scrollbar-thumb {
+      background: rgb(209, 209, 209);
+      border-radius: 10px;
+      max-height: 10px;
+    }
+
+    .scroller::-webkit-scrollbar-button:start:increment {
+      height: 25%;
+      display: block;
+      background: transparent;
+    }
+
+    .button-open-camp {
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 14px;
+      height: 44px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .button-view-all {
+      background-color: #ffffff;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      color: #000000;
+      border: 1px solid #000000;
+      padding: 8px 26px;
+      border-radius: 5px;
+      font-size: 10px;
+    }
+
+    .button-view-all:hover {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      color: white;
+      border-radius: 0px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-header .title {
+      font-size: 20px;
+      font-weight: medium;
+    }
+
+    .dashboard-header .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dashboard-header button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .open-campaign {
+      background-color: black;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+
+    .read-more {
+      background-color: white;
+      font-family: 'Poppins', sans-serif;
+      color: black;
+    }
+
+    .rank-container {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .rank-box {
+      display: flex;
+      align-items: center;
+      padding: 0px 30px;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      height: 121px;
+      min-width: 480px;
+    }
+
+    .epoch-rank {
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    }
+
+    .rank-title {
+      font-size: 20px;
+      margin-right: 20px;
+    }
+
+    .rank-value {
+      font-size: 32px;
+    }
+
+    .boost {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 89px;
+      height: 89px;
+      border: 5px solid #151515;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 14px;
+      background: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .boost-inner {
+      transform: rotate(-45deg);
+      text-align: center;
+      width: 100%;
+    }
+
+    .boost-inner p {
+      margin: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .boost-p-number {
+      font-weight: 700;
+      font-size: 32px;
+      background: linear-gradient(to right, #D73E53, #A04992, #615BA8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .boost-p-text {
+      color: #141414;
+    }
+
+    .boost-box {
+      margin-left: 10px;
+      padding: 2px;
+      min-width: 100px;
+      height: 100px;
+      border: 2px solid #151515;
+      border-radius: 20px;
+      transform: rotate(45deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .boost span {
+      transform: rotate(-45deg);
+    }
+
+    .coin {
+      width: 24px;
+      height: 24px;
+      background-color: gold;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: black;
+      margin-left: 8px;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .card {
+      background: #FAFAFA;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #D73E53;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card-main-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #141414;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .card-number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #151515;
+      height: 10px;
+    }
+
+    .card-title {
+      padding: 20px 16px;
+      background-color: #ffffff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fafafa;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 80vh;
+      overflow-y: auto;
+      width: 95%;
+      max-width: 1400px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #141414;
+    }
+
+    .close-modal {
+      cursor: pointer;
+      font-size: 24px;
+      color: #5E5E5E;
+    }
+
+    .modal .table td {
+      max-width: none;
+      white-space: normal;
+    }
+
+    .modal .table th {
+      max-width: none;
+      white-space: normal;
+    }
+
+    .modal .table td.address-col {
+      white-space: normal;
+      font-family: monospace;
+      word-break: break-all;
+      min-width: 350px;
+      max-width: 400px;
+    }
+
+    .modal .table td.description-col {
+      white-space: normal;
+      min-width: 200px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .airlyft-sidebar {
+        width: 100%;
+        right: -100%;
+      }
+
+      .modal-content {
+        margin: 20px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .rank-container {
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        gap: 20px;
+      }
+
+      .rank-box {
+        width: 100%;
+        height: 100px;
+      }
+
+      .boost-box {
+        margin: 0 auto;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .card {
+        width: 100%;
+      }
+
+      .tables-row {
+        flex-direction: column;
+      }
+
+      .content-box {
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 0 20px;
+        overflow-x: hidden;
+        margin: 0;
+      }
+
+      .dashboard-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+        margin-bottom: 23px;
+      }
+
+      .dashboard-header .title {
+        text-align: left;
+      }
+
+      .dashboard-header .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .dashboard-header button {
+        font-size: 12px;
+        width: 150px;
+        min-height: 34px;
+      }
+
+      .rank-container {
+        flex-direction: row;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      .boost-box {
+        order: 2;
+        margin: 0;
+        min-width: 90px;
+        margin-top: 20px;
+      }
+
+      .rank-box.epoch-rank {
+        order: 1;
+        min-height: 74px;
+        max-width: 94%;
+      }
+
+      .rank-container {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      .rank-box {
+        width: 100% !important;
+        min-width: unset;
+        height: 73px;
+        padding: 0 15px;
+      }
+
+      .rank-title {
+        font-size: 16px;
+      }
+
+      .rank-value {
+        font-size: 24px;
+      }
+
+      .boost-p-number {
+        font-size: 24px;
+      }
+
+      .boost-p-text {
+        font-size: 12px;
+      }
+
+      .card {
+        width: 100%;
+      }
+
+      .table-title {
+        font-size: 14px !important;
+      }
+
+      .button-view-all {
+        padding: 6px 20px;
+      }
+
+      .read-more {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard {
+        padding: 0 10px;
+      }
+
+      .dashboard-header {
+        padding: 15px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+
+      .dashboard-header .title {
+        font-size: 16px;
+        width: 100%;
+      }
+
+      .address-copy {
+        background-color: #1E1E1E;
+        height: 43px;
+        font-size: 10px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+
+      .dashboard-header button {
+        font-size: 12px;
+        width: 150px;
+        min-height: 34px;
+      }
+
+      .rank-container {
+        gap: 10px;
+      }
+
+      .rank-box {
+        padding: 0 10px;
+      }
+
+      .rank-title {
+        font-size: 16px;
+      }
+
+      .rank-value {
+        font-size: 24px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .left-column {
+        width: 100% !important;
+        margin-bottom: 30px;
+      }
+
+      .card-number {
+        font-size: 28px;
+      }
+
+      .table th,
+      .table td {
+        font-size: 10px;
+        padding: 8px;
+      }
+
+      .dashboard-header .buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!window.ethereum) {
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (!accounts || accounts.length === 0) {
+          window.location.href = "{{ '/wallet/' | relative_url }}";
+        }
+      } catch (err) {
+        console.error('Failed to retrieve accounts:', err);
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+      }
+    });
+  </script>
+
+  <div class="dashboard">
+    <div class="row">
+      <div class="rank-container" id="rankContainer">
+        <div class="rank-box epoch-rank">
+          <span class="rank-title">Epoch Rank: </span>
+          <span class="rank-value" id="epochRankValue">0</span>
+        </div>
+        <div class="boost-box">
+          <div class="boost">
+            <div class="boost-inner">
+              <p class="boost-p-number" id="boostValue">0%</p>
+              <p class="boost-p-text">BOOST</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card" id="nodesCard" style="border: 1px solid #D73E53;">
+        <div class="card-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="Node Icon" />
+            <div>
+              <p class="card-main-title">NODES</p>
+            </div>
+          </div>
+          <div
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="nodesCount">0</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="nodesBandwidth"></p>
+          </div>
+        </div>
+        <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="table-title">YOUR NODES</h3>
+            <button class="button-view-all">View All</button>
+          </div>
+          <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
+          <div class="table-box" style="overflow-y: auto; overflow-x: auto; max-height: 400px;">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Bandwidth</th>
+                  <th class="address-col">Address</th>
+                  <th class="description-col">DESCRIPTION</th>
+                </tr>
+              </thead>
+              <tbody id="nodesTableBody">
+                <tr>
+                  <td colspan="4">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card" id="zonesCard" style="border: 1px solid #A04992;">
+        <div class="card-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="Location Icon" />
+            <div>
+              <p class="card-main-title">ZONES</p>
+            </div>
+          </div>
+          <div
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="zonesCount">0</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">
+            </p>
+          </div>
+        </div>
+        <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="table-title">YOUR ZONES</h3>
+            <button class="button-view-all">View All</button>
+          </div>
+          <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
+          <div class="table-box" style="overflow-y: auto; overflow-x: auto; max-height: 400px;">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Active</th>
+                  <th class="address-col">ADDRESS</th>
+                  <th class="description-col">DESCRIPTION</th>
+                </tr>
+              </thead>
+              <tbody id="zonesTableBody">
+                <tr>
+                  <td colspan="4">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card" id="referralsCard" style="border: 1px solid #615BA8;">
+        <div class="card-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
+            <div>
+              <p class="card-main-title">CHILDREN</p>
+            </div>
+          </div>
+          <div
+            style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <p class="card-number" id="childrenCount">0</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
+          </div>
+        </div>
+        <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="table-title">Your Children</h3>
+            <button class="button-view-all">View All</button>
+          </div>
+          <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
+          <div class="table-box" style="overflow-y: auto; max-height: 400px;">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Username</th>
+                  <th>Nodes</th>
+                  <th>Zone</th>
+                  <th>Descendants</th>
+                </tr>
+              </thead>
+              <tbody id="referralsTableBody">
+                <tr>
+                  <td colspan="5">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tables-row">
+      <div class="content-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 class="table-title" style="font-size: 16px;">YOUR BOOSTS</h3>
+          <button class="button-view-all">View All</button>
+        </div>
+        <hr style="border: 0.3px solid #E6E6E6; margin: 0;">
+        <table class="table">
+          <tr>
+            <th>NFT</th>
+            <th>Quantity</th>
+            <th>Total Boost</th>
+          </tr>
+          <tbody id="boostsTableBody"></tbody>
+        </table>
+      </div>
+      <div class="content-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 class="table-title" style="font-size: 16px;">YOUR PAST
+            REWARDS</h3>
+          <button class="button-view-all">View All</button>
+        </div>
+        <hr style="border: 0.3px solid #E6E6E6; margin: 0;">
+        <table class="table">
+          <tr>
+            <th>Epoch</th>
+            <th>Reward</th>
+            <th>Rank</th>
+          </tr>
+          <tr>
+            <td>670</td>
+            <td>100 DIODE</td>
+            <td>745</td>
+          </tr>
+          <tr>
+            <td>669</td>
+            <td>400 DIODE</td>
+            <td>12</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="nodesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Nodes</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Epoch Rank</th>
+            <th>Bandwidth ETD</th>
+            <th class="address-col">Address</th>
+            <th class="description-col">Description</th>
+          </tr>
+        </thead>
+        <tbody id="nodesModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="zonesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Zones</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Epoch Rank</th>
+            <th>Active Users ETD</th>
+            <th class="address-col">Address</th>
+            <th class="description-col">Description</th>
+          </tr>
+        </thead>
+        <tbody id="zonesModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="referralsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Referrals</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Nodes</th>
+            <th>Descendants</th>
+          </tr>
+        </thead>
+        <tbody id="referralsModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Boosts Modal -->
+  <div id="boostsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Boosts</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>NFT</th>
+            <th>Quantity</th>
+            <th>Total Boost</th>
+          </tr>
+        </thead>
+        <tbody id="boostsModalBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Past Rewards Modal -->
+  <div id="rewardsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Past Rewards</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Epoch</th>
+            <th>Reward</th>
+            <th>Rank</th>
+          </tr>
+        </thead>
+        <tbody id="rewardsModalBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      function formatAddress(address) {
+        if (!address) return '';
+        return `${address.slice(0, 3)}…${address.slice(-7)}`;
+
+      }
+
+      function formatBandwidth(bandwidth) {
+        if (!bandwidth) return '0';
+        return (bandwidth / 1000000000).toFixed(1);
+      }
+
+      if (!window.ethereum) {
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (!accounts || accounts.length === 0) {
+          window.location.href = "{{ '/wallet/' | relative_url }}";
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to retrieve accounts:', err);
+        window.location.href = "{{ '/wallet/' | relative_url }}";
+        return;
+      }
+
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      const walletAddress = (accounts && accounts[0]) ? accounts[0] : null;
+      if (!walletAddress) return;
+
+      const baseURL = "https://registrar-prod.diode.link:8008/v1";
+
+      async function getData(endpoint) {
+        try {
+          const res = await fetch(`${baseURL}${endpoint}`, {
+            method: "GET",
+            headers: {
+              "Authorization": walletAddress
+            }
+          });
+          if (!res.ok) {
+            console.warn("Fetch failed:", res.status, res.statusText);
+            return null;
+          }
+          return await res.json();
+        } catch (err) {
+          console.error("Error fetching", endpoint, err);
+          return null;
+        }
+      }
+
+      const nodesData = await getData("/nodes/list");
+      const nodesTbody = document.getElementById("nodesTableBody");
+      if (Array.isArray(nodesData) && nodesData.length > 0) {
+        const sortedNodes = [...nodesData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+
+        nodesTbody.innerHTML = "";
+        const totalBandwidth = sortedNodes.reduce((sum, node) => sum + (parseFloat(node.bandwidth) || 0), 0);
+        const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
+        document.getElementById("nodesBandwidth").textContent = `with ${roundedTotalBandwidth} GB Bandwidth`;
+        document.getElementById("nodesCount").textContent = sortedNodes.length;
+
+        sortedNodes.forEach(node => {
+          const tr = document.createElement("tr");
+          tr.style.backgroundColor = "#ffffff";
+          tr.style.color = "#5E5E5E";
+          tr.style.cursor = "pointer";
+          tr.onclick = () => window.open(`https://diode.io/network/#/node/${node.address}`, '_blank');
+          tr.innerHTML = `
+              <td>${node.rank}</td>
+              <td>${formatBandwidth(node.bandwidth)} GB</td>
+              <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${formatAddress(node.address)}</a></td>
+              <td class="description-col">${node.meta}</td>
+            `;
+          nodesTbody.appendChild(tr);
+        });
+      } else {
+        nodesTbody.innerHTML = `<tr><td colspan="4">No Nodes Found</td></tr>`;
+        document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
+        document.getElementById("nodesCount").textContent = "0";
+      }
+
+      const zonesData = await getData("/zones/list");
+      const zonesTbody = document.getElementById("zonesTableBody");
+      if (Array.isArray(zonesData) && zonesData.length > 0) {
+        zonesTbody.innerHTML = "";
+        const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
+        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active Users`;
+        document.getElementById("zonesCount").textContent = zonesData.length;
+
+        zonesData.forEach(zone => {
+          const tr = document.createElement("tr");
+          tr.style.backgroundColor = "#ffffff";
+          tr.style.color = "#5E5E5E";
+          tr.innerHTML = `
+              <td>${zone.rank}</td>
+              <td>${zone.activeusers} users</td>
+              <td class="address-col">${formatAddress(zone.address)}</td>
+              <td class="description-col">${zone.meta}</td>
+            `;
+          zonesTbody.appendChild(tr);
+        });
+      } else {
+        zonesTbody.innerHTML = `<tr><td colspan="4">No Zones Found</td></tr>`;
+        document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
+        document.getElementById("zonesCount").textContent = "0";
+      }
+
+      const rankData = await getData("/user/rank");
+      if (rankData && typeof rankData.rank !== "undefined") {
+        document.getElementById("epochRankValue").textContent = rankData.rank;
+      } else {
+        document.getElementById("epochRankValue").textContent = "0";
+      }
+
+      const childrenData = await getData("/children/list");
+      const referralsTbody = document.getElementById("referralsTableBody");
+      if (Array.isArray(childrenData) && childrenData.length > 0) {
+        referralsTbody.innerHTML = "";
+        document.getElementById("childrenCount").textContent = childrenData.length;
+        const totalDescendants = childrenData.reduce((sum, c) => sum + (c.descendants || 0), 0);
+        document.getElementById("descendantCount").textContent = `with ${totalDescendants} Descendants`;
+
+        childrenData.forEach(child => {
+          const tr = document.createElement("tr");
+          tr.style.backgroundColor = "#ffffff";
+          tr.style.color = "#5E5E5E";
+          tr.innerHTML = `
+              <td>${child.rank || '-'}</td>
+              <td>@${child.username}</td>
+              <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
+              <td>${child.zone || '-'}</td>
+              <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+            `;
+          referralsTbody.appendChild(tr);
+        });
+      } else {
+        referralsTbody.innerHTML = `<tr><td colspan="5">No Referrals Found</td></tr>`;
+        document.getElementById("childrenCount").textContent = "0";
+        document.getElementById("descendantCount").textContent = `with 0 Descendants`;
+      }
+
+      let currentData = {
+        nodes: Array.isArray(nodesData) ? nodesData : [],
+        zones: Array.isArray(zonesData) ? zonesData : [],
+        referrals: Array.isArray(childrenData) ? childrenData : [],
+        boosts: [],
+        rewards: [
+          { epoch: 670, reward: '100 DIODE', rank: 745 },
+          { epoch: 669, reward: '400 DIODE', rank: 12 },
+        ],
+      };
+
+      function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+      }
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+      }
+      document.querySelectorAll('.close-modal').forEach(button => {
+        button.onclick = function () {
+          this.closest('.modal').style.display = 'none';
+        };
+      });
+      window.onclick = function (event) {
+        if (event.target.classList.contains('modal')) {
+          event.target.style.display = 'none';
+        }
+      };
+
+      if (currentData.nodes.length) {
+        document.querySelector('#nodesCard .button-view-all').onclick = function () {
+          const sortedModalNodes = [...currentData.nodes].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+          document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
+              <tr>
+                <td>${node.rank}</td>
+                <td>${formatBandwidth(node.bandwidth_rank)} GB</td>
+                <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
+                <td class="description-col">${node.meta}</td>
+              </tr>
+            `).join('');
+          showModal('nodesModal');
+        };
+      }
+      if (currentData.zones.length) {
+        document.querySelector('#zonesCard .button-view-all').onclick = function () {
+          document.getElementById('zonesModalBody').innerHTML = currentData.zones.map(zone => `
+              <tr>
+                <td>${zone.rank}</td>
+                <td>${zone.activeusers}</td>
+                <td class="address-col">${zone.address}</td>  <!-- Show full address -->
+                <td class="description-col">${zone.meta}</td>
+              </tr>
+            `).join('');
+          showModal('zonesModal');
+        };
+      }
+      if (currentData.referrals.length) {
+        document.querySelector('#referralsCard .button-view-all').onclick = function () {
+          document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
+              <tr>
+                <td>${child.rank || '-'}</td>
+                <td>@${child.username}</td>
+                <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
+                <td>${child.zone || '-'}</td>
+                <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+              </tr>
+            `).join('');
+          showModal('referralsModal');
+        };
+      }
+
+      const moonbeamRPC = "https://rpc.api.moonbeam.network";
+      const ERC721_ABI = [
+        {
+          "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+          "name": "balanceOf",
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ];
+
+      const NFT_BOOSTS = [
+        {
+          contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
+          name: "Ambassador Pre Launch",
+          baseBoost: 2
+        },
+        {
+          contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
+          name: "OG Ambassador",
+          baseBoost: 4
+        }
+      ];
+
+      const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
+        try {
+          const response = await fetch(moonbeamRPC, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              jsonrpc: "2.0",
+              id: 1,
+              method: "eth_call",
+              params: [{
+                to: nft.contractAddress,
+                data: '0x70a08231' + walletAddress.substring(2).padStart(64, '0')
+              }, "latest"]
+            })
+          });
+          const result = await response.json();
+          return {
+            name: nft.name,
+            balance: result.result ? parseInt(result.result, 16) : 0,
+            baseBoost: nft.baseBoost,
+            contractAddress: nft.contractAddress
+          };
+        } catch (err) {
+          console.error("Failed to fetch NFT balance:", err);
+          return {
+            name: nft.name,
+            balance: 0,
+            baseBoost: nft.baseBoost,
+            contractAddress: nft.contractAddress
+          };
+        }
+      })).catch(err => {
+        console.error("Failed to fetch NFTs", err);
+        return [];
+      });
+
+      const totalBoost = nftBalances.reduce((sum, nft) => {
+        return sum + (nft.baseBoost * nft.balance);
+      }, 0);
+
+      document.getElementById('boostValue').textContent = `${totalBoost}%`;
+
+      const boostsTbody = document.getElementById("boostsTableBody");
+      let userBoosts = [];
+      if (nftBalances && nftBalances.length > 0) {
+        userBoosts = nftBalances
+          .filter(item => item.balance > 0)
+          .map(item => {
+            const quantity = item.balance;
+            const totalBoost = (item.baseBoost * quantity) + "%";
+            return {
+              nft: item.name,
+              quantity,
+              totalBoost,
+              contractAddress: item.contractAddress
+            };
+          });
+      }
+
+      function createNFTRow(item) {
+        const url = `https://moonscan.io/token/${item.contractAddress}?a=${walletAddress}`;
+        return `
+            <tr>
+              <td>
+                <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                  ${item.nft}
+                </a>
+              </td>
+              <td>${item.quantity}</td>
+              <td>${item.totalBoost}</td>
+            </tr>
+          `;
+      }
+
+      if (userBoosts.length > 0) {
+        userBoosts.forEach(item => {
+          boostsTbody.innerHTML += createNFTRow(item);
+        });
+      } else {
+        boostsTbody.innerHTML = `<tr><td colspan="3">No NFT Found</td></tr>`;
+      }
+
+      document.querySelector('.content-box:first-of-type .button-view-all').onclick = function () {
+        const boostsModalBody = document.getElementById('boostsModalBody');
+        boostsModalBody.innerHTML = '';
+
+        if (userBoosts.length > 0) {
+          userBoosts.forEach(item => {
+            boostsModalBody.innerHTML += createNFTRow(item);
+          });
+        } else {
+          boostsModalBody.innerHTML = `<tr><td colspan="3">No matching NFTs found</td></tr>`;
+        }
+
+        showModal('boostsModal');
+      };
+
+      currentData.rewards = [
+        { epoch: 670, reward: '100 DIODE', rank: 745 },
+        { epoch: 669, reward: '400 DIODE', rank: 12 },
+      ];
+
+      document.querySelector('.content-box:last-of-type .button-view-all').onclick = function () {
+        document.getElementById('rewardsModalBody').innerHTML = currentData.rewards.map(r => `
+            <tr>
+              <td>${r.epoch}</td>
+              <td>${r.reward}</td>
+              <td>${r.rank}</td>
+            </tr>
+          `).join('');
+        showModal('rewardsModal');
+      };
+    });
+  </script>
+
+</body>
+
+</html>

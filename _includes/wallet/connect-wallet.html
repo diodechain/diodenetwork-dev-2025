@@ -1,0 +1,122 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diode Network Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+   
+      font-family: 'Poppins', sans-serif;
+      background-color: #000000;
+    }
+    .center-container {
+      display: flex;
+         margin-top: -30px;
+      background: url('{{ "assets/images/bg-wallet.png" | relative_url }}') center center / cover no-repeat;
+      justify-content: center;
+      align-items: center;
+      height: 90vh;
+    }
+    .wallet-card {
+      background-color: #141414;
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-left: 50px;
+      margin-top: 100px;
+      text-align: center;
+      width: 500px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .wallet-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+    .wallet-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .wallet-info {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
+    .connect-button {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to right, #D73E53, #A04992, #615BA8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .connect-button .icon {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            window.location.href = '{{ "/app/" | relative_url }}';
+          }
+        } catch (error) {
+          console.error("Error checking connected accounts:", error);
+        }
+      }
+    });
+  </script>
+
+  <div class="center-container">
+    <div class="wallet-card">
+      <div class="wallet-icon">
+        <img src="{{ '/assets/images/icons/wallet-div.png' | relative_url }}"/>
+      </div>
+      <div class="wallet-title">Connect Wallet</div>
+      <div class="wallet-info">Connect your wallet to start interacting with the Diode Network</div>
+      <button class="connect-button" id="connectWalletBtn">
+        <img
+          src="{{ '/assets/images/icons/wallet.svg' | relative_url }}"
+          style="margin-right: 10px;"
+          alt="Wallet Icon"
+        />
+        Connect Metamask Wallet
+      </button>
+    </div>  
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const connectWalletBtn = document.getElementById('connectWalletBtn');
+      connectWalletBtn.addEventListener('click', async () => {
+        if (window.ethereum) {
+          try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            window.location.href = '{{ "/app/" | relative_url }}';
+          } catch (error) {
+            console.error("User rejected request or error occurred:", error);
+          }
+        } else {
+          alert('Metamask not detected. Please install Metamask extension and try again.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
