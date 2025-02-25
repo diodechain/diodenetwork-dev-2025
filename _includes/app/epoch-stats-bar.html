@@ -264,6 +264,14 @@
         closeSidebarBtn.addEventListener('click', () => {
           airlyftWidget.classList.remove('active');
         });
+
+        document.addEventListener('click', (e) => {
+          if (airlyftWidget.classList.contains('active') && 
+              !airlyftWidget.contains(e.target) && 
+              e.target !== openCampaignBtn) {
+            airlyftWidget.classList.remove('active');
+          }
+        });
   
         const viewAllModal = document.getElementById('viewAllModal');
         const viewAllContent = document.getElementById('viewAllContent');

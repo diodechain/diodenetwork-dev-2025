@@ -101,6 +101,20 @@
       white-space: nowrap;
     }
 
+    .clickable-row {
+     
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .clickable-row:hover {
+      background-color: #e8e9e9 !important;
+    }
+
+    .clickable-row td {
+      background-color: transparent;
+    }
+
     .table th.address-col {
       width: 140px;
       max-width: 140px;
@@ -239,11 +253,14 @@
       font-size: 16px;
       font-weight: bold;
       height: 121px;
-      min-width: 480px;
+      min-width: 400px;
     }
 
     .epoch-rank {
       background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      justify-content: center;
+      align-items: center;
+      display: flex;
     }
 
     .rank-title {
@@ -295,7 +312,7 @@
     }
 
     .boost-box {
-      margin-left: 10px;
+      margin-left: 40px;
       padding: 2px;
       min-width: 100px;
       height: 100px;
@@ -372,19 +389,24 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
     }
 
     .modal-content {
       background-color: #fafafa;
-      margin: 5% auto;
       padding: 20px;
       border-radius: 8px;
-      width: 90%;
-      max-width: 1200px;
-      max-height: 80vh;
-      overflow-y: auto;
       width: 95%;
       max-width: 1400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
     }
 
     .modal-header {
@@ -429,16 +451,76 @@
       min-width: 200px;
     }
 
-    /* Responsive Styles */
+    @media (max-width: 768px) {
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .modal-content {
+        width: 10vw;
+        padding: 2px;
+        margin: 0;
+        max-height: 90vh;
+      }
+
+      .modal-header {
+        margin-bottom: 15px;
+      }
+
+      .modal-title {
+        font-size: 16px;
+      }
+
+      .modal .table th,
+      .modal .table td {
+        padding: 8px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        width: 95%;
+        padding: 10px;
+      }
+
+      .modal-title {
+        font-size: 14px;
+      }
+
+      .modal .table th,
+      .modal .table td {
+        padding: 6px;
+        font-size: 11px;
+      }
+
+      .modal .table td.address-col {
+        min-width: 150px;
+        max-width: 200px;
+      }
+
+      .close-modal {
+        font-size: 20px;
+      }
+    }
+
     @media (max-width: 768px) {
       .airlyft-sidebar {
         width: 100%;
         right: -100%;
       }
 
-      .modal-content {
-        margin: 20px;
-      }
+      
     }
 
     @media (max-width: 1200px) {
@@ -834,7 +916,7 @@
           <tbody id="boostsTableBody"></tbody>
         </table>
       </div>
-      <div class="content-box">
+      <!-- <div class="content-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h3 class="table-title" style="font-size: 16px;">YOUR PAST
             REWARDS</h3>
@@ -858,7 +940,7 @@
             <td>12</td>
           </tr>
         </table>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -1031,9 +1113,7 @@
 
         sortedNodes.forEach(node => {
           const tr = document.createElement("tr");
-          tr.style.backgroundColor = "#ffffff";
-          tr.style.color = "#5E5E5E";
-          tr.style.cursor = "pointer";
+          tr.className = "clickable-row";
           tr.onclick = () => window.open(`https://diode.io/network/#/node/${node.address}`, '_blank');
           tr.innerHTML = `
               <td>${node.rank}</td>
@@ -1267,12 +1347,8 @@
       function createNFTRow(item) {
         const url = `https://moonscan.io/token/${item.contractAddress}?a=${walletAddress}`;
         return `
-            <tr>
-              <td>
-                <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                  ${item.nft}
-                </a>
-              </td>
+            <tr class="clickable-row" onclick="window.open('${url}', '_blank')">
+              <td>${item.nft}</td>
               <td>${item.quantity}</td>
               <td>${item.totalBoost}</td>
             </tr>

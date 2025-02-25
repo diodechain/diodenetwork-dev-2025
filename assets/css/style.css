@@ -209,14 +209,17 @@ body {
 }
 
 .launch-app-btn {
-  margin-top: 18px;
-  margin-right: 100px;
+  position: fixed; 
+  top: 20px;
+  right: 100px; 
+  z-index: 3; 
+  padding: 0.75rem 1.5rem;
   border-radius: 20px;
   border: none;
   cursor: pointer;
   font-size: 14px;
-  text-decoration: none;
   font-weight: 500;
+  text-decoration: none;
   color: #fff;
   background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
   transition: opacity 0.2s ease;
@@ -267,25 +270,6 @@ body {
   width: 100%;
   background-color: #202020;
   margin-top: 0;
-}
-
-.launch-app-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 0.75rem 1.5rem;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: #fff;
-  background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
-  transition: opacity 0.2s ease;
-}
-
-.launch-app-btn:hover {
-  opacity: 0.85;
 }
 
 .hero-heading {
@@ -391,6 +375,8 @@ body {
 
 }
 
+
+
 .tooltip-inner strong {
   color: black;
   font-weight: bold;
@@ -403,8 +389,17 @@ body {
   font-size: 12px;
 }
 
+.tooltip-inner:hover {
+  opacity: 1;
+  visibility: visible;
+  display: block !important;
+  position: absolute;
+}
+
+
 .tooltip {
   position: fixed;
+  pointer-events: auto;
   z-index: 9999;
   display: block;
   font-family: "Titillium Web", Arial, sans-serif;
@@ -424,8 +419,14 @@ body {
   word-wrap: normal;
   font-size: 15px;
   padding: 20px;
+  
 }
-
+.tooltip:hover {
+  opacity: 1;
+  visibility: visible;
+  display: block !important;
+  position: absolute;
+}
 
 
 /* Epoch section */
@@ -729,8 +730,8 @@ body {
 }
 
 .footer-icon img {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   display: block;
 }
 
@@ -844,9 +845,9 @@ body {
   }
 
   .launch-app-btn {
-    position: absolute;
+    position: fixed;
     top: 20px;
-    right: 20px;
+    left: 20px;
     margin: 0;
   }
 }
@@ -931,11 +932,10 @@ body {
   }
 
   .launch-app-btn {
-    position: relative;
-    top: auto;
-    right: auto;
-    margin-top: 20vh;
-    margin-bottom: 20px;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    margin: 0;
   }
   .hero-section {
    justify-content: flex-start;

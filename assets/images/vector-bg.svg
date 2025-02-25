@@ -61,13 +61,23 @@
     <stop offset="1" stop-color="#181818" stop-opacity="0"/>
     <animate 
       attributeName="x1"
-      values="-0.000008;361; -0.000008"
-      dur="12s"
+      values="-100;461;-100"
+      dur="15s"
+      repeatCount="indefinite"/>
+    <animate 
+      attributeName="y1"
+      values="646;846;646"
+      dur="18s"
       repeatCount="indefinite"/>
     <animate 
       attributeName="x2"
-      values="361; -0.000008; 361"
-      dur="12s"
+      values="361;-100;361"
+      dur="15s"
+      repeatCount="indefinite"/>
+    <animate 
+      attributeName="y2"
+      values="846;646;846"
+      dur="18s"
       repeatCount="indefinite"/>
 </linearGradient>
 
@@ -76,14 +86,24 @@
     <stop offset="0.52" stop-color="#D13F59"/>
     <stop offset="0.97" stop-color="#6659A6"/>
     <animate 
+      attributeName="x1"
+      values="287;487;287"
+      dur="20s"
+      repeatCount="indefinite"/>
+    <animate 
       attributeName="y1"
-      values="156;370;156"
-      dur="10s"
+      values="56;470;56"
+      dur="17s"
+      repeatCount="indefinite"/>
+    <animate 
+      attributeName="x2"
+      values="487;287;487"
+      dur="20s"
       repeatCount="indefinite"/>
     <animate 
       attributeName="y2"
-      values="370;156;370"
-      dur="10s"
+      values="470;56;470"
+      dur="17s"
       repeatCount="indefinite"/>
 </linearGradient>
 
@@ -92,14 +112,24 @@
     <stop offset="0.48" stop-color="#6659A6"/>
     <stop offset="0.985" stop-color="#3E3E3E"/>
     <animate 
+      attributeName="x1"
+      values="220;420;220"
+      dur="22s"
+      repeatCount="indefinite"/>
+    <animate 
       attributeName="y1"
-      values="525;786;525"
-      dur="12s"
+      values="425;886;425"
+      dur="19s"
+      repeatCount="indefinite"/>
+    <animate 
+      attributeName="x2"
+      values="420;220;420"
+      dur="22s"
       repeatCount="indefinite"/>
     <animate 
       attributeName="y2"
-      values="786;525;786"
-      dur="12s"
+      values="886;425;886"
+      dur="19s"
       repeatCount="indefinite"/>
 </linearGradient>
 
@@ -108,21 +138,26 @@
     <stop offset="0.475" stop-color="#6659A6"/>
     <stop offset="0.995" stop-color="#333333"/>
     <animate 
+      attributeName="x1"
+      values="730;930;730"
+      dur="16s"
+      repeatCount="indefinite"/>
+    <animate 
       attributeName="y1"
-      values="526;675;526"
-      dur="8s"
+      values="426;775;426"
+      dur="14s"
+      repeatCount="indefinite"/>
+    <animate 
+      attributeName="x2"
+      values="930;730;930"
+      dur="16s"
       repeatCount="indefinite"/>
     <animate 
       attributeName="y2"
-      values="675;526;675"
-      dur="8s"
+      values="775;426;775"
+      dur="14s"
       repeatCount="indefinite"/>
 </linearGradient>
 
-
-<linearGradient id="paint4_linear_3230_20" x1="-7.60414e-06" y1="646.994" x2="334.437" y2="646.994" gradientUnits="userSpaceOnUse">
-<stop stop-color="#181818"/>
-<stop offset="1" stop-color="#181818" stop-opacity="0"/>
-</linearGradient>
 </defs>
 </svg>
