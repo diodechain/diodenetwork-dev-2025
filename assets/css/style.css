@@ -371,6 +371,7 @@ body {
   text-decoration: none;
   font-size: 12px;
   display: block;
+  margin-bottom: 5px;
   cursor: pointer;
 
 }
@@ -944,6 +945,25 @@ body {
   .hero-section {
    justify-content: flex-start;
   }
+
+  .tooltip-inner {
+    min-width: 250px;
+    padding: 0.75rem;
+    font-size: 11px;
+    line-height: 10px;
+  }
+
+  .tooltip-inner strong {
+    font-size: 11px;
+  }
+
+  .tooltip-inner span {
+    font-size: 11px;
+  }
+
+  .tooltip-inner a {
+    font-size: 11px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -981,6 +1001,31 @@ body {
     height: auto;
     max-width: 100%;
     touch-action: pan-x pan-y;
+  }
+
+  .tooltip-inner {
+    max-width: 200px;
+    min-width: 200px;
+    padding: 0.5rem;
+    font-size: 8px;
+  }
+
+  .tooltip-inner strong {
+    font-size: 8px;
+  }
+
+  .tooltip-inner span {
+    font-size: 8px;
+  }
+
+  .tooltip-inner a {
+    font-size: 8px;
+    margin-bottom: 5px;
+  }
+
+  .tooltip {
+    padding: 5px;
+    font-size: 8px;
   }
 }
 
