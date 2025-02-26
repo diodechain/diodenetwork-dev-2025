@@ -39,7 +39,7 @@
       values="#D13F59;#6659A6;#333333;#6659A6;#D13F59" 
       dur="8s" repeatCount="indefinite" />
   </stop>
-  <stop offset="100%" stop-color="#6659A6">
+  <stop offset="100%" stop-color="#262626">
     <animate attributeName="stop-color" 
       values="#6659A6;#333333;#D13F59;#333333;#6659A6" 
       dur="8s" repeatCount="indefinite" />
@@ -47,40 +47,40 @@
 </linearGradient>
 
 <linearGradient id="circleGradient2" x1="0%" y1="0%" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
-  <stop offset="0%" stop-color="#6659A6">
+  <stop offset="0%" stop-color="#262626">
     <animate attributeName="stop-color" 
-      values="#6659A6;#D13F59;#333333;#D13F59;#6659A6" 
+      values="#262626" 
       dur="7s" repeatCount="indefinite" />
   </stop>
-  <stop offset="100%" stop-color="#333333">
+  <stop offset="100%" stop-color="#262626">
     <animate attributeName="stop-color" 
-      values="#333333;#6659A6;#D13F59;#6659A6;#333333" 
+      values="#333333;#6659A6;#6659A6;#333333" 
       dur="7s" repeatCount="indefinite" />
   </stop>
 </linearGradient>
 
 <linearGradient id="circleGradient3" x1="0%" y1="0%" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
-  <stop offset="0%" stop-color="#333333">
+  <stop offset="0%" stop-color="#262626">
     <animate attributeName="stop-color" 
       values="#333333;#D13F59;#6659A6;#D13F59;#333333" 
       dur="9s" repeatCount="indefinite" />
   </stop>
-  <stop offset="100%" stop-color="#D13F59">
+  <stop offset="100%" stop-color="#262626">
     <animate attributeName="stop-color" 
-      values="#D13F59;#333333;#6659A6;#333333;#D13F59" 
+      values="#262626" 
       dur="9s" repeatCount="indefinite" />
   </stop>
 </linearGradient>
 
 <linearGradient id="circleGradient4" x1="0%" y1="0%" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
-  <stop offset="0%" stop-color="#D13F59">
+  <stop offset="0%" stop-color="#262626">
     <animate attributeName="stop-color" 
       values="#D13F59;#6659A6;#333333;#6659A6;#D13F59" 
       dur="10s" repeatCount="indefinite" />
   </stop>
-  <stop offset="100%" stop-color="#333333">
+  <stop offset="100%" stop-color="#262626">
     <animate attributeName="stop-color" 
-      values="#333333;#D13F59;#6659A6;#D13F59;#333333" 
+      values="#262626" 
       dur="10s" repeatCount="indefinite" />
   </stop>
 </linearGradient>
