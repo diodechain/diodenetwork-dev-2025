@@ -2,11 +2,28 @@
   <div class="network prenet">
     <div class="title row" >
     </div>
-    <div class="map"  >
+    <div class="map" ref="mapContainer" >
     <div  class="map-title">Network Map</div>
-      <svg ref="svg"  @mouseleave="hideTooltip"  version="1.1" viewBox="0 0 1000 647" preserveAspectRatio="xMinYMin meet"
-        style="stroke-linejoin: round; background-color:#ffff; stroke:#FFF; fill: #EEEEEE;  "
-        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <div class="map-controls">
+        <div class="map-control-btn" @click="zoomIn">+</div>
+        <div class="map-control-btn" @click="zoomOut">-</div>
+      </div>
+      <svg ref="svg"  @mouseleave="hideTooltip"       @mousedown="startDrag($event)"
+           @mousemove="onDrag($event)"
+           @mouseup="endDrag" @touchstart="startDragTouch($event)"
+           @touchmove="onDragTouch($event)"
+           @touchend="endDragTouch"
+           version="1.1"
+           viewBox="0 0 1000 647"
+           preserveAspectRatio="xMinYMin meet"
+          :style="{
+            transform: 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')'
+          }"
+
+        xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           style="stroke-linejoin: round; background-color: #fff; stroke: #FFF; fill: #EEEEEE;">
+        
         <g x="0" y="0" id="countries" class="draggable">
           <path
             d="M705.095473,347.358975L703.185541,347.101503L699.259904,349.734781L698.161758,348.598999L698.420314,345.662495L696.381534,343.613834L692.809190,346.703602L691.914707,348.301657L690.980523,347.628542L688.972844,348.746781L688.125371,348.323054L686.033561,347.587345L684.488245,347.564174L683.652811,347.455957L682.344409,346.520899L681.909851,347.764979L679.572241,348.438463L679.018582,351.205398L675.266223,352.766604L674.686909,354.312810L672.595672,354.766275L669.767179,353.474360L668.636641,357.694527L667.874589,360.130031L669.081805,360.621575L667.895801,362.437648L669.021466,367.138651L671.122018,367.686762L671.349186,369.770679L668.833711,372.682517L673.480983,374.311011L680.406385,373.822025L684.010834,372.494781L684.107864,369.760841L685.653897,367.928997L692.251661,365.986526L692.098448,364.018170L693.276139,362.026616L695.041314,361.187620L693.951194,358.982338L696.589497,359.086936L697.236317,356.586326L698.617671,355.165008L697.644933,352.022243L699.264491,350.523488L706.834993,348.754680L708.449535,348.364676L707.955785,347.364479L705.095473,347.358975Z "
@@ -545,16 +562,20 @@
             @click="tooltip(point, $event, false)" :key="point.ip" v-bind:cx="point.x" v-bind:cy="point.y" r="4" />
         </g>
        
-      <g transform="translate(50, 550)" id="labels">
-         
-          
-          <text class="map-info-title" dominant-baseline="middle" y="-50" x="-10" ref="num_nodes">Total nodes: {{total_nodes}}</text>          
-          <circle class="connected" r="6" cy="0" />
-          <text class="map-info" dominant-baseline="middle" y="0" x="12">Connected nodes</text>
-          <circle class="notConnected" r="6" cy="30" />
-          <text class="map-info" dominant-baseline="middle" y="30" x="12">Not connected nodes</text>
-        </g>
+
       </svg>
+          <g transform="translate(50, 550)" id="labels" class="map-title-total" >
+          <text class="map-info-title" dominant-baseline="middle" y="-40" x="-10" ref="num_nodes">Total nodes: {{total_nodes}}</text>   
+            <div class="row-node" style="margin-top: 1rem;" >
+        <div class="circle-green"></div>
+        <text class="map-info">Connected nodes</text>
+    </div>       
+          <div class="row-node">
+        <div class="circle-black"></div>
+        <text class="map-info">Not connected nodes</text>
+    </div>
+  
+        </g>
     </div>
     <div class="tooltip vue-tooltip-theme" id="map-tooltip"></div>
     <div class="page-content"></div>
@@ -573,6 +594,15 @@ export default {
       collisionMap: {},
       baseIp: undefined,
       timeoutId: null,
+      scale: 1,
+      minScale: 1, 
+      maxScale: 5, 
+      zoomStep: 0.2,
+      translateX: 0,
+      translateY: 0,
+      isDragging: false,
+      dragStartX: 0,
+      dragStartY: 0,
       searchTerm: "",
       searchActivated: false,
       searchFinished: false,
@@ -587,8 +617,14 @@ export default {
   });
 },
   mounted: function () {
-    this.makeDraggable(this.$refs.svg);
+ 
+     if (this.checkIfMobile()) {
+      this.scale = 6; 
+    }
+   
   },
+ 
+
 watch: {
   points: {
     handler() {
@@ -600,6 +636,68 @@ watch: {
 },
 
 methods: {
+  checkIfMobile() {
+      return window.innerWidth < 768;
+    },
+      clampTranslate() {
+  const container = this.$refs.mapContainer;
+  
+},
+  zoomIn() {
+  if (this.scale < this.maxScale) {
+    this.scale += this.zoomStep;
+    this.clampTranslate();
+  }
+},
+zoomOut() {
+  if (this.scale > this.minScale) {
+    this.scale -= this.zoomStep;
+    this.clampTranslate(); 
+  }
+},
+
+    onWheel(event) {
+      if (event.deltaY < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
+    },
+
+   startDrag(evt) {
+  this.isDragging = true;
+  this.dragStartX = evt.clientX - this.translateX;
+  this.dragStartY = evt.clientY - this.translateY;
+},onDrag(evt) {
+  if (!this.isDragging) return;
+
+  this.translateX = evt.clientX - this.dragStartX;
+  this.translateY = evt.clientY - this.dragStartY;
+
+  this.clampTranslate();
+},
+    endDrag() {
+      this.isDragging = false;
+    },
+
+    startDragTouch(evt) {
+  if (evt.touches.length === 1) {
+    this.isDragging = true;
+    this.dragStartX = evt.touches[0].clientX - this.translateX;
+    this.dragStartY = evt.touches[0].clientY - this.translateY;
+  }
+},
+    onDragTouch(evt) {
+  if (!this.isDragging || evt.touches.length !== 1) return;
+
+  this.translateX = evt.touches[0].clientX - this.dragStartX;
+  this.translateY = evt.touches[0].clientY - this.dragStartY;
+
+  this.clampTranslate();
+},
+endDragTouch() {
+  this.isDragging = false;
+},
     tooltip(point, event, hovered) {
       let text = "Location: " + point.city + " (" + point.ip + ")</br>";
       text += "Version: " + point.version + " </br>";
@@ -703,54 +801,7 @@ load: async function() {
 },
 
 
-    makeDraggable: function (svg) {
-      let selectedElement;
-      let offset;
-      let getMousePosition = function (evt) {
-        let CTM = svg.getScreenCTM();
-        return {
-          x: (evt.clientX - CTM.e) / CTM.a,
-          y: (evt.clientY - CTM.f) / CTM.d
-        };
-      }
 
-      let startDrag = function (evt) {
-
-        if (evt.currentTarget.classList.contains('draggable')) {
-          selectedElement = evt.currentTarget;
-          offset = getMousePosition(evt);
-          offset.x -= parseFloat(selectedElement.getAttributeNS(null, "x"));
-          offset.y -= parseFloat(selectedElement.getAttributeNS(null, "y"));
-        }
-      }
-
-      let drag = function (evt) {
-        if (selectedElement == evt.currentTarget) {
-          evt.preventDefault();
-          let coord = getMousePosition(evt);
-          let x = coord.x - offset.x;
-          let y = coord.y - offset.y;
-          selectedElement.setAttributeNS(null, "x", x);
-          selectedElement.setAttributeNS(null, "y", y);
-          selectedElement.setAttributeNS(null, "transform", "translate(" + x + "," + y + ")");
-        }
-      }
-
-      let endDrag = function (evt) {
-        selectedElement = false;
-      }
-
-      for (let el of document.getElementsByClassName('draggable')) {
-        el.addEventListener('mousedown', startDrag);
-        el.addEventListener('mousemove', drag);
-        el.addEventListener('mouseup', endDrag);
-        el.addEventListener('mouseleave', endDrag);
-      };
-      // svg.addEventListener('mousedown', startDrag);
-      // svg.addEventListener('mousemove', drag);
-      // svg.addEventListener('mouseup', endDrag);
-      // svg.addEventListener('mouseleave', endDrag);
-    },
 
     putPoint: function (node_id, serverObj, type, retries, extra) {
       resolveIP(serverObj[1], (location) => {
