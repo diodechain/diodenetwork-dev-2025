@@ -11,8 +11,8 @@
       <svg ref="svg"  @mouseleave="hideTooltip"       @mousedown="startDrag($event)"
            @mousemove="onDrag($event)"
            @mouseup="endDrag" @touchstart="startDragTouch($event)"
-           @touchmove="onDragTouch($event)"
-           @touchend="endDragTouch"
+          @touchstart="startTouch($event)" @touchmove="onTouchMove($event)" @touchend="endTouch"
+
            version="1.1"
            viewBox="0 0 1000 647"
            preserveAspectRatio="xMinYMin meet"
@@ -680,24 +680,40 @@ zoomOut() {
       this.isDragging = false;
     },
 
-    startDragTouch(evt) {
-  if (evt.touches.length === 1) {
-    this.isDragging = true;
-    this.dragStartX = evt.touches[0].clientX - this.translateX;
-    this.dragStartY = evt.touches[0].clientY - this.translateY;
-  }
-},
-    onDragTouch(evt) {
-  if (!this.isDragging || evt.touches.length !== 1) return;
-
-  this.translateX = evt.touches[0].clientX - this.dragStartX;
-  this.translateY = evt.touches[0].clientY - this.dragStartY;
-
-  this.clampTranslate();
-},
-endDragTouch() {
-  this.isDragging = false;
-},
+    startTouch(evt) {
+      if (evt.touches.length === 1) {
+        this.isDragging = true;
+        this.dragStartX = evt.touches[0].clientX - this.translateX;
+        this.dragStartY = evt.touches[0].clientY - this.translateY;
+      } else if (evt.touches.length === 2) {
+        this.isDragging = false;
+        this.initialPinchDistance = this.getPinchDistance(evt);
+        this.lastScale = this.scale;
+      }
+    },
+    onTouchMove(evt) {
+      if (evt.touches.length === 1 && this.isDragging) {
+        this.translateX = evt.touches[0].clientX - this.dragStartX;
+        this.translateY = evt.touches[0].clientY - this.dragStartY;
+        this.clampTranslate();
+      } else if (evt.touches.length === 2) {
+        const newDistance = this.getPinchDistance(evt);
+        if (this.initialPinchDistance) {
+          const scaleChange = newDistance / this.initialPinchDistance;
+          this.scale = Math.min(this.maxScale, Math.max(this.minScale, this.lastScale * scaleChange));
+          this.clampTranslate();
+        }
+      }
+    },
+    endTouch() {
+      this.isDragging = false;
+      this.initialPinchDistance = null;
+    },
+    getPinchDistance(evt) {
+      const dx = evt.touches[0].clientX - evt.touches[1].clientX;
+      const dy = evt.touches[0].clientY - evt.touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    },
     tooltip(point, event, hovered) {
       let text = "Location: " + point.city + " (" + point.ip + ")</br>";
       text += "Version: " + point.version + " </br>";
