@@ -277,13 +277,13 @@ body {
   font-size: 54px;
   color: #fff;
   position: absolute;
-  top: 25%;
+  top: 35%;
   margin-bottom: 2rem;
 }
 
 .hero-subtext {
   position: absolute; 
-  top: 45%;       
+  top: 55%;       
   display: flex;
   justify-content: center;
   align-items: center;
