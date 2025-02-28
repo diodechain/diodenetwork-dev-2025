@@ -6,6 +6,10 @@ body {
   background-color: white;
 }
 
+a:hover {
+    opacity: 0.75;
+}
+
 .sidebar {
   width: 256px;
   min-height: 100vh;
@@ -763,8 +767,12 @@ body {
   font-family: sans-serif;
 }
 
-.tech-card-desc a {
-  color:9d4c7d;
+.tech-card-desc a:link {
+  color:#9d4c7d;
+}
+
+.tech-card-desc a:visited {
+  color:#9d4c7d;
 }
 
 /* FOOTER */
