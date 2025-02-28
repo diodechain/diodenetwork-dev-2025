@@ -7,12 +7,13 @@ title: "Home"
 <div id="hero-section" class="hero-section">
 
   <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Launch App</a>
-  <h1 class="hero-heading">Uncompromising Privacy.</h1>
+  <h1 class="hero-heading">Web3 Zero Trust Networking</h1>
   <p class="hero-subtext">
-    Diode Network delivers privacy-first communication solutions for  <br/> 
-    executives, expats, and operations teams, ensuring secure  <br/>
-    messaging and remote access across the globe.
+    The Diode Network is the leading open and permissionless Zero Trust network.
   </p>
+  <a href="#network-map-section" class="scroll-down-arrow-hero">
+    <img src="{{ '/assets/images/icons/arrow_back_white.svg' | relative_url }}" alt="Scroll Down" width="50" height="50" >
+  </a>
 </div>
 
 <!-- NETWORK MAP SECTION (Network.vue component) -->

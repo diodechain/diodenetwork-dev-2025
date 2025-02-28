@@ -6,17 +6,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     body {
-   
       font-family: 'Poppins', sans-serif;
       background-color: #000000;
+      margin: 0;
+      padding: 0;
     }
     .center-container {
       display: flex;
-         margin-top: -30px;
+      margin-top: -30px;
       background: url('{{ "assets/images/bg-wallet.png" | relative_url }}') center center / cover no-repeat;
       justify-content: center;
       align-items: center;
       height: 90vh;
+      width: 100%;
     }
     .wallet-card {
       background-color: #141414;
@@ -33,6 +35,10 @@
       font-size: 40px;
       margin-bottom: 15px;
     }
+    .wallet-icon img {
+      max-width: 100%;
+      height: auto;
+    }
     .wallet-title {
       font-family: 'Poppins', sans-serif;
       font-size: 22px;
@@ -44,6 +50,7 @@
       font-size: 14px;
       color: #bbb;
       margin-bottom: 20px;
+      text-align: center;  
     }
     .connect-button {
       font-family: 'Poppins', sans-serif;
@@ -63,6 +70,48 @@
     .connect-button .icon {
       margin-right: 10px;
       font-size: 18px;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .wallet-card {
+        width: 90%;
+        max-width: 400px;
+        margin-left: 0;
+        margin-top: 0px;
+        padding: 15px;
+      }
+      .wallet-title {
+        font-size: 20px;
+      }
+      .connect-button {
+        font-size: 16px;
+        padding: 10px 15px;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .center-container {
+        margin-top: -20px;
+        height: 85vh;
+      }
+      .wallet-card {
+        width: 85%;
+        padding: 15px 10px;
+      }
+      .wallet-title {
+        font-size: 18px;
+      }
+      .wallet-info {
+        font-size: 12px;
+      }
+      .connect-button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+      .connect-button img {
+        width: 16px;
+        height: auto;
+      }
     }
   </style>
 </head>

@@ -10,6 +10,12 @@
       font-family: 'Poppins', sans-serif;
       background-color: #000000;
     }
+    button:hover {
+      opacity: 75%;
+    }
+    a:hover {
+      opacity: 75%;
+    }
     .dashboard {
       max-width: 1392px;
       margin: 20px auto;
@@ -111,7 +117,7 @@
       align-items: center;
       z-index: 1000;
     }
-    .modal-content {
+    .modal-read {
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -132,7 +138,7 @@
       font-size: 24px;
       cursor: pointer;
     }
-    .modal-content.modal-large {
+    .modal-read.modal-large {
       max-width: 95%;
       max-height: 90vh;
       overflow: auto;
@@ -165,21 +171,31 @@
     }
     .close-sidebar {
       position: absolute;
-      right: 10px;
-      top: 10px;
-      background: none;
+      right: 25px;
+      top: 30px;     
+      background: #b5b1b0;
       border: none;
       font-size: 24px;
       z-index: 1001;
       cursor: pointer;
       color: #ffffff;
+      width: 32px;      
+      height: 32px;    
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px; 
+      margin-right: 15px;    
+      padding: 0;
+      line-height: 1;
     }
   
   </style>
 </head>
 <body>
   <div class="dashboard-header">
-    <div class="title">Epoch 670 Stats</div>
+    <div class="title">Current Epoch Stats</div>
     <div class="buttons">
       <button class="open-campaign">View Campaign</button>
       <button class="read-more">Read More</button>
@@ -189,11 +205,11 @@
     <!-- Airlyft Sidebar Widget -->
     <div class="airlyft-sidebar" id="airlyftWidget">
       <button class="close-sidebar">&times;</button>
-      <iframe src="https://airlyft.one/diode/og-nodes" style="width:100%; height:100%; border:none;"></iframe>
+      <iframe src="https://airlyft.one/diode" style="width:100%; height:100%; border:none;"></iframe>
     </div>
   
     <div class="modal-overlay" id="viewAllModal">
-      <div class="modal-content modal-large">
+      <div class="modal-read modal-large">
         <div class="modal-header">
           <h2></h2>
           <button class="close-view-all-modal">&times;</button>
@@ -204,24 +220,28 @@
     </div>
     <!-- Modal for Read More -->
     <div class="modal-overlay" id="readMoreModal">
-      <div class="modal-content">
+      <div class="modal-read">
         <div class="modal-header">
-          <h2>About Epoch 670</h2>
+          <h2>Diode Network Rewards</h2>
           <button class="close-modal">&times;</button>
         </div>
         <div class="modal-body">
           <h3>How It Works</h3>
           <p>
-            This is placeholder content explaining the epoch system. Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Diode Network rewards can be collected every 30 days (every Epoch) for activity in your registered Nodes, Zones, and Children.  You must <a href="https://diode.foundation/docs/programs/ambassador_registration_program.html" target="_blank">join the Diode Referral Program</a> to use this dashboard, and you must “set wallet” with the Registrar Bot to a Metamask wallet address you can connect to this dashboard.
           </p>
-          <h3>Key Features</h3>
+          <h3>Reward Categories</h3>
           <ul>
-            <li>Node performance tracking</li>
-            <li>Real-time ranking system</li>
-            <li>Boost mechanics</li>
-            <li>Reward distribution</li>
+            <li>Nodes - rewarded for their bandwidth</li>
+            <li>Zones - rewarded for their active users</li>
+            <li>Children - rewarded for their growth in descendants</li>
+            <li>Boosts - follow the Discord for opportunities to earn NFTs and get boosts on your rewards</li>
           </ul>
+          <p><a href="https://medium.com/@hansr77/diode-foundation-rewards-program-2aa4ff25728f" target="_blank">See here for an article on these topics</a></p>
+          <h3>More Information</h3>
+          <p>
+            <a href="https://discord.gg/qdGCAKJdHs" target="_blank">Join the Discord</a> or the <a href="https://diode.io/joinzone/#1MQKGI_TUYpNksoAAK6TSynBPpviy5MPgDRyTiO7YuGh5_H5sHDN9VIB1diC" target="_blank">Diode Community Zone</a> to discuss
+          </p>
         </div>
       </div>
     </div>
