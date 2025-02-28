@@ -270,6 +270,30 @@ a:hover {
   margin-bottom: 0;
 }
 
+.scroll-down-arrow-hero {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  transition: opacity 0.3s ease;
+}
+.scroll-down-arrow-map {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  transition: opacity 0.3s ease;
+}
+.scroll-down-arrow:hover {
+  opacity: 0.7;
+}
+
+
+
 #app {
   width: 100%;
   background-color: #202020;
