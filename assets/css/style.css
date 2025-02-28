@@ -1148,6 +1148,24 @@ a:hover {
     height: 10px;
     padding: 0px;
   }
+  .scroll-down-arrow-hero {
+    position: absolute;
+    bottom: 20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    animation: bounce 2s infinite;
+    transition: opacity 0.3s ease;
+  }
+  .scroll-down-arrow-map {
+    position: absolute;
+    bottom: 20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    animation: bounce 2s infinite;
+    transition: opacity 0.3s ease;
+  }
 }
 
 @media screen and (max-width: 480px) {

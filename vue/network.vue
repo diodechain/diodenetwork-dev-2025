@@ -561,11 +561,10 @@
           <circle v-for="point in points" v-bind:class="point.type" @mouseover="tooltip(point, $event, true)"
             @click="tooltip(point, $event, false)" :key="point.ip" v-bind:cx="point.x" v-bind:cy="point.y" r="4" />
         </g>
-       
-
+      
       </svg>
                <a href="#technology-section" class="scroll-down-arrow-map">
-          <img src="/diodenetwork-dev-2025/assets/images/icons/arrow_back_black.svg" alt="Back arrow" />                </a>
+          <img :src="baseurl + '/assets/images/icons/arrow_back_black.svg'" alt="Back arrow" />                </a>
           <g transform="translate(50, 550)" id="labels" class="map-title-total" >
           <text class="map-info-title" dominant-baseline="middle" y="-40" x="-10" ref="num_nodes">Total nodes: {{total_nodes}}</text>   
             <div class="row-node" style="margin-top: 1rem;" >
@@ -590,6 +589,7 @@ export default {
   data() {
     return {
       base: "",
+      baseurl: "https://diodenetwork.io",
       total_nodes: "",
       network: [],
       nodes: {},
