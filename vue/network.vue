@@ -10,7 +10,7 @@
       </div>
       <svg ref="svg"  @mouseleave="hideTooltip"       @mousedown="startDrag($event)"
            @mousemove="onDrag($event)"
-           @mouseup="endDrag" @touchstart="startDragTouch($event)"
+           @mouseup="endDrag" 
           @touchstart="startTouch($event)" @touchmove="onTouchMove($event)" @touchend="endTouch"
 
            version="1.1"
@@ -619,7 +619,7 @@ export default {
   mounted: function () {
  
      if (this.checkIfMobile()) {
-      this.scale = 6; 
+      this.scale = 3; 
     }
    
   },
