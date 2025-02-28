@@ -1150,7 +1150,7 @@ a:hover {
   }
   .scroll-down-arrow-hero {
     position: absolute;
-    bottom: 20vh;
+    bottom: 30vh;
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
