@@ -7,9 +7,12 @@ title: "Home"
 <div id="hero-section" class="hero-section">
 
   <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Launch App</a>
-  <h1 class="hero-heading">Mathematically Secured Zero Trust Networking</h1>
+  <h1 class="hero-heading">Not your keys, not your data</h1>
   <p class="hero-subtext">
-    The leading open and permissionless secure communication network
+    <br>
+    The Diode Network is the leading open and permissionless zero trust network.
+    <br><br>
+    Not only is it more secure than traditional ZTNAs, it delivers communication for the price of bandwidth.  
   </p>
   <a href="#network-map-section" class="scroll-down-arrow-hero">
     <img src="{{ '/assets/images/icons/arrow_back_white.svg' | relative_url }}" alt="Scroll Down" width="50" height="50" >
