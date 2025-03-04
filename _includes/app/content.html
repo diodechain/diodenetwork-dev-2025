@@ -833,7 +833,7 @@
               <thead>
                 <tr>
                   <th>Rank</th>
-                  <th>Active</th>
+                  <th>Active Users</th>
                   <th class="address-col">ADDRESS</th>
                   <th class="description-col">DESCRIPTION</th>
                 </tr>
@@ -860,7 +860,7 @@
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
             <p class="card-number" id="childrenCount">0</p>
-            <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="referralCount"></p>
           </div>
         </div>
         <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
@@ -875,9 +875,8 @@
               <thead>
                 <tr>
                   <th>Rank</th>
+                  <th>New Referrals</th>
                   <th>Username</th>
-                  <th>Nodes</th>
-                  <th>Zone</th>
                   <th>Descendants</th>
                 </tr>
               </thead>
@@ -986,9 +985,12 @@
       <table class="table">
         <thead>
           <tr>
+            <th>Epoch Rank</th>
+            <th>Referrals ETD</th>
             <th>Username</th>
-            <th>Nodes</th>
             <th>Descendants</th>
+            <th>Nodes</th>
+            <th>Zones</th>
           </tr>
         </thead>
         <tbody id="referralsModalBody"></tbody>
@@ -1127,7 +1129,7 @@
       if (Array.isArray(zonesData) && zonesData.length > 0) {
         zonesTbody.innerHTML = "";
         const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
-        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active Users`;
+        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
         document.getElementById("zonesCount").textContent = zonesData.length;
 
         zonesData.forEach(zone => {
@@ -1160,8 +1162,8 @@
       if (Array.isArray(childrenData) && childrenData.length > 0) {
         referralsTbody.innerHTML = "";
         document.getElementById("childrenCount").textContent = childrenData.length;
-        const totalDescendants = childrenData.reduce((sum, c) => sum + (c.descendants || 0), 0);
-        document.getElementById("descendantCount").textContent = `with ${totalDescendants} Descendants`;
+        const totalReferrals = childrenData.reduce((sum, c) => sum + (c.registrations || 0), 0);
+        document.getElementById("referralCount").textContent = `with ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
 
         childrenData.forEach(child => {
           const tr = document.createElement("tr");
@@ -1169,17 +1171,16 @@
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
               <td>${child.rank || '-'}</td>
-              <td>@${child.username}</td>
-              <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
-              <td>${child.zone || '-'}</td>
-              <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+              <td>${child.registrations || "-"}</td>
+              <td>@${child.username.split('.')[0]}</td>
+              <td>${child.descendants !== undefined ? child.descendants || "-" : '-'}</td>
             `;
           referralsTbody.appendChild(tr);
         });
       } else {
         referralsTbody.innerHTML = `<tr><td colspan="5">No Referrals Found</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
-        document.getElementById("descendantCount").textContent = `with 0 Descendants`;
+        document.getElementById("referralCount").textContent = `with 0 Referrals`;
       }
 
       let currentData = {
@@ -1216,7 +1217,7 @@
           document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
               <tr>
                 <td>${node.rank}</td>
-                <td>${formatBandwidth(node.bandwidth_rank)} GB</td>
+                <td>${formatBandwidth(node.bandwidth)} GB</td>
                 <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
                 <td class="description-col">${node.meta}</td>
               </tr>
@@ -1242,10 +1243,11 @@
           document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
               <tr>
                 <td>${child.rank || '-'}</td>
-                <td>@${child.username}</td>
-                <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
-                <td>${child.zone || '-'}</td>
-                <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+                <td>${child.registrations || "-"}</td>
+                <td>@${child.username.split('.')[0]}</td>
+                <td>${child.descendants !== undefined ? child.descendants || "-" : '-' }</td>
+                <td>${child.nodes !== undefined ? child.nodes || "-" : '-' }</td>
+                <td>${child.zones || "-"}</td>
               </tr>
             `).join('');
           showModal('referralsModal');
