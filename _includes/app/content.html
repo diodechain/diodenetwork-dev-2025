@@ -1127,12 +1127,14 @@
       const zonesData = await getData("/zones/list");
       const zonesTbody = document.getElementById("zonesTableBody");
       if (Array.isArray(zonesData) && zonesData.length > 0) {
+        const sortedZones = [...zonesData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+
         zonesTbody.innerHTML = "";
         const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
         document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
         document.getElementById("zonesCount").textContent = zonesData.length;
 
-        zonesData.forEach(zone => {
+        sortedZones.forEach(zone => {
           const tr = document.createElement("tr");
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
@@ -1160,12 +1162,14 @@
       const childrenData = await getData("/children/list");
       const referralsTbody = document.getElementById("referralsTableBody");
       if (Array.isArray(childrenData) && childrenData.length > 0) {
+        const sortedChildren = [...childrenData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+
         referralsTbody.innerHTML = "";
         document.getElementById("childrenCount").textContent = childrenData.length;
         const totalReferrals = childrenData.reduce((sum, c) => sum + (c.registrations || 0), 0);
         document.getElementById("referralCount").textContent = `with ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
 
-        childrenData.forEach(child => {
+        sortedChildren.forEach(child => {
           const tr = document.createElement("tr");
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
