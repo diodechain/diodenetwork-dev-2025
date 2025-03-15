@@ -769,12 +769,12 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="Node Icon" />
             <div>
-              <p class="card-main-title">NODES</p>
+              <p class="card-main-title"><span id="nodesCount">0</span> NODES</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="nodesCount">0</p>
+            <p><span class="card-number" id="nodePoints">0</span> Points</p>
             <p style="font-size: 12px; color: #5E5E5E;" id="nodesBandwidth"></p>
           </div>
         </div>
@@ -811,12 +811,12 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="Location Icon" />
             <div>
-              <p class="card-main-title">ZONES</p>
+              <p class="card-main-title"><span id="zonesCount">0</span> ZONES</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="zonesCount">0</p>
+            <p><span class="card-number" id="zonePoints">0</span> Points</p>
             <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">
             </p>
           </div>
@@ -854,12 +854,12 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
             <div>
-              <p class="card-main-title">CHILDREN</p>
+              <p class="card-main-title"><span id="childrenCount">0</span> CHILDREN</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="childrenCount">0</p>
+            <p><span class="card-number" id="childrenPoints">0</span> Points</p>
             <p style="font-size: 12px; color: #5E5E5E;" id="referralCount"></p>
           </div>
         </div>
@@ -1103,8 +1103,10 @@
         nodesTbody.innerHTML = "";
         const totalBandwidth = sortedNodes.reduce((sum, node) => sum + (parseFloat(node.bandwidth) || 0), 0);
         const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
-        document.getElementById("nodesBandwidth").textContent = `with ${roundedTotalBandwidth} GB Bandwidth`;
+        document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
+        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points || 0), 0);
+        document.getElementById("nodePoints").textContent = totalNodePoints.toFixed(0);
 
         sortedNodes.forEach(node => {
           const tr = document.createElement("tr");
@@ -1120,7 +1122,7 @@
         });
       } else {
         nodesTbody.innerHTML = `<tr><td colspan="4">No Nodes Found</td></tr>`;
-        document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
+        document.getElementById("nodesBandwidth").textContent = `from 0 GB Bandwidth`;
         document.getElementById("nodesCount").textContent = "0";
       }
 
@@ -1130,9 +1132,11 @@
         const sortedZones = [...zonesData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
 
         zonesTbody.innerHTML = "";
-        const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
-        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
-        document.getElementById("zonesCount").textContent = zonesData.length;
+        const totalActiveUsers = sortedZones.reduce((sum, z) => sum + (z.activeusers || 0), 0);
+        document.getElementById("zonesUsers").textContent = `from ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
+        document.getElementById("zonesCount").textContent = sortedZones.length;
+        const totalZonePoints = sortedZones.reduce((sum, z) => sum + (z.points || 0), 0);
+        document.getElementById("zonePoints").textContent = totalZonePoints.toFixed(0);
 
         sortedZones.forEach(zone => {
           const tr = document.createElement("tr");
@@ -1148,7 +1152,7 @@
         });
       } else {
         zonesTbody.innerHTML = `<tr><td colspan="4">No Zones Found</td></tr>`;
-        document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
+        document.getElementById("zonesUsers").textContent = `from 0 Active Users`;
         document.getElementById("zonesCount").textContent = "0";
       }
 
@@ -1165,9 +1169,11 @@
         const sortedChildren = [...childrenData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
 
         referralsTbody.innerHTML = "";
-        document.getElementById("childrenCount").textContent = childrenData.length;
-        const totalReferrals = childrenData.reduce((sum, c) => sum + (c.registrations || 0), 0);
-        document.getElementById("referralCount").textContent = `with ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
+        document.getElementById("childrenCount").textContent = sortedChildren.length;
+        const totalReferrals = sortedChildren.reduce((sum, c) => sum + (c.registrations || 0), 0);
+        document.getElementById("referralCount").textContent = `from ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
+        const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.points || 0), 0);
+        document.getElementById("childrenPoints").textContent = totalChildPoints.toFixed(0);
 
         sortedChildren.forEach(child => {
           const tr = document.createElement("tr");
@@ -1184,7 +1190,7 @@
       } else {
         referralsTbody.innerHTML = `<tr><td colspan="5">No Referrals Found</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
-        document.getElementById("referralCount").textContent = `with 0 Referrals`;
+        document.getElementById("referralCount").textContent = `from 0 Referrals`;
       }
 
       let currentData = {
