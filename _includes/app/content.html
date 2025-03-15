@@ -259,6 +259,14 @@
       display: flex;
     }
 
+    .epoch-points {
+      color: black;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      min-width: 200px;
+    }
+
     .rank-title {
       font-size: 20px;
       margin-right: 20px;
@@ -750,7 +758,13 @@
       <div class="rank-container" id="rankContainer">
         <div class="rank-box epoch-rank">
           <span class="rank-title">Epoch Rank: </span>
-          <span class="rank-value" id="epochRankValue">0</span>
+          <span class="rank-value" id="epochRankValue">-</span>
+          <span class="rank-title">&nbsp;&nbsp;&nbsp;of</span>
+          <span class="rank-value" id="epochParticipantsValue">-</span>
+        </div>
+        <div class="rank-box epoch-points">
+          <span class="rank-title">Total Points: </span>
+          <span class="rank-value" id="epochPointsValue">-</span>
         </div>
         <div class="boost-box">
           <div class="boost">
@@ -1106,7 +1120,7 @@
         document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
         const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points || 0), 0);
-        document.getElementById("nodePoints").textContent = totalNodePoints.toFixed(0);
+        document.getElementById("nodePoints").textContent = Math.ceil(totalNodePoints);
 
         sortedNodes.forEach(node => {
           const tr = document.createElement("tr");
@@ -1136,7 +1150,7 @@
         document.getElementById("zonesUsers").textContent = `from ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
         document.getElementById("zonesCount").textContent = sortedZones.length;
         const totalZonePoints = sortedZones.reduce((sum, z) => sum + (z.points || 0), 0);
-        document.getElementById("zonePoints").textContent = totalZonePoints.toFixed(0);
+        document.getElementById("zonePoints").textContent = Math.ceil(totalZonePoints);
 
         sortedZones.forEach(zone => {
           const tr = document.createElement("tr");
@@ -1157,11 +1171,12 @@
       }
 
       const rankData = await getData("/user/rank");
-      if (rankData && typeof rankData.rank !== "undefined") {
-        document.getElementById("epochRankValue").textContent = rankData.rank;
-      } else {
-        document.getElementById("epochRankValue").textContent = "0";
+      if (rankData) {
+        document.getElementById("epochRankValue").textContent = typeof rankData.rank !== "undefined" ? rankData.rank : "0";
+        document.getElementById("epochParticipantsValue").textContent = typeof rankData.participants !== "undefined" ? rankData.participants : "-";
+        document.getElementById("epochPointsValue").textContent = typeof rankData.points !== "undefined" ? Math.ceil(rankData.points) : "-";
       }
+
 
       const childrenData = await getData("/children/list");
       const referralsTbody = document.getElementById("referralsTableBody");
@@ -1173,7 +1188,7 @@
         const totalReferrals = sortedChildren.reduce((sum, c) => sum + (c.registrations || 0), 0);
         document.getElementById("referralCount").textContent = `from ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
         const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.points || 0), 0);
-        document.getElementById("childrenPoints").textContent = totalChildPoints.toFixed(0);
+        document.getElementById("childrenPoints").textContent = Math.ceil(totalChildPoints);
 
         sortedChildren.forEach(child => {
           const tr = document.createElement("tr");
