@@ -102,7 +102,7 @@
     }
 
     .clickable-row {
-     background-color: #ffffff;
+      background-color: #ffffff;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
@@ -257,6 +257,10 @@
       justify-content: center;
       align-items: center;
       display: flex;
+    }
+
+    .epoch-rank:hover {
+      cursor: pointer;
     }
 
     .epoch-points {
@@ -426,7 +430,13 @@
       color: #141414;
     }
 
+    .rank-highlight {
+      background-color: #D73E53 !important;
+      color: #fff !important;
+    }
+
     .close-modal {
+      margin-right:30px;
       cursor: pointer;
       font-size: 24px;
       color: #5E5E5E;
@@ -456,22 +466,26 @@
     }
 
     @media (max-width: 768px) {
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .close-modal {
+        margin-right:20px;
+      }
 
       .modal-content {
-        width: 10vw;
+        width: 95%;
         padding: 2px;
         margin: 0;
         max-height: 90vh;
@@ -515,6 +529,7 @@
 
       .close-modal {
         font-size: 20px;
+        margin-right: 20px;
       }
     }
 
@@ -760,7 +775,7 @@
           <span class="rank-title">Epoch Rank: </span>
           <span class="rank-value" id="epochRankValue">-</span>
           <span class="rank-title">&nbsp;&nbsp;&nbsp;of</span>
-          <span class="rank-value" id="epochParticipantsValue">-</span>
+          <span class="rank-value participants-view-all" id="epochParticipantsValue">-</span>
         </div>
         <div class="rank-box epoch-points">
           <span class="rank-title">Total Points: </span>
@@ -949,6 +964,27 @@
       </div> -->
     </div>
   </div>
+
+
+  <div id="participantsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Participants</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Epoch Rank</th>
+            <th>Username</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="participantsModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
 
   <div id="nodesModal" class="modal">
     <div class="modal-content">
@@ -1208,7 +1244,10 @@
         document.getElementById("referralCount").textContent = `from 0 Referrals`;
       }
 
+      const participantData = await getData("/users_by_rank");
+
       let currentData = {
+        participants: Array.isArray(participantData) ? participantData : [],
         nodes: Array.isArray(nodesData) ? nodesData : [],
         zones: Array.isArray(zonesData) ? zonesData : [],
         referrals: Array.isArray(childrenData) ? childrenData : [],
@@ -1235,6 +1274,21 @@
           event.target.style.display = 'none';
         }
       };
+
+      if (currentData.participants.length) {
+        document.querySelector('#rankContainer .epoch-rank').onclick = function () {
+          const curUsername = document.getElementById('username').textContent.replace(/^@/, '');
+          const sortedParticipants = [...currentData.participants].sort((a, b) => a.rank - b.rank);
+          document.getElementById('participantsModalBody').innerHTML = sortedParticipants.map(user => `
+              <tr>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.rank}</td>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.username.split('.')[0]}</td>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${Math.ceil(user.points)}</td>
+              </tr>
+            `).join('');
+          showModal('participantsModal');
+        };
+      }
 
       if (currentData.nodes.length) {
         document.querySelector('#nodesCard .button-view-all').onclick = function () {
