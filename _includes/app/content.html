@@ -102,7 +102,7 @@
     }
 
     .clickable-row {
-     background-color: #ffffff;
+      background-color: #ffffff;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
@@ -257,6 +257,18 @@
       justify-content: center;
       align-items: center;
       display: flex;
+    }
+
+    .epoch-rank:hover {
+      cursor: pointer;
+    }
+
+    .epoch-points {
+      color: black;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      min-width: 200px;
     }
 
     .rank-title {
@@ -418,7 +430,13 @@
       color: #141414;
     }
 
+    .rank-highlight {
+      background-color: #D73E53 !important;
+      color: #fff !important;
+    }
+
     .close-modal {
+      margin-right:30px;
       cursor: pointer;
       font-size: 24px;
       color: #5E5E5E;
@@ -448,22 +466,26 @@
     }
 
     @media (max-width: 768px) {
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .close-modal {
+        margin-right:20px;
+      }
 
       .modal-content {
-        width: 10vw;
+        width: 95%;
         padding: 2px;
         margin: 0;
         max-height: 90vh;
@@ -507,6 +529,7 @@
 
       .close-modal {
         font-size: 20px;
+        margin-right: 20px;
       }
     }
 
@@ -750,7 +773,13 @@
       <div class="rank-container" id="rankContainer">
         <div class="rank-box epoch-rank">
           <span class="rank-title">Epoch Rank: </span>
-          <span class="rank-value" id="epochRankValue">0</span>
+          <span class="rank-value" id="epochRankValue">-</span>
+          <span class="rank-title">&nbsp;&nbsp;&nbsp;of</span>
+          <span class="rank-value participants-view-all" id="epochParticipantsValue">-</span>
+        </div>
+        <div class="rank-box epoch-points">
+          <span class="rank-title">Total Points: </span>
+          <span class="rank-value" id="epochPointsValue">-</span>
         </div>
         <div class="boost-box">
           <div class="boost">
@@ -769,12 +798,12 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/node.png' | relative_url }}" alt="Node Icon" />
             <div>
-              <p class="card-main-title">NODES</p>
+              <p class="card-main-title"><span id="nodesCount">0</span> NODES</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="nodesCount">0</p>
+            <p><span class="card-number" id="nodePoints">0</span> Points</p>
             <p style="font-size: 12px; color: #5E5E5E;" id="nodesBandwidth"></p>
           </div>
         </div>
@@ -811,12 +840,12 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/location.png' | relative_url }}" alt="Location Icon" />
             <div>
-              <p class="card-main-title">ZONES</p>
+              <p class="card-main-title"><span id="zonesCount">0</span> ZONES</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="zonesCount">0</p>
+            <p><span class="card-number" id="zonePoints">0</span> Points</p>
             <p style="font-size: 12px; color: #5E5E5E;" id="zonesUsers">
             </p>
           </div>
@@ -833,7 +862,7 @@
               <thead>
                 <tr>
                   <th>Rank</th>
-                  <th>Active</th>
+                  <th>Active Users</th>
                   <th class="address-col">ADDRESS</th>
                   <th class="description-col">DESCRIPTION</th>
                 </tr>
@@ -854,13 +883,13 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
             <div>
-              <p class="card-main-title">CHILDREN</p>
+              <p class="card-main-title"><span id="childrenCount">0</span> CHILDREN</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p class="card-number" id="childrenCount">0</p>
-            <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
+            <p><span class="card-number" id="childrenPoints">0</span> Points</p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="referralCount"></p>
           </div>
         </div>
         <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
@@ -875,9 +904,8 @@
               <thead>
                 <tr>
                   <th>Rank</th>
+                  <th>New Referrals</th>
                   <th>Username</th>
-                  <th>Nodes</th>
-                  <th>Zone</th>
                   <th>Descendants</th>
                 </tr>
               </thead>
@@ -937,6 +965,27 @@
     </div>
   </div>
 
+
+  <div id="participantsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">All Participants</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Epoch Rank</th>
+            <th>Username</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="participantsModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
   <div id="nodesModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -980,15 +1029,18 @@
   <div id="referralsModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">All Referrals</h3>
+        <h3 class="modal-title">All Children</h3>
         <span class="close-modal">&times;</span>
       </div>
       <table class="table">
         <thead>
           <tr>
+            <th>Epoch Rank</th>
+            <th>Referrals ETD</th>
             <th>Username</th>
-            <th>Nodes</th>
             <th>Descendants</th>
+            <th>Nodes</th>
+            <th>Zones</th>
           </tr>
         </thead>
         <tbody id="referralsModalBody"></tbody>
@@ -1101,8 +1153,10 @@
         nodesTbody.innerHTML = "";
         const totalBandwidth = sortedNodes.reduce((sum, node) => sum + (parseFloat(node.bandwidth) || 0), 0);
         const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
-        document.getElementById("nodesBandwidth").textContent = `with ${roundedTotalBandwidth} GB Bandwidth`;
+        document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
+        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points || 0), 0);
+        document.getElementById("nodePoints").textContent = Math.ceil(totalNodePoints);
 
         sortedNodes.forEach(node => {
           const tr = document.createElement("tr");
@@ -1118,19 +1172,23 @@
         });
       } else {
         nodesTbody.innerHTML = `<tr><td colspan="4">No Nodes Found</td></tr>`;
-        document.getElementById("nodesBandwidth").textContent = `with 0 GB Bandwidth`;
+        document.getElementById("nodesBandwidth").textContent = `from 0 GB Bandwidth`;
         document.getElementById("nodesCount").textContent = "0";
       }
 
       const zonesData = await getData("/zones/list");
       const zonesTbody = document.getElementById("zonesTableBody");
       if (Array.isArray(zonesData) && zonesData.length > 0) {
-        zonesTbody.innerHTML = "";
-        const totalActiveUsers = zonesData.reduce((sum, z) => sum + (z.activeusers || 0), 0);
-        document.getElementById("zonesUsers").textContent = `with ${totalActiveUsers} Active Users`;
-        document.getElementById("zonesCount").textContent = zonesData.length;
+        const sortedZones = [...zonesData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
 
-        zonesData.forEach(zone => {
+        zonesTbody.innerHTML = "";
+        const totalActiveUsers = sortedZones.reduce((sum, z) => sum + (z.activeusers || 0), 0);
+        document.getElementById("zonesUsers").textContent = `from ${totalActiveUsers} Active User${totalActiveUsers == 1 ? "" : "s"}`;
+        document.getElementById("zonesCount").textContent = sortedZones.length;
+        const totalZonePoints = sortedZones.reduce((sum, z) => sum + (z.points || 0), 0);
+        document.getElementById("zonePoints").textContent = Math.ceil(totalZonePoints);
+
+        sortedZones.forEach(zone => {
           const tr = document.createElement("tr");
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
@@ -1144,45 +1202,52 @@
         });
       } else {
         zonesTbody.innerHTML = `<tr><td colspan="4">No Zones Found</td></tr>`;
-        document.getElementById("zonesUsers").textContent = `with 0 Active Users`;
+        document.getElementById("zonesUsers").textContent = `from 0 Active Users`;
         document.getElementById("zonesCount").textContent = "0";
       }
 
       const rankData = await getData("/user/rank");
-      if (rankData && typeof rankData.rank !== "undefined") {
-        document.getElementById("epochRankValue").textContent = rankData.rank;
-      } else {
-        document.getElementById("epochRankValue").textContent = "0";
+      if (rankData) {
+        document.getElementById("epochRankValue").textContent = typeof rankData.rank !== "undefined" ? rankData.rank : "0";
+        document.getElementById("epochParticipantsValue").textContent = typeof rankData.participants !== "undefined" ? rankData.participants : "-";
+        document.getElementById("epochPointsValue").textContent = typeof rankData.points !== "undefined" ? Math.ceil(rankData.points) : "-";
       }
+
 
       const childrenData = await getData("/children/list");
       const referralsTbody = document.getElementById("referralsTableBody");
       if (Array.isArray(childrenData) && childrenData.length > 0) {
-        referralsTbody.innerHTML = "";
-        document.getElementById("childrenCount").textContent = childrenData.length;
-        const totalDescendants = childrenData.reduce((sum, c) => sum + (c.descendants || 0), 0);
-        document.getElementById("descendantCount").textContent = `with ${totalDescendants} Descendants`;
+        const sortedChildren = [...childrenData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
 
-        childrenData.forEach(child => {
+        referralsTbody.innerHTML = "";
+        document.getElementById("childrenCount").textContent = sortedChildren.length;
+        const totalReferrals = sortedChildren.reduce((sum, c) => sum + (c.registrations || 0), 0);
+        document.getElementById("referralCount").textContent = `from ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
+        const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.points || 0), 0);
+        document.getElementById("childrenPoints").textContent = Math.ceil(totalChildPoints);
+
+        sortedChildren.forEach(child => {
           const tr = document.createElement("tr");
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
               <td>${child.rank || '-'}</td>
-              <td>@${child.username}</td>
-              <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
-              <td>${child.zone || '-'}</td>
-              <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+              <td>${child.registrations || "-"}</td>
+              <td>@${child.username.split('.')[0]}</td>
+              <td>${child.descendants !== undefined ? child.descendants || "-" : '-'}</td>
             `;
           referralsTbody.appendChild(tr);
         });
       } else {
         referralsTbody.innerHTML = `<tr><td colspan="5">No Referrals Found</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
-        document.getElementById("descendantCount").textContent = `with 0 Descendants`;
+        document.getElementById("referralCount").textContent = `from 0 Referrals`;
       }
 
+      const participantData = await getData("/users_by_rank");
+
       let currentData = {
+        participants: Array.isArray(participantData) ? participantData : [],
         nodes: Array.isArray(nodesData) ? nodesData : [],
         zones: Array.isArray(zonesData) ? zonesData : [],
         referrals: Array.isArray(childrenData) ? childrenData : [],
@@ -1210,13 +1275,28 @@
         }
       };
 
+      if (currentData.participants.length) {
+        document.querySelector('#rankContainer .epoch-rank').onclick = function () {
+          const curUsername = document.getElementById('username').textContent.replace(/^@/, '');
+          const sortedParticipants = [...currentData.participants].sort((a, b) => a.rank - b.rank);
+          document.getElementById('participantsModalBody').innerHTML = sortedParticipants.map(user => `
+              <tr>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.rank}</td>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.username.split('.')[0]}</td>
+                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${Math.ceil(user.points)}</td>
+              </tr>
+            `).join('');
+          showModal('participantsModal');
+        };
+      }
+
       if (currentData.nodes.length) {
         document.querySelector('#nodesCard .button-view-all').onclick = function () {
           const sortedModalNodes = [...currentData.nodes].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
           document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
               <tr>
                 <td>${node.rank}</td>
-                <td>${formatBandwidth(node.bandwidth_rank)} GB</td>
+                <td>${formatBandwidth(node.bandwidth)} GB</td>
                 <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
                 <td class="description-col">${node.meta}</td>
               </tr>
@@ -1242,10 +1322,11 @@
           document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
               <tr>
                 <td>${child.rank || '-'}</td>
-                <td>@${child.username}</td>
-                <td>${child.nodes !== undefined ? child.nodes : '0'}</td>
-                <td>${child.zone || '-'}</td>
-                <td>${child.descendants !== undefined ? child.descendants : '0'}</td>
+                <td>${child.registrations || "-"}</td>
+                <td>@${child.username.split('.')[0]}</td>
+                <td>${child.descendants !== undefined ? child.descendants || "-" : '-' }</td>
+                <td>${child.nodes !== undefined ? child.nodes || "-" : '-' }</td>
+                <td>${child.zones || "-"}</td>
               </tr>
             `).join('');
           showModal('referralsModal');
