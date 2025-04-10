@@ -1,7 +1,7 @@
 "use strict";
 
 (function() {
-  const targetDateStr = "2025-04-24T00:00:00Z";
+  const targetDateStr = "2025-04-24T16:00:00Z";
   const targetDate = new Date(targetDateStr).getTime();
   console.log("Target Date (milliseconds):", targetDate);
 
