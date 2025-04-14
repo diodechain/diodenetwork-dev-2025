@@ -1,8 +1,10 @@
 "use strict";
 
 (function() {
-  const targetDateStr = "2025-04-24T16:00:00Z";
+
+  const targetDateStr = "2025-04-24T16:00:00Z"; // This corresponds to 9am PT (16:00 UTC)
   const targetDate = new Date(targetDateStr).getTime();
+  console.log("test date function"+ new Date(targetDateStr));
   console.log("Target Date (milliseconds):", targetDate);
 
   fetch("https://www.timeapi.io/api/Time/current/zone?timeZone=UTC")
@@ -21,8 +23,17 @@
       //   "timeZone": "UTC",
       //   ...
       // }
+      console.log("Current UTC from API:", data);
 
-      const currentUTC = new Date(data.dateTime).getTime();
+      const currentUTC = Date.UTC(
+        data.year,
+        data.month - 1, // JavaScript months are 0-11, API returns 1-12
+        data.day,
+        data.hour,
+        data.minute,
+        data.seconds,
+        data.milliSeconds || 0
+      );
       console.log("Current UTC from API (ms):", currentUTC);
 
       let distance = targetDate - currentUTC;
