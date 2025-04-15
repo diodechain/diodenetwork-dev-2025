@@ -1,0 +1,93 @@
+<div class="dashboard-header">
+    <div class="title">Diode Token</div>
+    <div class="buttons">
+      <button class="read-more">Goto Points</button>
+    </div>
+  </div>
+  <style>
+  .dashboard {
+    max-width: 1392px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 30px;
+    background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    color: white;
+    border-radius: 0;
+  }
+  .dashboard-header .title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .dashboard-header .buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .dashboard-header button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .read-more {
+    background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    color: white;
+    border: 1px solid #fff !important;
+  }
+  .open-campaign {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .dashboard {
+      padding: 0 20px;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    .dashboard-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      margin-bottom: 23px;
+    }
+
+    .dashboard-header .title {
+      text-align: left;
+    }
+
+    .dashboard-header .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .dashboard-header button {
+      font-size: 12px;
+      width: 150px;
+      min-height: 34px;
+    }
+
+    .rank-container {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .boost-box {
+      order: 3;
+      margin: 0;
+      min-width: 90px;
+      height: 90px;
+      margin-top: 20px;
+    }
+
+    .read-more {
+      display: none;
+    }
+  }  </style>

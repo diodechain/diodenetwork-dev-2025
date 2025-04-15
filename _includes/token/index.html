@@ -1,0 +1,649 @@
+<div class="token-page">
+    <div class="countdown">
+      <div class="countdown-title">$DIODE Token Launch:</div>
+      <div class="countdown-timer">
+        <div class="countdown-unit">
+          <strong>10</strong>
+          <span>Days</span>
+        </div>
+        <div class="countdown-unit">
+          <strong>12</strong>
+          <span>Hours</span>
+        </div>
+        <div class="countdown-unit">
+          <strong>06</strong>
+          <span>Minutes</span>
+        </div>
+        <div class="countdown-unit">
+          <strong>27</strong>
+          <span>Seconds</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="nft-container">
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="Disrupt NFT" />
+      <ul class="dotted-list">
+        <li>• REVENUE-ANCHORED QUARTERLY YIELD</li>
+        <li>• REDEEMABLE FOR 10 DIODE</li>
+        <li>• <a href="#">READ DETAILS HERE</a></li>
+      </ul>
+      <div class="nft-number"><strong>NFT #1 – #10</strong></div>
+  
+      <div class="quantity-input">
+        <label for="quantity">QUANTITY
+          <input type="number" id="quantity" value="10" min="1" max="100" class="always-show-arrows" />
+        </label>
+      </div>
+      <div class="total"><strong>TOTAL:</strong> $166.10 USDC</div>
+  
+      <div class="terms-container">
+        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE TERMS</label>
+      </div>
+      <button class="purchase-btn" disabled>Purchase</button>
+    </div>
+  
+    <div class="your-nfts">
+      <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="table-title">YOUR NFTS</h3>
+        </div>
+        <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
+        <div class="table-box" style="overflow-y: auto; overflow-x: auto; max-height: 400px;">
+          <table class="table">
+            <thead>
+              <tr><th>NFT</th><th>QUANTITY</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>OG Ambassador</td><td>1</td></tr>
+              <tr><td>OG Node</td><td>6</td></tr>
+              <tr><td>Disrupt #1</td><td>1</td></tr>
+              <tr><td>Disrupt #17</td><td>6</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Transaction Modals -->
+<div id="confirmingModal" class="transaction-modal">
+  <div class="popup">
+    <button class="close-btn">×</button>
+    <div class="popup-header">
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+    </div>
+    <div class="popup-image">
+      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+    </div>
+    <div class="popup-title">NFT #1 – #10</div>
+    <div class="popup-status">Confirming Purchase</div>
+    <div class="popup-spinner">
+      <img src="{{ '/assets/images/icons/sync.png' | relative_url }}" alt="Processing" class="spinner">
+    </div>
+  </div>
+</div>
+
+<div id="successModal" class="transaction-modal">
+  <div class="popup">
+    <button class="close-btn">×</button>
+    <div class="popup-header" style="margin-bottom: 23px;">
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+    </div>
+    <div class="popup-image" style="margin: 0 0 15px;">
+      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+    </div>
+    <div class="popup-status" style="margin: 0;">Success!</div>
+    <div class="popup-info" style="margin-top: 10px;">You are the owner of Disrupt NFT #1 - 10!</div>
+    <div style="margin-top: 32px;">
+      <button class="modal-close-btn" style="margin-top: 0;">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<div id="failureModal" class="transaction-modal">
+  <div class="popup" style="height: 630px;">
+    <button class="close-btn">×</button>
+    <div class="popup-header" style="margin-bottom: 23px;">
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+    </div>
+    <div class="popup-image" style="margin: 0 0 15px;">
+      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+    </div>
+    <div class="popup-status" style="margin: 0;">Transaction Failed!</div>
+    <div class="popup-info" style="margin-top: 10px;">It looks like those NFTs are no longer available. please try again with a new range.</div>
+    <div style="margin-top: 32px;">
+      <button class="modal-close-btn" style="margin-top: 0;">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- CSS -->
+<style>
+  .token-page {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: #FFFFFF;
+  }
+  
+  .countdown {
+    border: 1px solid #D73E53;
+    height: 132px;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 50px;
+    width: 345px;
+    max-width: 420px;
+    box-shadow: 0 4px 12px rgba(183, 92, 115, 0.08);
+  }
+  
+  .countdown-title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .countdown-timer {
+    display: flex;
+    justify-content: space-around;
+    margin: 0.5rem 0;
+  }
+  
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .countdown-unit strong {
+    background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-size: 32px;
+    font-weight: 700;
+    display: block;
+    margin-top: 23px;
+  }
+  
+  .countdown-unit span {
+    color: #141414;
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+  }
+  
+  .nft-container {
+    border: 1px solid #D73E53;
+    padding: 26px 60px;
+    border-radius: 15px;
+    width: 450px;
+    text-align: center;
+    margin-bottom: 50px;
+    box-shadow: 0 5px 15px rgba(183, 92, 115, 0.1);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .nft-container img {
+    width: 254px;
+    height: 259px;
+    margin-bottom: 1.2rem;
+    object-fit: cover;
+  }
+  
+  .nft-container h2 {
+    font-size: 20px;
+    color: #151515;
+    line-height: 150%;
+    margin-bottom: 23px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .help-icon {
+    width: 16px !important;
+    height: 16px !important;
+    margin-bottom: 0rem !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+    object-fit: contain;
+  }
+  
+  .nft-container ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  
+  .nft-container .dotted-list li {
+    color: #141414;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-align: center;
+    padding-left: 0;
+  }
+  
+  .nft-container ul a {
+    color: #D73E53;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .nft-number {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 19px;
+  }
+  
+  .quantity-input {
+    margin-bottom: 27px;
+    font-weight: 700;
+    font-size: 20px;
+    position: relative;
+  }
+  
+  .nft-container input[type="number"] {
+    width: 55px;
+    height: 40px;
+    padding: 8px;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    border: 2px solid #b75c73;
+    border-radius: 12px;
+    text-align: center;
+  }
+  
+  .nft-container input[type="number"].always-show-arrows {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+  
+  .nft-container .total {
+    margin: 1.2rem 0;
+    font-size: 1.2rem;
+    font-weight: normal;
+  }
+  
+  .nft-container .total strong {
+    font-weight: 700;
+  }
+  
+  .terms-container {
+    margin: 1.5rem 0;
+  }
+  
+  .terms-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  
+  .nft-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #D73E53 !important;
+    border: 1px solid #D73E53 !important;
+    cursor: pointer;
+  }
+  
+  .purchase-btn {
+    padding: 0.8rem 3rem;
+    width: 168px;
+    height: 56px;
+    background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+    box-shadow: 0 4px 12px rgba(95, 87, 230, 0.3);
+  }
+  
+  .purchase-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .purchase-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(95, 87, 230, 0.4);
+  }
+  
+  .helper-text {
+    font-size: 0.8rem;
+    margin-top: 1.2rem;
+    color: #c1517e;
+    line-height: 1.4;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .your-nfts {
+    width: 100%;
+    background-color: #FAFAFA;
+    padding: 20px;
+    max-width: 420px;
+    text-align: left;
+    border: 1px solid #D73E53;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(183, 92, 115, 0.08);
+  }
+  
+  .your-nfts .table-title {
+    font-size: 16px;
+    margin: 0px;
+    color: #141414;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  
+  .your-nfts .table {
+    width: 100%;
+    background-color: #FAFAFA;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 10px;
+    text-align: left;
+  }
+  
+  .your-nfts .table th {
+    font-size: 12px;
+    color: #141414;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 7px;
+    text-align: left;
+    white-space: nowrap;
+    height: 32px;
+  }
+  
+  .your-nfts .table td {
+    font-size: 12px;
+    color: #5E5E5E;
+    font-weight: 400;
+    padding: 4px 7px;
+    background-color: #ffffff;
+    text-align: left;
+    align-items: flex-start;
+    height: 32px;
+    margin-bottom: 6px;
+    word-wrap: none;
+    white-space: nowrap;
+  }
+  
+  .transaction-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .popup {
+    width: 447px;
+    height: 550px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .popup-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #111;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 34px;
+    cursor: pointer;
+    color: #D73E53;
+    z-index: 10;
+  }
+  
+  .popup-image img {
+    width: 254px;
+  }
+  
+  .popup-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    color: #141414;
+  }
+  
+  .popup-info {
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: #141414;
+    margin-top: 15px !important;
+  }
+  
+  .popup-status {
+    font-size: 32px;
+    text-transform: uppercase;
+    color: #141414;
+    text-transform: uppercase;
+    line-height: 150%;
+    font-weight: 700;
+    margin-top: 15px;
+  }
+  
+  .popup-spinner {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+  }
+  
+  .spinner {
+    animation: spin 1.5s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .modal-icon {
+    margin-bottom: 20px;
+  }
+  
+  .modal-icon img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .success-icon img {
+    filter: drop-shadow(0 4px 8px rgba(0, 200, 0, 0.3));
+  }
+  
+  .failure-icon img {
+    filter: drop-shadow(0 4px 8px rgba(255, 0, 0, 0.3));
+  }
+  
+  .modal-content h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 22px;
+  }
+  
+  .modal-content p {
+    color: #666;
+    margin-bottom: 25px;
+  }
+  
+  .modal-close-btn,
+  .try-again-btn {
+    padding: 10px 24px;
+    background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    width: 157px;
+    height: 56px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 32px;
+  }
+  
+  .modal-close-btn:hover,
+  .try-again-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(95, 87, 230, 0.3);
+  }
+</style>
+
+<!-- JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('quantity');
+    const totalDiv = document.querySelector('.total');
+    const termsCheckbox = document.querySelector('.terms-container input[type="checkbox"]');
+    const purchaseBtn = document.querySelector('.purchase-btn');
+    const confirmingModal = document.getElementById('confirmingModal');
+    const successModal = document.getElementById('successModal');
+    const failureModal = document.getElementById('failureModal');
+    
+    quantityInput.addEventListener('input', updateTotal);
+    
+    termsCheckbox.addEventListener('change', function() {
+      purchaseBtn.disabled = !termsCheckbox.checked;
+    });
+
+    updateTotal();
+    
+    function updateTotal() {
+      const quantity = parseInt(quantityInput.value);
+      const pricePerNft = 16.61;
+      const total = (quantity * pricePerNft).toFixed(2);
+      totalDiv.innerHTML = `<strong>TOTAL:</strong> $${total} USDC`;
+    }
+    
+    purchaseBtn.addEventListener('click', async function() {
+      if (!termsCheckbox.checked) {
+        alert('Please accept the terms to continue.');
+        return;
+      }
+      
+      if (typeof window.ethereum === 'undefined') {
+        alert('MetaMask is not installed. Please install MetaMask to make a purchase.');
+        return;
+      }
+      
+      try {
+        confirmingModal.style.display = 'flex';
+        
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        
+        const transactionResult = await simulateTransaction();
+        
+        confirmingModal.style.display = 'none';
+        
+        if (transactionResult.success) {
+          successModal.style.display = 'flex';
+        } else {
+          failureModal.style.display = 'flex';
+        }
+      } catch (error) {
+        console.error('Transaction error:', error);
+        confirmingModal.style.display = 'none';
+        failureModal.style.display = 'flex';
+      }
+    });
+    
+    const closeButtons = document.querySelectorAll('.close-btn');
+    closeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        confirmingModal.style.display = 'none';
+        successModal.style.display = 'none';
+        failureModal.style.display = 'none';
+      });
+    });
+    
+    const modalCloseButtons = document.querySelectorAll('.modal-close-btn');
+    modalCloseButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        confirmingModal.style.display = 'none';
+        successModal.style.display = 'none';
+        failureModal.style.display = 'none';
+      });
+    });
+    
+    document.querySelector('.try-again-btn')?.addEventListener('click', function() {
+      failureModal.style.display = 'none';
+      purchaseBtn.click();
+    });
+    
+    function simulateTransaction() {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const success = Math.random() > 0.2;
+          resolve({ success });
+        }, 2000);
+      });
+    }
+    
+    window.addEventListener('click', function(event) {
+      if (event.target === successModal) {
+        successModal.style.display = 'none';
+      }
+      if (event.target === failureModal) {
+        failureModal.style.display = 'none';
+      }
+    });
+  });
+</script>
