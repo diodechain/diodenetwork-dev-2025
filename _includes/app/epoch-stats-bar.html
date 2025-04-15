@@ -54,6 +54,11 @@
       background-color: white;
       color: black;
     }
+    .goto-token {
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+    color: white;
+    border: 1px solid #fff !important;
+    }
     @media (max-width: 768px) {
       .dashboard {
         padding: 0 20px;
@@ -197,8 +202,10 @@
   <div class="dashboard-header">
     <div class="title">Current Epoch Stats</div>
     <div class="buttons">
+      <button class="read-more">Help</button>
+      <button class="goto-token">Goto Token</button>
+
       <button class="open-campaign">View Campaign</button>
-      <button class="read-more">Read More</button>
     </div>
   </div>
 
@@ -290,6 +297,13 @@
         closeSidebarBtn.addEventListener('click', () => {
           airlyftWidget.classList.remove('active');
         });
+
+        const gotoTokenBtn = document.querySelector('.goto-token');
+        if (gotoTokenBtn) {
+          gotoTokenBtn.addEventListener('click', () => {
+            window.location.href = '/diodenetwork-dev-2025/token/';
+          });
+        }
 
         document.addEventListener('click', (e) => {
           if (airlyftWidget.classList.contains('active') && 
