@@ -1348,22 +1348,57 @@
         {
           contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
           name: "Ambassador Pre Launch",
+          standard: "ERC721",
           baseBoost: 2
         },
         {
           contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
           name: "OG Ambassador",
+          standard: "ERC721",
           baseBoost: 5
         },
         {
-          contractAddress: "0x741C3F3146304Aaf5200317cbEc0265aB728FE07",
+          contractAddress: "0xa147524963dF676e06b8C846aBD13d884568570b",
           name: "OG Node",
+          standard: "ERC1155",
+          tokenId: 0,
           baseBoost: 3
         }
       ];
 
+/*
+
+        {
+          contractAddress: "0x743C3F3146304Aaf5200317cbEc0265aB728FE07",
+          name: "Ecosystem Common",
+          standard: "ERC1155",
+          baseBoost: 3
+        },
+        {
+          contractAddress: "0x742C3F3146304Aaf5200317cbEc0265aB728FE07",
+          name: "Ecosystem Rare",
+          standard: "ERC1155",
+          baseBoost: 3
+        }
+
+*/
+
+
       const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
         try {
+          let data;
+
+          if (nft.standard === 'ERC1155') {
+            // balanceOf(address, uint256)
+            const walletHex = walletAddress.substring(2).padStart(64, '0');
+            const tokenIdHex = nft.tokenId.toString(16).padStart(64, '0');
+            data = '0x00fdd58e' + walletHex + tokenIdHex;
+          } else {
+            // ERC721 or ERC20: balanceOf(address)
+            data = '0x70a08231' + walletAddress.substring(2).padStart(64, '0');
+          }
+
+
           const response = await fetch(moonbeamRPC, {
             method: "POST",
             headers: {
@@ -1375,7 +1410,7 @@
               method: "eth_call",
               params: [{
                 to: nft.contractAddress,
-                data: '0x70a08231' + walletAddress.substring(2).padStart(64, '0')
+                data: data,
               }, "latest"]
             })
           });
@@ -1385,7 +1420,8 @@
             name: nft.name,
             balance: balance,
             baseBoost: nft.baseBoost,
-            contractAddress: nft.contractAddress
+            contractAddress: nft.contractAddress,
+            standard: nft.standard
           };
         } catch (err) {
           console.error("Failed to fetch NFT balance:", err);
@@ -1393,14 +1429,15 @@
             name: nft.name,
             balance: 0,
             baseBoost: nft.baseBoost,
-            contractAddress: nft.contractAddress
+            contractAddress: nft.contractAddress,
+            standard: nft.standard
           };
         }
       })).catch(err => {
         console.error("Failed to fetch NFTs", err);
         return [];
       });
-
+      
       const totalBoost = nftBalances.reduce((sum, nft) => {
         const boost = (nft.balance || 0) * (nft.baseBoost || 0);
         return sum + boost;

@@ -56,8 +56,9 @@
     }
     .goto-token {
       background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
-    color: white;
-    border: 1px solid #fff !important;
+      color: white;
+      border: 1px solid #fff !important;
+      visibility: hidden;
     }
     @media (max-width: 768px) {
       .dashboard {
@@ -202,10 +203,9 @@
   <div class="dashboard-header">
     <div class="title">Current Epoch Stats</div>
     <div class="buttons">
-      <button class="read-more">Help</button>
       <button class="goto-token">Goto Token</button>
-
       <button class="open-campaign">View Campaign</button>
+      <button class="read-more">Help</button>
     </div>
   </div>
 
