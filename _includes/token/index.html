@@ -78,7 +78,7 @@
       <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
     <div class="popup-title">NFT #1 – #10</div>
-    <div class="popup-status">Confirming Purchase</div>
+    <div class="popup-status" style="font-weight: 300;">Confirming Purchase</div>
     <div class="popup-spinner">
       <img src="{{ '/assets/images/icons/sync.png' | relative_url }}" alt="Processing" class="spinner">
     </div>
@@ -543,6 +543,156 @@
   .try-again-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(95, 87, 230, 0.3);
+  }
+
+  /* Responsive Styles */
+  @media screen and (max-width: 768px) {
+    .token-page {
+      padding: 1rem;
+    }
+    
+    .countdown {
+      width: 100%;
+      max-width: 345px;
+      padding: 12px;
+      height: auto;
+    }
+    
+    .nft-container {
+      width: 100%;
+      max-width: 345px;
+      padding: 20px;
+    }
+    
+    .nft-container img {
+      width: 220px;
+      height: 220px;
+    }
+    
+    .nft-container h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    
+    .nft-number {
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+    
+    .your-nfts {
+      max-width: 345px;
+    }
+    
+    .popup {
+      width: 90%;
+      max-width: 345px;
+      height: auto;
+      padding: 25px 15px;
+    }
+    
+    .popup-header h2 {
+      font-size: 16px;
+    }
+    
+    .popup-image img {
+      width: 200px;
+    }
+    
+    .popup-title {
+      font-size: 24px;
+    }
+    
+    .popup-status {
+      font-size: 24px;
+    }
+    
+    .popup-info {
+      font-size: 16px;
+    }
+    
+    .modal-close-btn {
+      width: 140px;
+      height: 48px;
+    }
+    
+    .purchase-btn {
+      width: 150px;
+      height: 48px;
+      font-size: 18px;
+    }
+    
+    .countdown-unit strong {
+      font-size: 28px;
+    }
+    
+    .countdown-unit span {
+      font-size: 12px;
+    }
+    
+    .table-box {
+      overflow-x: auto;
+    }
+    
+    .your-nfts .table {
+      min-width: 300px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .countdown {
+      max-width: 300px;
+    }
+    
+    .countdown-title {
+      font-size: 18px;
+    }
+    
+    .countdown-unit strong {
+      font-size: 24px;
+      margin-top: 18px;
+    }
+    
+    .countdown-unit span {
+      font-size: 11px;
+    }
+    
+    .nft-container {
+      max-width: 300px;
+    }
+    
+    .nft-container h2 {
+      font-size: 16px;
+    }
+    
+    .nft-container img {
+      width: 180px;
+      height: 180px;
+    }
+    
+    .nft-number {
+      font-size: 22px;
+    }
+    
+    .your-nfts {
+      max-width: 300px;
+    }
+    
+    .popup {
+      max-width: 300px;
+      padding: 20px 10px;
+    }
+    
+    .popup-title {
+      font-size: 20px;
+    }
+    
+    .popup-status {
+      font-size: 20px;
+    }
+    
+    .popup-info {
+      font-size: 14px;
+    }
   }
 </style>
 
