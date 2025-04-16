@@ -1,21 +1,21 @@
 <div class="token-page">
-    <div class="countdown">
+    <div class="countdown countdown-container">
       <div class="countdown-title">$DIODE Token Launch:</div>
       <div class="countdown-timer">
         <div class="countdown-unit">
-          <strong>10</strong>
+          <strong id="days">--</strong>
           <span>Days</span>
         </div>
         <div class="countdown-unit">
-          <strong>12</strong>
+          <strong id="hours">--</strong>
           <span>Hours</span>
         </div>
         <div class="countdown-unit">
-          <strong>06</strong>
+          <strong id="minutes">--</strong>
           <span>Minutes</span>
         </div>
         <div class="countdown-unit">
-          <strong>27</strong>
+          <strong id="seconds">--</strong>
           <span>Seconds</span>
         </div>
       </div>
@@ -27,19 +27,19 @@
       <ul class="dotted-list">
         <li>• REVENUE-ANCHORED QUARTERLY YIELD</li>
         <li>• REDEEMABLE FOR 10 DIODE</li>
-        <li>• <a href="#">READ DETAILS HERE</a></li>
+        <li>• <a href="{{ '/#hero-section' | relative_url }}">READ DETAILS HERE</a></li>
       </ul>
-      <div class="nft-number"><strong>NFT #1 – #10</strong></div>
+      <div class="nft-number"><strong id="nft-number-display">NFT #1</strong> <span id="nft-range-display" style="display: none;">- #1</span></div>
   
       <div class="quantity-input">
         <label for="quantity">QUANTITY
-          <input type="number" id="quantity" value="10" min="1" max="100" class="always-show-arrows" />
+          <input type="number" id="quantity" value="1" min="1" max="100" class="always-show-arrows" />
         </label>
       </div>
       <div class="total"><strong>TOTAL:</strong> $166.10 USDC</div>
   
       <div class="terms-container">
-        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE TERMS</label>
+        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE <a href="https://diode.io/terms/" target="_blank" class="terms-link">TERMS</a></label>
       </div>
       <button class="purchase-btn" disabled>Purchase</button>
     </div>
@@ -77,8 +77,8 @@
     <div class="popup-image">
       <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
-    <div class="popup-title">NFT #1 – #10</div>
-    <div class="popup-status" style="font-weight: 300;">Confirming Purchase</div>
+    <div class="popup-title">NFT #1</div>
+    <div class="popup-info" style="font-weight: 300;">Confirming Purchase</div>
     <div class="popup-spinner">
       <img src="{{ '/assets/images/icons/sync.png' | relative_url }}" alt="Processing" class="spinner">
     </div>
@@ -95,7 +95,7 @@
       <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
     <div class="popup-status" style="margin: 0;">Success!</div>
-    <div class="popup-info" style="margin-top: 10px;">You are the owner of Disrupt NFT #1 - 10!</div>
+    <div class="popup-info" style="margin-top: 10px;">You are the owner of Disrupt NFT #1!</div>
     <div style="margin-top: 32px;">
       <button class="modal-close-btn" style="margin-top: 0;">CLOSE</button>
     </div>
@@ -545,6 +545,16 @@
     box-shadow: 0 6px 12px rgba(95, 87, 230, 0.3);
   }
 
+  .terms-link {
+    color: #D73E53;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .terms-link:hover {
+    text-decoration: underline;
+  }
+
   /* Responsive Styles */
   @media screen and (max-width: 768px) {
     .token-page {
@@ -706,20 +716,68 @@
     const confirmingModal = document.getElementById('confirmingModal');
     const successModal = document.getElementById('successModal');
     const failureModal = document.getElementById('failureModal');
+    const nftNumberDisplay = document.getElementById('nft-number-display');
+    const nftRangeDisplay = document.getElementById('nft-range-display');
     
-    quantityInput.addEventListener('input', updateTotal);
+    const gotoPointsBtn = document.querySelector('.read-more');
+    if (gotoPointsBtn) {
+      gotoPointsBtn.addEventListener('click', () => {
+        window.location.href = '/diodenetwork-dev-2025/app/';
+      });
+    }
+    
+    quantityInput.addEventListener('input', function() {
+      updateTotal();
+      updateNftNumber();
+    });
     
     termsCheckbox.addEventListener('change', function() {
       purchaseBtn.disabled = !termsCheckbox.checked;
     });
 
     updateTotal();
+    updateNftNumber();
     
     function updateTotal() {
       const quantity = parseInt(quantityInput.value);
       const pricePerNft = 16.61;
       const total = (quantity * pricePerNft).toFixed(2);
       totalDiv.innerHTML = `<strong>TOTAL:</strong> $${total} USDC`;
+    }
+    
+    function updateNftNumber() {
+      const quantity = parseInt(quantityInput.value);
+      if (quantity <= 0 || isNaN(quantity)) {
+        nftNumberDisplay.textContent = 'NFT #1';
+        nftRangeDisplay.style.display = 'none';
+      } else if (quantity === 1) {
+        nftNumberDisplay.textContent = 'NFT #1';
+        nftRangeDisplay.style.display = 'none';
+      } else {
+        nftNumberDisplay.textContent = 'NFT #1';
+        nftRangeDisplay.textContent = `- #${quantity}`;
+        nftRangeDisplay.style.display = 'inline';
+      }
+      
+      updateModalNftNumbers(quantity);
+    }
+    
+    function updateModalNftNumbers(quantity) {
+      const confirmingTitle = confirmingModal.querySelector('.popup-title');
+      if (confirmingTitle) {
+        confirmingTitle.textContent = quantity === 1 ? 'NFT #1' : `NFT #1 - #${quantity}`;
+      }
+      
+      const successInfo = successModal.querySelector('.popup-info');
+      if (successInfo) {
+        const nftRange = quantity === 1 ? 'Disrupt NFT #1' : `Disrupt NFT #1 - #${quantity}`;
+        successInfo.textContent = `You are the owner of ${nftRange}!`;
+      }
+      
+      const failureInfo = failureModal.querySelector('.popup-info');
+      if (failureInfo) {
+        failureInfo.textContent = 'It looks like those NFTs are no longer available. Please try again with a new range.';
+      }
     }
     
     purchaseBtn.addEventListener('click', async function() {
@@ -734,6 +792,8 @@
       }
       
       try {
+        const quantity = parseInt(quantityInput.value);
+        updateModalNftNumbers(quantity); 
         confirmingModal.style.display = 'flex';
         
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -795,5 +855,100 @@
         failureModal.style.display = 'none';
       }
     });
+
+    // NFT Fetching
+    async function fetchNFTData() {
+      if (typeof window.ethereum === 'undefined') return;
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (!accounts || accounts.length === 0) return;
+
+        const walletAddress = accounts[0];
+        const moonbeamRPC = "https://rpc.api.moonbeam.network";
+        
+        const NFT_BOOSTS = [
+          {
+            contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
+            name: "Ambassador Pre Launch",
+            baseBoost: 2
+          },
+          {
+            contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
+            name: "OG Ambassador",
+            baseBoost: 5
+          },
+          {
+            contractAddress: "0x741C3F3146304Aaf5200317cbEc0265aB728FE07",
+            name: "OG Node",
+            baseBoost: 3
+          }
+        ];
+
+        const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
+          try {
+            const response = await fetch(moonbeamRPC, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                jsonrpc: "2.0",
+                id: 1,
+                method: "eth_call",
+                params: [{
+                  to: nft.contractAddress,
+                  data: '0x70a08231' + walletAddress.substring(2).padStart(64, '0')
+                }, "latest"]
+              })
+            });
+            
+            const result = await response.json();
+            const balance = result.result ? parseInt(result.result, 16) : 0;
+            
+            return {
+              name: nft.name,
+              balance: balance,
+              baseBoost: nft.baseBoost,
+              contractAddress: nft.contractAddress
+            };
+          } catch (err) {
+            console.error("Failed to fetch NFT balance:", err);
+            return {
+              name: nft.name,
+              balance: 0,
+              baseBoost: nft.baseBoost,
+              contractAddress: nft.contractAddress
+            };
+          }
+        })).catch(err => {
+          console.error("Failed to fetch NFTs", err);
+          return [];
+        });
+
+        const userNfts = nftBalances.filter(item => item.balance > 0);
+        
+        const nftTableBody = document.querySelector('.your-nfts .table tbody');
+        if (nftTableBody) {
+          if (userNfts.length > 0) {
+            nftTableBody.innerHTML = '';
+            userNfts.forEach(nft => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `<td>${nft.name}</td><td>${nft.balance}</td>`;
+              nftTableBody.appendChild(tr);
+            });
+          } else {
+            nftTableBody.innerHTML = '<tr><td colspan="2">No NFTs Found</td></tr>';
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching NFT data:', error);
+      }
+    }
+
+    fetchNFTData();
   });
 </script>
+
+<!-- Add countdown script reference -->
+<script src="{{ '/assets/js/countdown.js' | relative_url }}"></script>
