@@ -413,7 +413,6 @@
   
   .popup {
     width: 447px;
-    height: 550px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -697,8 +696,14 @@
 </style>
 
 <!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Web3 === 'undefined') {
+      console.error('Web3 library is not loaded. Please check your network connection.');
+    }
+    
     const quantityInput = document.getElementById('quantity');
     const totalDiv = document.querySelector('.total');
     const termsCheckbox = document.querySelector('.terms-container input[type="checkbox"]');
@@ -716,6 +721,8 @@
       });
     }
     
+    let currentSlotId = 1;
+    
     quantityInput.addEventListener('input', function() {
       updateTotal();
       updateNftNumber();
@@ -728,24 +735,39 @@
     updateTotal();
     updateNftNumber();
     
+    function calculatePrice(slotId) {
+      // $10 base + ($0.02 * (id - 1)) increment per slot
+      return (0.01e6 + (slotId - 1) * 2e4) / 1e6;
+    }
+    
     function updateTotal() {
-      const quantity = parseInt(quantityInput.value);
-      const pricePerNft = 16.61;
-      const total = (quantity * pricePerNft).toFixed(2);
-      totalDiv.innerHTML = `<strong>TOTAL:</strong> $${total} USDC`;
+      const quantity = parseInt(quantityInput.value) || 1;
+      if (quantity <= 0) {
+        quantityInput.value = 1;
+        updateTotal();
+        return;
+      }
+      
+      let total = 0;
+      for (let i = 0; i < quantity; i++) {
+        const slotId = currentSlotId + i;
+        total += calculatePrice(slotId);
+      }
+      
+      totalDiv.innerHTML = `<strong>TOTAL:</strong> $${total.toFixed(2)} USDC`;
     }
     
     function updateNftNumber() {
-      const quantity = parseInt(quantityInput.value);
-      if (quantity <= 0 || isNaN(quantity)) {
-        nftNumberDisplay.textContent = 'NFT #1';
+      const quantity = parseInt(quantityInput.value) || 1;
+      if (quantity <= 0) {
+        nftNumberDisplay.textContent = `NFT #${currentSlotId}`;
         nftRangeDisplay.style.display = 'none';
       } else if (quantity === 1) {
-        nftNumberDisplay.textContent = 'NFT #1';
+        nftNumberDisplay.textContent = `NFT #${currentSlotId}`;
         nftRangeDisplay.style.display = 'none';
       } else {
-        nftNumberDisplay.textContent = 'NFT #1';
-        nftRangeDisplay.textContent = `- #${quantity}`;
+        nftNumberDisplay.textContent = `NFT #${currentSlotId}`;
+        nftRangeDisplay.textContent = `- #${currentSlotId + quantity - 1}`;
         nftRangeDisplay.style.display = 'inline';
       }
       
@@ -755,12 +777,16 @@
     function updateModalNftNumbers(quantity) {
       const confirmingTitle = confirmingModal.querySelector('.popup-title');
       if (confirmingTitle) {
-        confirmingTitle.textContent = quantity === 1 ? 'NFT #1' : `NFT #1 - #${quantity}`;
+        confirmingTitle.textContent = quantity === 1 ? 
+          `NFT #${currentSlotId}` : 
+          `NFT #${currentSlotId} - #${currentSlotId + quantity - 1}`;
       }
       
       const successInfo = successModal.querySelector('.popup-info');
       if (successInfo) {
-        const nftRange = quantity === 1 ? 'Disrupt NFT #1' : `Disrupt NFT #1 - #${quantity}`;
+        const nftRange = quantity === 1 ? 
+          `Disrupt NFT #${currentSlotId}` : 
+          `Disrupt NFT #${currentSlotId} - #${currentSlotId + quantity - 1}`;
         successInfo.textContent = `You are the owner of ${nftRange}!`;
       }
       
@@ -781,30 +807,104 @@
         return;
       }
       
+      if (typeof Web3 === 'undefined') {
+        alert('Web3 library is not loaded. Please refresh the page or check your internet connection.');
+        return;
+      }
+      
       try {
-        const quantity = parseInt(quantityInput.value);
-        updateModalNftNumbers(quantity); 
         confirmingModal.style.display = 'flex';
+        const contractData = await initializeContract();
+        if (!contractData) {
+          throw new Error('Failed to initialize contract. Check console for details.');
+        }
         
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const { web3, contract, usdcContract } = contractData;
+        
+        const accounts = await window.ethereum.request({ 
+          method: 'eth_requestAccounts' 
+        });
         const account = accounts[0];
         
-        const transactionResult = await simulateTransaction();
-        
-        confirmingModal.style.display = 'none';
-        
-        if (transactionResult.success) {
-          successModal.style.display = 'flex';
-        } else {
-          failureModal.style.display = 'flex';
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== '0x504') { // Moonbeam mainnet
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x504' }],
+          });
         }
-      } catch (error) {
-        console.error('Transaction error:', error);
+        
+        // Check slot availability
+        const slotResult = await contract.methods.getNextSlot().call();
+        const slotId = Number(slotResult.slotId);
+        const slotPrice = Number(slotResult.priceUSDC);
+        
+        if (slotId === 0) {
+          throw new Error('All NFTs are sold out');
+        }
+        
+        const quantity = parseInt(quantityInput.value) || 1;
+        
+        // Calculate total price
+        let totalPrice = 0;
+        const slotIds = [];
+        
+        for (let i = 0; i < quantity; i++) {
+          const currentId = slotId + i;
+          if (currentId > 8500) {
+            throw new Error('Maximum slot ID is 8500');
+          }
+          slotIds.push(currentId);
+          // Calculate total price using the formula: 0.01e6 + (id - 1) * 2e4
+          totalPrice += (0.01e6 + (currentId - 1) * 2e4);
+        }
+        
+        // Check USDC balance
+        const usdcBalance = await usdcContract.methods.balanceOf(account).call();
+        if (Number(usdcBalance) < totalPrice) {
+          throw new Error(`Insufficient USDC balance. You need ${totalPrice/1e6} USDC.`);
+        }
+        
+        // Approve USDC
+        const approveTx = await usdcContract.methods.approve(
+          contract.options.address, 
+          totalPrice
+        ).send({ from: account });
+        
+        // Buy the slots
+        const buyTx = await contract.methods.buySlots(slotIds).send({ from: account });
+        
         confirmingModal.style.display = 'none';
+        successModal.style.display = 'flex';
+        
+        // Update the success modal with transaction details
+        const successInfo = successModal.querySelector('.popup-info');
+        successInfo.innerHTML = quantity === 1 ?
+          `You are the owner of Disrupt NFT #${slotId}!<br>
+          <a href="https://moonscan.io/tx/${buyTx.transactionHash}" target="_blank" 
+             style="color: #D73E53; margin-top: 10px; display: inline-block; text-decoration: none;">
+            View on Moonscan
+          </a>` :
+          `You are the owner of Disrupt NFT #${slotId} - #${slotId + quantity - 1}!<br>
+          <a href="https://moonscan.io/tx/${buyTx.transactionHash}" target="_blank" 
+             style="color: #D73E53; margin-top: 10px; display: inline-block; text-decoration: none;">
+            View on Moonscan
+          </a>`;
+        
+        await fetchNFTData();
+        
+        // Check for next available slot
+        await checkSlotAvailability();
+      } catch (error) {
+        console.error('Purchase transaction error:', error);
+        confirmingModal.style.display = 'none';
+        
+        const failureInfo = failureModal.querySelector('.popup-info');
+        failureInfo.textContent = error.message || 'Transaction failed. Please try again.';
         failureModal.style.display = 'flex';
       }
     });
-    
+
     const closeButtons = document.querySelectorAll('.close-btn');
     closeButtons.forEach(button => {
       button.addEventListener('click', function() {
@@ -936,7 +1036,109 @@
       }
     }
 
+    // NFT Contract interaction
+    async function initializeContract() {
+      if (typeof window.ethereum === 'undefined') return null;
+      if (typeof Web3 === 'undefined') {
+        console.error('Web3 library not loaded');
+        return null;
+      }
+      
+      try {
+        const contractDataUrl = "{{ '/assets/contracts/contract_data.json' | relative_url }}";
+        const abiUrl = "{{ '/assets/contracts/slotmarket_abi.json' | relative_url }}";
+        
+        let contractData, abi;
+        
+        try {
+          const contractResponse = await fetch(contractDataUrl);
+          if (!contractResponse.ok) {
+            console.warn(`Failed to fetch contract data from ${contractDataUrl}. Status: ${contractResponse.status}`);
+            contractData = { "contract_address": "0x802735FD7B56DA35e8636B1ba1a43C9d36AfB28C" };
+          } else {
+            contractData = await contractResponse.json();
+          }
+          
+          // fetch ABI
+          const abiResponse = await fetch(abiUrl);
+          if (!abiResponse.ok) {
+            console.warn(`Failed to fetch ABI from ${abiUrl}. Status: ${abiResponse.status}`);
+            throw new Error('Contract interface definition not available');
+          } else {
+            abi = await abiResponse.json();
+          }
+        } catch (fetchErr) {
+          console.error('Error fetching contract files:', fetchErr);
+          throw new Error('Failed to load contract information. Please try again later.');
+        }
+        
+        const web3 = new Web3(window.ethereum);
+        const contractAddress = contractData.contract_address;
+        console.log('Contract initialized with address:', contractAddress);
+        
+        return {
+          web3,
+          contract: new web3.eth.Contract(abi, contractAddress),
+          usdcContract: new web3.eth.Contract([
+            {
+              "constant": true,
+              "inputs": [{"name": "account", "type": "address"}],
+              "name": "balanceOf",
+              "outputs": [{"name": "", "type": "uint256"}],
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {"name": "spender", "type": "address"},
+                {"name": "amount", "type": "uint256"}
+              ],
+              "name": "approve",
+              "outputs": [{"name": "", "type": "bool"}],
+              "type": "function"
+            }
+          ], "0x931715FEE2d06333043d11F658C8CE934aC61D0c")
+        };
+      } catch (error) {
+        console.error('Contract initialization error:', error);
+        return null;
+      }
+    }
+    
+    async function checkSlotAvailability() {
+      try {
+        const contractData = await initializeContract();
+        if (!contractData) {
+          console.error('Failed to initialize contract for slot availability check');
+          return;
+        }
+        
+        const { contract } = contractData;
+        try {
+          const result = await contract.methods.getNextSlot().call();
+          const slotId = Number(result.slotId);
+          const priceUSDC = Number(result.priceUSDC) / 1e6;
+          
+          if (slotId === 0) {
+            document.querySelector('.nft-number').innerText = 'All slots sold!';
+            purchaseBtn.disabled = true;
+          } else {
+            currentSlotId = slotId;
+            document.getElementById('nft-number-display').textContent = `NFT #${slotId}`;
+            
+            const quantity = parseInt(quantityInput.value) || 1;
+            updateTotal();
+          }
+        } catch (error) {
+          console.error('Failed to check slot availability:', error);
+        }
+      } catch (error) {
+        console.error('Failed to check slot availability:', error);
+      }
+    }
+    
     fetchNFTData();
+    checkSlotAvailability();
   });
 </script>
 
