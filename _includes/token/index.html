@@ -56,10 +56,8 @@
               <tr><th>NFT</th><th>QUANTITY</th></tr>
             </thead>
             <tbody>
-              <tr><td>OG Ambassador</td><td>1</td></tr>
-              <tr><td>OG Node</td><td>6</td></tr>
-              <tr><td>Disrupt #1</td><td>1</td></tr>
-              <tr><td>Disrupt #17</td><td>6</td></tr>
+             
+              <tr><td> Diode Disrupt</td><td>-</td></tr>
             </tbody>
           </table>
         </div>
@@ -981,11 +979,10 @@
               }
             ], nft.contractAddress);
             
-            const tokenIds = Array.from({length: 10}, (_, i) => i + 1);
+            const tokenIds = Array.from({length: 256}, (_, i) => i + 1);
             const accounts = Array(tokenIds.length).fill(walletAddress);
             
             const balances = await contract.methods.balanceOfBatch(accounts, tokenIds).call();
-            console.log("NFT balances response:", balances);
             
             const balance = balances.reduce((sum, val) => sum + parseInt(val), 0);
             
