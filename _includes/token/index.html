@@ -959,42 +959,35 @@
         
         const NFT_BOOSTS = [
           {
-            contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
-            name: "Ambassador Pre Launch",
-            baseBoost: 2
-          },
-          {
-            contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
-            name: "OG Ambassador",
-            baseBoost: 5
-          },
-          {
-            contractAddress: "0x741C3F3146304Aaf5200317cbEc0265aB728FE07",
-            name: "OG Node",
-            baseBoost: 3
+            contractAddress: "0x802735FD7B56DA35e8636B1ba1a43C9d36AfB28C",
+            name: "Diode Disrupt",
+            baseBoost: 0
           }
         ];
 
         const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
           try {
-            const response = await fetch(moonbeamRPC, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                jsonrpc: "2.0",
-                id: 1,
-                method: "eth_call",
-                params: [{
-                  to: nft.contractAddress,
-                  data: '0x70a08231' + walletAddress.substring(2).padStart(64, '0')
-                }, "latest"]
-              })
-            });
+            const web3 = new Web3(moonbeamRPC);
+            const contract = new web3.eth.Contract([
+              {
+                "inputs": [
+                  {"internalType": "address[]", "name": "accounts", "type": "address[]"},
+                  {"internalType": "uint256[]", "name": "ids", "type": "uint256[]"}
+                ],
+                "name": "balanceOfBatch",
+                "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
+                "stateMutability": "view",
+                "type": "function"
+              }
+            ], nft.contractAddress);
             
-            const result = await response.json();
-            const balance = result.result ? parseInt(result.result, 16) : 0;
+            const tokenIds = Array.from({length: 10}, (_, i) => i + 1);
+            const accounts = Array(tokenIds.length).fill(walletAddress);
+            
+            const balances = await contract.methods.balanceOfBatch(accounts, tokenIds).call();
+            console.log("NFT balances response:", balances);
+            
+            const balance = balances.reduce((sum, val) => sum + parseInt(val), 0);
             
             return {
               name: nft.name,
