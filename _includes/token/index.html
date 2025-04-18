@@ -1,3 +1,23 @@
+<!-- US Geo-restriction Modal -->
+<div id="geoRestrictionModal" class="transaction-modal">
+  <div class="popup" style="height: auto; padding: 40px 30px;">
+    <div class="popup-header" style="margin-bottom: 8px;">
+      <h2>Access Restricted</h2>
+    </div>
+    <div style="text-align: center; margin-bottom: 30px;">
+           <p style="font-size: 18px; line-height: 1.5; margin-bottom: 50px;">
+        Please connect with Diode directly for more information about the Diode Token and the Disrupt NFT.
+      </p>
+      <div style="display: flex; justify-content: center; gap: 15px;">
+        <button class="modal-back-btn" style="margin-top: 0;">Back</button>
+        <a href="https://contactdiode.paperform.co/" target="_blank" style="display: inline-block;">
+          <button class="modal-close-btn" style="margin-top: 0;">Contact Diode</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="token-page">
     <div class="countdown countdown-container">
       <div class="countdown-title">$DIODE Token Launch:</div>
@@ -457,6 +477,14 @@
     background-color: rgba(0, 0, 0, 0.7);
     align-items: center;
     justify-content: center;
+    overflow: auto;
+  }
+  
+  body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
   }
   
   .modal-content {
@@ -577,7 +605,8 @@
   }
   
   .modal-close-btn,
-  .try-again-btn {
+  .try-again-btn,
+  .modal-back-btn {
     padding: 10px 24px;
     background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
     border: none;
@@ -591,8 +620,13 @@
     margin-top: 32px;
   }
   
+  .modal-back-btn {
+    background: #000000;
+  }
+  
   .modal-close-btn:hover,
-  .try-again-btn:hover {
+  .try-again-btn:hover,
+  .modal-back-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(95, 87, 230, 0.3);
   }
@@ -672,7 +706,8 @@
       font-size: 16px;
     }
     
-    .modal-close-btn {
+    .modal-close-btn,
+    .modal-back-btn {
       width: 140px;
       height: 48px;
     }
@@ -750,6 +785,12 @@
     .popup-info {
       font-size: 14px;
     }
+    
+    .modal-close-btn,
+    .modal-back-btn {
+      font-size: 14px;
+      width: 120px;
+    }
   }
 </style>
 
@@ -769,6 +810,7 @@
     const confirmingModal = document.getElementById('confirmingModal');
     const successModal = document.getElementById('successModal');
     const failureModal = document.getElementById('failureModal');
+    const geoRestrictionModal = document.getElementById('geoRestrictionModal');
     const nftNumberDisplay = document.getElementById('nft-number-display');
     const nftRangeDisplay = document.getElementById('nft-range-display');
     
@@ -986,6 +1028,14 @@
       purchaseBtn.click();
     });
     
+    const modalBackBtn = document.querySelector('.modal-back-btn');
+    if (modalBackBtn) {
+      modalBackBtn.addEventListener('click', function() {
+        document.body.classList.remove('modal-open');
+        window.history.back();
+      });
+    }
+    
     function simulateTransaction() {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -1186,9 +1236,30 @@
         console.error('Failed to check slot availability:', error);
       }
     }
-    
+
+    async function checkGeoRestriction() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        if (data.country === 'US') {
+          geoRestrictionModal.style.display = 'flex';
+          document.body.classList.add('modal-open');
+          
+          geoRestrictionModal.addEventListener('click', function(event) {
+            if (event.target === geoRestrictionModal) {
+              event.stopPropagation();
+              return false;
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to check geolocation:', error);
+      }
+    }
+
     fetchNFTData();
     checkSlotAvailability();
+    checkGeoRestriction();
   });
 </script>
 
