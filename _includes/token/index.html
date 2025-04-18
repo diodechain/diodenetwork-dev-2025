@@ -141,9 +141,35 @@
   }
   
   .countdown-title {
-    font-size: 20px;
-    font-weight: 600;
+  font-size: 20px;
+  font-weight: 600;
+  background: linear-gradient(
+    to right, 
+    #D73E53 0%, 
+    #eb8e9e 10%,
+    #A04992 20%,
+    #615BA8 30%,
+    #A04992 40%,
+    #eb8e9e 50%,
+    #D73E53 60%,
+    #eb8e9e 70%,
+    #A04992 80%,
+    #615BA8 90%,
+    #D73E53 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
+  display: inline-block;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
+}
   
   .countdown-timer {
     display: flex;
@@ -175,7 +201,34 @@
     font-weight: 600;
     display: block;
   }
-  
+  .countdown-complete {
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(
+    to right, 
+    #D73E53 0%, 
+    #eb8e9e 10%,
+    #A04992 20%,
+    #615BA8 30%,
+    #A04992 40%,
+    #eb8e9e 50%,
+    #D73E53 60%,
+    #eb8e9e 70%,
+    #A04992 80%,
+    #615BA8 90%,
+    #D73E53 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
+  display: inline-block;
+  padding: 35px 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
   .nft-container {
     border: 1px solid #D73E53;
     padding: 26px 60px;
