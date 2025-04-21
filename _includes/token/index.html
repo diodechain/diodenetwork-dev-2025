@@ -830,7 +830,7 @@
     });
     
     termsCheckbox.addEventListener('change', function() {
-      purchaseBtn.disabled = !termsCheckbox.checked;
+      purchaseBtn.disabled = !(termsCheckbox.checked && currentSlotId);
     });
 
     updateTotal();
