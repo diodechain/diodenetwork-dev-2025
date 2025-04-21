@@ -10,7 +10,7 @@
       </p>
       <div style="display: flex; justify-content: center; gap: 15px;">
         <button class="modal-back-btn" style="margin-top: 0;">Back</button>
-        <a href="https://contactdiode.paperform.co/" target="_blank" style="display: inline-block;">
+        <a href="https://diode.io/joinzone/#1MQKGI_TUYpNksoAAK6TSynBPpviy5MPgDRyTiO7YuGh5_H5sHDN9VIB1diC" target="_blank" style="display: inline-block;">
           <button class="modal-close-btn" style="margin-top: 0;">Contact Diode</button>
         </a>
       </div>
@@ -818,7 +818,7 @@
     const gotoPointsBtn = document.querySelector('.read-more');
     if (gotoPointsBtn) {
       gotoPointsBtn.addEventListener('click', () => {
-        window.location.href = '/diodenetwork-dev-2025/app/';
+        window.location.href = "{{ '/app/' | relative_url }}"
       });
     }
     
