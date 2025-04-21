@@ -1,0 +1,12 @@
+dev notes
+
+To push selective files to prod:
+
+First - git remote add upstream git@github.com:diocomweb/diodenetwork.git
+
+Then subsequently:
+git fetch upstream
+git pull upstream main --rebase
+git push upstream
+git reset --hard origin/main
+

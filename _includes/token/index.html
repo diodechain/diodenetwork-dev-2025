@@ -22,24 +22,24 @@
     </div>
   
     <div class="nft-container">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
-      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="Disrupt NFT" />
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
+      <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="Disrupt NFT" />
       <ul class="dotted-list">
         <li>• REVENUE-ANCHORED QUARTERLY YIELD</li>
         <li>• REDEEMABLE FOR 10 DIODE</li>
-        <li>• <a href="{{ '/#hero-section' | relative_url }}">READ DETAILS HERE</a></li>
+        <li>• <a href="{{ 'https://diode.foundation/docs/programs/disrupt_nft.html' | relative_url }}" target="_blank">READ DETAILS HERE</a></li>
       </ul>
       <div class="nft-number"><strong id="nft-number-display">NFT #1</strong> <span id="nft-range-display" style="display: none;">- #1</span></div>
   
       <div class="quantity-input">
         <label for="quantity">QUANTITY
-          <input type="number" id="quantity" value="1" min="1" max="100" class="always-show-arrows" />
+          <input type="number" id="quantity" value="1" min="1" max="1000" class="always-show-arrows" />
         </label>
       </div>
       <div class="total"><strong>TOTAL:</strong> $166.10 USDC</div>
   
       <div class="terms-container">
-        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE <a href="https://diode.io/terms/" target="_blank" class="terms-link">TERMS</a></label>
+        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE <a href="https://diode.foundation/docs/programs/disrupt_nft_terms.html" target="_blank" class="terms-link">TERMS</a></label>
       </div>
       <button class="purchase-btn" disabled>Purchase</button>
     </div>
@@ -70,10 +70,10 @@
   <div class="popup">
     <button class="close-btn">×</button>
     <div class="popup-header">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
     </div>
     <div class="popup-image">
-      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+      <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
     <div class="popup-title">NFT #1</div>
     <div class="popup-info" style="font-weight: 300;">Confirming Purchase</div>
@@ -87,10 +87,10 @@
   <div class="popup">
     <button class="close-btn">×</button>
     <div class="popup-header" style="margin-bottom: 23px;">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
     </div>
     <div class="popup-image" style="margin: 0 0 15px;">
-      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+      <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
     <div class="popup-status" style="margin: 0;">Success!</div>
     <div class="popup-info" style="margin-top: 10px;">You are the owner of Disrupt NFT #1!</div>
@@ -104,10 +104,10 @@
   <div class="popup" style="height: 630px;">
     <button class="close-btn">×</button>
     <div class="popup-header" style="margin-bottom: 23px;">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"><img class="help-icon" src="{{ '/assets/images/icons/help.png' | relative_url }}" alt="Info"></span></h2>
+      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
     </div>
     <div class="popup-image" style="margin: 0 0 15px;">
-      <img src="{{ '/assets/images/nft.png' | relative_url }}" alt="NFT Artwork">
+      <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="NFT Artwork">
     </div>
     <div class="popup-status" style="margin: 0;">Transaction Failed!</div>
     <div class="popup-info" style="margin-top: 10px;">It looks like those NFTs are no longer available. please try again with a new range.</div>
@@ -201,6 +201,7 @@
     font-weight: 600;
     display: block;
   }
+
   .countdown-complete {
   font-size: 26px;
   font-weight: 700;
@@ -229,6 +230,12 @@
   text-align: center;
   width: 100%;
 }
+
+  img.nft {
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+  }
+
   .nft-container {
     border: 1px solid #D73E53;
     padding: 26px 60px;
@@ -308,7 +315,7 @@
   }
   
   .nft-container input[type="number"] {
-    width: 55px;
+    width: 80px;
     height: 40px;
     padding: 8px;
     font-size: 1rem;
