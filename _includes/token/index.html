@@ -800,10 +800,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    if (typeof Web3 === 'undefined') {
-      console.error('Web3 library is not loaded. Please check your network connection.');
-    }
-    
     const quantityInput = document.getElementById('quantity');
     const totalDiv = document.querySelector('.total');
     const termsCheckbox = document.querySelector('.terms-container input[type="checkbox"]');
@@ -1063,15 +1059,25 @@
 
     // NFT Fetching
     async function fetchNFTData() {
-      if (typeof window.ethereum === 'undefined') return;
-
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        if (!accounts || accounts.length === 0) return;
-
-        const walletAddress = accounts[0];
         const moonbeamRPC = "https://rpc.api.moonbeam.network";
+        let walletAddress = null;
         
+        if (typeof window.ethereum !== 'undefined') {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' }).catch(() => []);
+          if (accounts && accounts.length > 0) {
+            walletAddress = accounts[0];
+          }
+        }
+        
+        if (!walletAddress) {
+          const nftTableBody = document.querySelector('.your-nfts .table tbody');
+          if (nftTableBody) {
+            nftTableBody.innerHTML = '<tr><td colspan="2">Connect wallet to view your NFTs</td></tr>';
+          }
+          return;
+        }
+
         const NFT_BOOSTS = [
           {
             contractAddress: "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7",
@@ -1080,9 +1086,10 @@
           }
         ];
 
+        const web3 = new Web3(new Web3.providers.HttpProvider(moonbeamRPC));
+
         const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
           try {
-            const web3 = new Web3(moonbeamRPC);
             const contract = new web3.eth.Contract([
               {
                 "inputs": [
@@ -1140,20 +1147,19 @@
         }
       } catch (error) {
         console.error('Error fetching NFT data:', error);
+        const nftTableBody = document.querySelector('.your-nfts .table tbody');
+        if (nftTableBody) {
+          nftTableBody.innerHTML = '<tr><td colspan="2">Error loading NFTs</td></tr>';
+        }
       }
     }
 
     // NFT Contract interaction
     async function initializeContract() {
-      if (typeof window.ethereum === 'undefined') return null;
-      if (typeof Web3 === 'undefined') {
-        console.error('Web3 library not loaded');
-        return null;
-      }
-      
       try {
         const contractDataUrl = "{{ '/assets/contracts/contract_data.json' | relative_url }}";
         const abiUrl = "{{ '/assets/contracts/slotmarket_abi.json' | relative_url }}";
+        const moonbeamRPC = "https://rpc.api.moonbeam.network";
         
         let contractData, abi;
         
@@ -1179,12 +1185,22 @@
           throw new Error('Failed to load contract information. Please try again later.');
         }
         
-        const web3 = new Web3(window.ethereum);
+        let web3;
+        let isReadOnly = false;
+        
+        if (typeof window.ethereum !== 'undefined') {
+          web3 = new Web3(window.ethereum);
+        } else {
+          web3 = new Web3(new Web3.providers.HttpProvider(moonbeamRPC));
+          isReadOnly = true;
+          console.log('Using read-only web3 provider (MetaMask not detected)');
+        }
+        
         const contractAddress = contractData.contract_address;
-        console.log('Contract initialized with address:', contractAddress);
         
         return {
           web3,
+          isReadOnly,
           contract: new web3.eth.Contract(abi, contractAddress),
           usdcContract: new web3.eth.Contract([
             {
@@ -1230,12 +1246,22 @@
             document.querySelector('.nft-number').innerText = 'All slots sold!';
             purchaseBtn.disabled = true;
           } else {
-            
             currentSlotId = slotId;            
             document.getElementById('nft-number-display').textContent = `NFT #${slotId}`;
             const quantity = parseInt(quantityInput.value) || 1;
             updateTotal();
-
+            
+            purchaseBtn.disabled = !(termsCheckbox.checked && typeof window.ethereum !== 'undefined');
+            
+            if (typeof window.ethereum === 'undefined') {
+              const helperText = document.createElement('div');
+              helperText.className = 'helper-text';
+              helperText.textContent = 'MetaMask extension is required for purchasing. Please install MetaMask to continue.';
+              
+              if (!document.querySelector('.helper-text')) {
+                document.querySelector('.purchase-btn').insertAdjacentElement('afterend', helperText);
+              }
+            }
           }
         } catch (error) {
           console.error('Failed to check slot availability:', error);
