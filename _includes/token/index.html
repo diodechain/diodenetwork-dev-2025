@@ -879,6 +879,8 @@
     
     function updateModalNftNumbers(quantity) {
       const confirmingTitle = confirmingModal.querySelector('.popup-title');
+      let titleContent;
+
       if (confirmingTitle) {
         confirmingTitle.textContent = quantity === 1 ? 
           `NFT #${currentSlotId}` : 
@@ -1287,7 +1289,8 @@
             document.getElementById('nft-number-display').textContent = `NFT #${slotId}`;
             const quantity = parseInt(quantityInput.value) || 1;
             updateTotal();
-            
+            updateNftNumber();
+
             purchaseBtn.disabled = !(termsCheckbox.checked && typeof window.ethereum !== 'undefined');
             
             if (typeof window.ethereum === 'undefined') {
