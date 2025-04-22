@@ -799,7 +799,7 @@
 <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', async function() {
     const quantityInput = document.getElementById('quantity');
     const totalDiv = document.querySelector('.total');
     const termsCheckbox = document.querySelector('.terms-container input[type="checkbox"]');
@@ -1228,6 +1228,44 @@
       }
     }
     
+    async function switchToMoonbeamNetwork() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+          if (chainId !== '0x504') { // Moonbeam mainnet
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0x504' }],
+            }).catch(async (switchError) => {
+              if (switchError.code === 4902) {
+                await window.ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [{
+                    chainId: '0x504',
+                    chainName: 'Moonbeam',
+                    nativeCurrency: {
+                      name: 'GLMR',
+                      symbol: 'GLMR',
+                      decimals: 18
+                    },
+                    rpcUrls: ['https://rpc.api.moonbeam.network'],
+                    blockExplorerUrls: ['https://moonscan.io']
+                  }]
+                });
+              } else {
+                console.error('Failed to switch network:', switchError);
+              }
+            });
+            console.log('Switched to Moonbeam network');
+          } else {
+            console.log('Already on Moonbeam network');
+          }
+        } catch (error) {
+          console.error('Error switching to Moonbeam network:', error);
+        }
+      }
+    }
+
     async function checkSlotAvailability() {
       try {
         const contractData = await initializeContract();
@@ -1241,7 +1279,6 @@
           const result = await contract.methods.getNextSlot().call();
           const slotId = Number(result.slotId);
           const priceUSDC = Number(result.priceUSDC) / 1e6;
-          
           if (slotId === 0) {
             document.querySelector('.nft-number').innerText = 'All slots sold!';
             purchaseBtn.disabled = true;
@@ -1292,6 +1329,7 @@
     }
 
     fetchNFTData();
+    await switchToMoonbeamNetwork();
     checkSlotAvailability();
     checkGeoRestriction();
   });
