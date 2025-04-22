@@ -1103,7 +1103,7 @@
               }
             ], nft.contractAddress);
             
-            const tokenIds = Array.from({length: 256}, (_, i) => i + 1);
+            const tokenIds = Array.from({length: 8500}, (_, i) => i + 1);
             const accounts = Array(tokenIds.length).fill(walletAddress);
             
             const balances = await contract.methods.balanceOfBatch(accounts, tokenIds).call();
