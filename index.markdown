@@ -5,28 +5,6 @@ title: "Home"
 
 <!-- HERO SECTION -->
 <div id="hero-section" class="hero-section">
- <!-- Countdown Timer -->
-  <div class="countdown-container">
-    <div class="countdown-label">$DIODE Token Launch:</div>
-    <div id="countdown" class="countdown">
-      <div class="countdown-item">
-        <span id="days">--</span>
-        <span class="countdown-label-sm">Days</span>
-      </div>
-      <div class="countdown-item">
-        <span id="hours">--</span>
-        <span class="countdown-label-sm">Hours</span>
-      </div>
-      <div class="countdown-item">
-        <span id="minutes">--</span>
-        <span class="countdown-label-sm">Minutes</span>
-      </div>
-      <div class="countdown-item">
-        <span id="seconds">--</span>
-        <span class="countdown-label-sm">Seconds</span>
-      </div>
-    </div>
-  </div>
   
   <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Launch App</a>
 
