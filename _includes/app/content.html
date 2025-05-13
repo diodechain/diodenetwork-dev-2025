@@ -1163,7 +1163,7 @@
           tr.className = "clickable-row";
           tr.onclick = () => window.open(`https://diode.io/network/#/node/${node.address}`, '_blank');
           tr.innerHTML = `
-              <td>${node.rank}</td>
+              <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
               <td>${formatBandwidth(node.bandwidth)} GB</td>
               <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${formatAddress(node.address)}</a></td>
               <td class="description-col">${node.meta}</td>
@@ -1193,7 +1193,7 @@
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-              <td>${zone.rank}</td>
+              <td>${zone.banned === 1 ? "BANNED" : zone.rank}</td>
               <td>${zone.activeusers} users</td>
               <td class="address-col">${formatAddress(zone.address)}</td>
               <td class="description-col">${zone.meta}</td>
@@ -1231,7 +1231,7 @@
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-              <td>${child.rank || '-'}</td>
+              <td>${child.banned === 1 ? "BANNED" : child.rank || '-'}</td>
               <td>${child.registrations || "-"}</td>
               <td>@${child.username.split('.')[0]}</td>
               <td>${child.descendants !== undefined ? child.descendants || "-" : '-'}</td>
@@ -1295,7 +1295,7 @@
           const sortedModalNodes = [...currentData.nodes].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
           document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
               <tr>
-                <td>${node.rank}</td>
+                <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
                 <td>${formatBandwidth(node.bandwidth)} GB</td>
                 <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
                 <td class="description-col">${node.meta}</td>
@@ -1306,9 +1306,10 @@
       }
       if (currentData.zones.length) {
         document.querySelector('#zonesCard .button-view-all').onclick = function () {
-          document.getElementById('zonesModalBody').innerHTML = currentData.zones.map(zone => `
+          const sortedModalZones = [...currentData.zones].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+          document.getElementById('zonesModalBody').innerHTML = sortedModalZones.map(zone => `
               <tr>
-                <td>${zone.rank}</td>
+                <td>${zone.banned === 1 ? "BANNED" : zone.rank}</td>
                 <td>${zone.activeusers}</td>
                 <td class="address-col">${zone.address}</td>
                 <td class="description-col">${zone.meta}</td>
@@ -1321,7 +1322,7 @@
         document.querySelector('#referralsCard .button-view-all').onclick = function () {
           document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
               <tr>
-                <td>${child.rank || '-'}</td>
+                <td>${child.banned === 1 ? "BANNED" : child.rank || '-'}</td>
                 <td>${child.registrations || "-"}</td>
                 <td>@${child.username.split('.')[0]}</td>
                 <td>${child.descendants !== undefined ? child.descendants || "-" : '-' }</td>
