@@ -292,6 +292,14 @@
         let epoch_extra_minutes_remaining = 60 * (epoch_extra_hours_remaining - Math.floor(epoch_extra_hours_remaining))
         let epoch_percentage = Math.floor(100 * (now - epoch_start) / 2_592_000);
 
+        let epoch_days_to_stake = 10 - (30 - Math.floor(epoch_days_remaining));
+
+        if (epoch_days_to_stake > 0) {
+          window.epochStakeWindow = `${epoch_days_to_stake}D ${Math.floor(epoch_extra_hours_remaining)}H ${Math.floor(epoch_extra_minutes_remaining)}M left to stake your nodes!`;
+        } else {
+          window.epochStakeWindow = "Staking window is closed for this Epoch"
+        }
+
         document.getElementById("epochTitle").textContent = `Epoch ${epoch} Stats`;
         document.getElementById("epochRemaining").textContent = `${Math.floor(epoch_days_remaining)}D ${Math.floor(epoch_extra_hours_remaining)}H ${Math.floor(epoch_extra_minutes_remaining)}M remaining`;
 
