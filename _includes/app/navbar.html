@@ -239,135 +239,136 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const navbar = document.querySelector('.navbar');
-      const navbarMiddle = document.getElementById('navbarMiddle');
-      const navbarRight = document.getElementById('navbarRight');
-      const usernameEl = document.getElementById('username');
-      const fullAddressEl = document.getElementById('fullAddress');
-      const shortAddressEl = document.getElementById('shortWalletAddress');
-      const walletBalanceEl = document.getElementById('walletBalance');
-      const profileImg = document.getElementById('profileImage');
-      const copyBtn = document.getElementById('copyButton');
+      document.addEventListener('DOMContentLoaded', async () => {
+        const navbar = document.querySelector('.navbar');
+        const navbarMiddle = document.getElementById('navbarMiddle');
+        const navbarRight = document.getElementById('navbarRight');
+        const usernameEl = document.getElementById('username');
+        const fullAddressEl = document.getElementById('fullAddress');
+        const shortAddressEl = document.getElementById('shortWalletAddress');
+        const walletBalanceEl = document.getElementById('walletBalance');
+        const profileImg = document.getElementById('profileImage');
+        const copyBtn = document.getElementById('copyButton');
 
-      const copyIconUrl = "{{ '/assets/images/icons/copy.png' | relative_url }}";
-      const checkIconUrl = "{{ '/assets/images/icons/check-white.png' | relative_url }}";
+        const copyIconUrl = "{{ '/assets/images/icons/copy.png' | relative_url }}";
+        const checkIconUrl = "{{ '/assets/images/icons/check-white.png' | relative_url }}";
 
-      const SAMPLE_BALANCE = "12 DIODE";
+        const SAMPLE_BALANCE = "12 DIODE";
 
-      function shortenAddress(address) {
-        return address.slice(0, 6) + '...' + address.slice(-4);
-      }
+        function shortenAddress(address) {
+          return address.slice(0, 6) + '...' + address.slice(-4);
+        }
 
-      function getDiceBearAvatarUrl(address) {
-        return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(address)}&size=64`;
-      }
+        function getDiceBearAvatarUrl(address) {
+          return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(address)}&size=64`;
+        }
 
-      async function getData(endpoint) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          const walletAddress = accounts[0];
-          const baseURL = "https://registrar-prod.diode.link:8008/v1";
-          const res = await fetch(`${baseURL}${endpoint}`, {
-            method: "GET",
-            headers: { "Authorization": walletAddress }
-          });
-          if (!res.ok) {
-            console.warn("Fetch failed:", res.status, res.statusText);
+        async function getData(endpoint) {
+          try {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+            const walletAddress = accounts[0];
+            const baseURL = "https://registrar-prod.diode.link:8008/v1";
+            const res = await fetch(`${baseURL}${endpoint}`, {
+              method: "GET",
+              headers: { "Authorization": walletAddress }
+            });
+            if (!res.ok) {
+              console.warn("Fetch failed:", res.status, res.statusText);
+              return null;
+            }
+            return await res.json();
+          } catch (err) {
+            console.error("Error fetching", endpoint, err);
             return null;
           }
-          return await res.json();
-        } catch (err) {
-          console.error("Error fetching", endpoint, err);
-          return null;
         }
-      }
 
-      const DIODE_CONTRACT = "0x434116a99619f2B465A137199C38c1Aab0353913";
-        
-      async function getDiodeBalance(walletAddress) {
-          try {
-              const response = await fetch("https://rpc.api.moonbeam.network", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                      jsonrpc: "2.0",
-                      id: 1,
-                      method: "eth_call",
-                      params: [{
-                          to: DIODE_CONTRACT,
-                          data: `0x70a08231000000000000000000000000${walletAddress.substring(2)}`
-                      }, "latest"]
-                  })
-              });
-
-              const result = await response.json();
-              if (result.result) {
-                  const balance = parseInt(result.result, 16);
-                  return `${(balance / 10**18).toFixed(2)} Diode`;
-              }
-              return "0 DIODE";
-          } catch (err) {
-              console.error("Failed to fetch DIODE balance:", err);
-              return "0 DIODE";
-          }
-      }
-
-      if (window.ethereum) {
-        window.ethereum.request({ method: 'eth_accounts' })
-          .then(async (accounts) => {
-            if (accounts && accounts.length > 0) {
-              navbarMiddle.style.display = 'flex';
-              navbarRight.style.display = 'flex';
-
-              const walletAddress = accounts[0];
-
-              const userData = await getData("/user/username");
-              usernameEl.textContent = userData && userData.username ?
-                "@" + userData.username : "@nousername";
-
-              const userReferral = await getData("/user/referral");
-              const referralCode = userReferral && userReferral.referral ?
-                userReferral.referral : "no referral";
-
-              fullAddressEl.textContent = referralCode;
-              shortAddressEl.textContent = shortenAddress(walletAddress);
-              const walletBalance = await getDiodeBalance(walletAddress);
-              walletBalanceEl.textContent = walletBalance;
-              profileImg.src = getDiceBearAvatarUrl(walletAddress);
-
-              if (copyBtn) {
-                copyBtn.addEventListener('click', () => {
-                  if (referralCode !== "no data") {
-                    navigator.clipboard.writeText(referralCode)
-                      .then(() => {
-                        console.log('Referral code copied to clipboard:', referralCode);
-                        const iconImg = copyBtn.querySelector('img');
-                        iconImg.src = checkIconUrl;
-                        setTimeout(() => {
-                          iconImg.src = copyIconUrl;
-                        }, 3000);
-                      })
-                      .catch(err => console.error('Failed to copy referral code:', err));
-                  }
+        const DIODE_CONTRACT = "0x434116a99619f2B465A137199C38c1Aab0353913";
+          
+        async function getDiodeBalance(walletAddress) {
+            try {
+                const response = await fetch("https://rpc.api.moonbeam.network", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        jsonrpc: "2.0",
+                        id: 1,
+                        method: "eth_call",
+                        params: [{
+                            to: DIODE_CONTRACT,
+                            data: `0x70a08231000000000000000000000000${walletAddress.substring(2)}`
+                        }, "latest"]
+                    })
                 });
-              }
-            } else {
-              navbarMiddle.style.display = 'none';
-              navbarRight.style.display = 'none';
-              navbar.style.backgroundImage = 'none';
-              navbar.style.padding = '20px 30px';
-              console.warn('No Metamask accounts found. Wallet is not connected.');
+
+                const result = await response.json();
+                if (result.result) {
+                    const balance = parseInt(result.result, 16);
+                    return `${(balance / 10**18).toFixed(2)} Diode`;
+                }
+                return "0 DIODE";
+            } catch (err) {
+                console.error("Failed to fetch DIODE balance:", err);
+                return "0 DIODE";
             }
-          })
-          .catch((err) => console.error('Failed to retrieve accounts:', err));
-      } else {
-        console.warn('Metamask not detected. window.ethereum is not available.');
-      }
-    });
-  </script>
+        }
+
+        if (window.ethereum) {
+          window.ethereum.request({ method: 'eth_accounts' })
+            .then(async (accounts) => {
+              if (accounts && accounts.length > 0) {
+                navbarMiddle.style.display = 'flex';
+                navbarRight.style.display = 'flex';
+
+                const walletAddress = accounts[0];
+
+                const userData = await getData("/user/username");
+                usernameEl.textContent = userData && userData.username ?
+                  "@" + userData.username : "@nousername";
+
+                const userReferral = await getData("/user/referral");
+                const referralCode = userReferral && userReferral.referral ?
+                  userReferral.referral : "no referral";
+
+                fullAddressEl.textContent = referralCode;
+                shortAddressEl.textContent = shortenAddress(walletAddress);
+                const walletBalance = await getDiodeBalance(walletAddress);
+                walletBalanceEl.textContent = walletBalance;
+                profileImg.src = getDiceBearAvatarUrl(walletAddress);
+
+                if (copyBtn) {
+                  copyBtn.addEventListener('click', () => {
+                    if (referralCode !== "no data") {
+                      navigator.clipboard.writeText(referralCode)
+                        .then(() => {
+                          console.log('Referral code copied to clipboard:', referralCode);
+                          const iconImg = copyBtn.querySelector('img');
+                          iconImg.src = checkIconUrl;
+                          setTimeout(() => {
+                            iconImg.src = copyIconUrl;
+                          }, 3000);
+                        })
+                        .catch(err => console.error('Failed to copy referral code:', err));
+                    }
+                  });
+                }
+              } else {
+                navbarMiddle.style.display = 'none';
+                navbarRight.style.display = 'none';
+                navbar.style.backgroundImage = 'none';
+                navbar.style.padding = '20px 30px';
+                console.warn('No Metamask accounts found. Wallet is not connected.');
+              }
+            })
+            .catch((err) => console.error('Failed to retrieve accounts:', err));
+        } else {
+          console.warn('Metamask not detected. window.ethereum is not available.');
+        }
+      });
+
+    </script>
 
   </body>
 

@@ -35,6 +35,9 @@
       font-size: 20px;
       font-weight: 500;
     }
+    .dashboard-header .sub-title {
+      font-size: 14px;
+    }
     .dashboard-header .buttons {
       display: flex;
       gap: 10px;
@@ -200,7 +203,10 @@
 </head>
 <body>
   <div class="dashboard-header">
-    <div class="title">Current Epoch Stats</div>
+    <div class="title">
+      <span id="epochTitle">Epoch --- Stats</span><br>
+      <span id="epochRemaining" class="sub-title"></span>
+    </div>
     <div class="buttons">
       <button class="goto-token">Goto Token</button>
       <!-- <button class="open-campaign">View Campaign</button> -->
@@ -259,7 +265,7 @@
     </div>
   
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', async () => {
         const readMoreBtn = document.querySelector('.read-more');
         const readMoreModal = document.getElementById('readMoreModal');
         const closeModalBtn = document.querySelector('.close-modal');
@@ -276,6 +282,20 @@
           });
         }
   
+        let now = Math.floor(Date.now() / 1000);
+        let epoch = Math.floor(now / 2_592_000);
+        let epoch_start = epoch * 2_592_000;
+        let epoch_end = epoch_start + 2_592_000;
+        let epoch_seconds_remaining = epoch_end - now
+        let epoch_days_remaining = epoch_seconds_remaining / 86400
+        let epoch_extra_hours_remaining = 24 * (epoch_days_remaining - Math.floor(epoch_days_remaining))
+        let epoch_extra_minutes_remaining = 60 * (epoch_extra_hours_remaining - Math.floor(epoch_extra_hours_remaining))
+        let epoch_percentage = Math.floor(100 * (now - epoch_start) / 2_592_000);
+
+        document.getElementById("epochTitle").textContent = `Epoch ${epoch} Stats`;
+        document.getElementById("epochRemaining").textContent = `${Math.floor(epoch_days_remaining)}D ${Math.floor(epoch_extra_hours_remaining)}H ${Math.floor(epoch_extra_minutes_remaining)}M remaining`;
+
+
         window.addEventListener('click', (e) => {
           if (e.target === readMoreModal) {
             readMoreModal.style.display = 'none';
