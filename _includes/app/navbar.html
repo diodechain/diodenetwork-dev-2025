@@ -325,13 +325,17 @@
                 const walletAddress = accounts[0];
 
                 const userData = await getData("/user/username");
-                usernameEl.textContent = userData && userData.username ?
-                  "@" + userData.username : "@nousername";
+                if (userData && userData.username) {
+                  usernameEl.textContent = "@" + userData.username;
+                } else {
+                  usernameEl.textContent = "@nousername";
+                }
 
                 const userReferral = await getData("/user/referral");
-                const referralCode = userReferral && userReferral.referral ?
-                  userReferral.referral : "no referral";
-
+                let referralCode = "no referral";
+                if (userReferral && userReferral.referral) {
+                  referralCode = userReferral.referral;
+                }
                 fullAddressEl.textContent = referralCode;
                 shortAddressEl.textContent = shortenAddress(walletAddress);
                 const walletBalance = await getDiodeBalance(walletAddress);

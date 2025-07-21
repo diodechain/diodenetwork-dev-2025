@@ -57,7 +57,7 @@
   
     <div class="your-nfts">
       <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
           <h3 class="table-title">YOUR NFTS</h3>
         </div>
         <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
@@ -67,8 +67,7 @@
               <tr><th>NFT</th><th>QUANTITY</th></tr>
             </thead>
             <tbody>
-             
-              <tr><td> Diode Disrupt</td><td>-</td></tr>
+              <tr><td> Diode Disrupt</td><td id="disrupt-nft-qty">-</td><td><button class="button-view-all see-all-nft-btn" data-nft-type="disrupt">View All</button></td></tr>
             </tbody>
           </table>
         </div>
@@ -410,15 +409,15 @@
   }
   
   .your-nfts {
-    width: 100%;
-    background-color: #FAFAFA;
-    padding: 20px;
-    max-width: 420px;
-    text-align: left;
+    width: 450px;
+    background-color: #fff;
+    padding: 26px 30px;
     border: 1px solid #D73E53;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(183, 92, 115, 0.08);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(183, 92, 115, 0.1);
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 50px;
+    text-align: center;
   }
   
   .your-nfts .table-title {
@@ -484,14 +483,99 @@
     height: 100%;
   }
   
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+  }
   .modal-content {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #141414;
+    text-align: left;
+    margin-left: 0;
+  }
+  .close-modal {
+    margin-right: 30px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #5E5E5E;
+    background: none;
+    border: none;
+    z-index: 10;
+  }
+  .modal .table {
+    width: 100%;
+    background-color: #FAFAFA;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 10px;
+    text-align: left;
+  }
+  .modal .table th {
+    font-size: 12px;
+    color: #141414;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 7px;
+    text-align: left;
+    white-space: nowrap;
+    height: 32px;
+    max-width: none;
+  }
+  .modal .table td {
+    font-size: 12px;
+    color: #5E5E5E;
+    font-weight: 400;
+    padding: 4px 7px;
+    background-color: #ffffff;
+    text-align: left;
+    align-items: flex-start;
+    height: 32px;
+    margin-bottom: 6px;
+    word-wrap: none;
+    white-space: nowrap;
+    max-width: none;
+  }
+  .modal .table td.address-col {
+    white-space: normal;
+    font-family: monospace;
+    word-break: break-all;
+    min-width: 350px;
     max-width: 400px;
-    width: 90%;
+  }
+  .modal .table td.description-col {
+    white-space: normal;
+    min-width: 200px;
   }
   
   .popup {
@@ -637,6 +721,22 @@
   
   .terms-link:hover {
     text-decoration: underline;
+  }
+
+  .button-view-all {
+    background-color: #ffffff;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: #000000;
+    border: 1px solid #000000;
+    padding: 8px 26px;
+    border-radius: 5px;
+    font-size: 10px;
+  }
+
+  .button-view-all:hover {
+    background-color: #000000;
+    color: #ffffff;
   }
 
   /* Responsive Styles */
@@ -791,6 +891,23 @@
     }
   }
 </style>
+
+<!-- Add NFT Details Modal for View All functionality (moved to end of file) -->
+<div id="nftDetailsModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="nftDetailsModalTitle">Your NFTs</h3>
+      <span class="close-modal">&times;</span>
+    </div>
+    <div id="nftDetailsModalBody">
+      <!-- Populated by JS -->
+    </div>
+    <div id="nftLiquidateBar" style="display:none; margin-bottom: 10px; text-align: left;">
+      <button id="liquidateSelectedBtn" class="button-view-all" style="display:none; margin-bottom: 16px;">Liquidate Selected for 20 DIODE each</button>
+      <span id="liquidateStatus" style="margin-left: 20px; color: #D73E53;"></span>
+    </div>
+  </div>
+</div>
 
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
@@ -1138,9 +1255,10 @@
             nftTableBody.innerHTML = '';
             userNfts.forEach(nft => {
               const tr = document.createElement('tr');
-              tr.innerHTML = `<td>${nft.name}</td><td>${nft.balance}</td>`;
+              tr.innerHTML = `<td>${nft.name}</td><td>${nft.balance}</td><td><button class="button-view-all see-all-nft-btn" data-nft-type="${nft.name.toLowerCase().replace(/\s/g, '')}">View All</button></td>`;
               nftTableBody.appendChild(tr);
             });
+            attachSeeAllListeners();
           } else {
             nftTableBody.innerHTML = '<tr><td colspan="2">No NFTs Found</td></tr>';
           }
@@ -1337,7 +1455,136 @@
     fetchNFTData();
     await switchToMoonbeamNetwork();
     checkSlotAvailability();
-    checkGeoRestriction();
+
+    // --- NFT Modal Logic ---
+    const disruptContractAddress = "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7";
+    const liquidatorContractAddress = "0x1C7d5Bab1E6ac806Cc56352519EE811D83E650Da";
+    const liquidatorABI = [{"inputs":[{"internalType":"address","name":"_nftContract","type":"address"},{"internalType":"address","name":"_diodeToken","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"nftIds","type":"uint256[]"},{"indexed":false,"internalType":"uint256","name":"payout","type":"uint256"}],"name":"NFTsLiquidated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[],"name":"HOLD_PERIOD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PAYOUT_PER_NFT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"diodeToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"maxId","type":"uint256"}],"name":"getMintTimestamps","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"nftIds","type":"uint256[]"}],"name":"liquidateNFTs","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"mintTimestamps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nftContract","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"nftIds","type":"uint256[]"},{"internalType":"uint256[]","name":"timestamps","type":"uint256[]"}],"name":"setMintTimestamps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawTokens","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+
+    // Modal open/close logic
+    const nftDetailsModal = document.getElementById('nftDetailsModal');
+    const closeNftDetailsModal = nftDetailsModal.querySelector('.close-modal');
+    closeNftDetailsModal.onclick = function() { nftDetailsModal.style.display = 'none'; document.body.classList.remove('modal-open'); };
+    window.onclick = function(event) { if (event.target === nftDetailsModal) { nftDetailsModal.style.display = 'none'; document.body.classList.remove('modal-open'); } };
+
+    // See All button logic
+    function attachSeeAllListeners() {
+      document.querySelectorAll('.see-all-nft-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          console.log('View All clicked', this);
+          const nftType = this.getAttribute('data-nft-type');
+          if (nftType && nftType.includes('disrupt')) {
+            await showDisruptNFTsModal();
+          }
+          // Add more types here if needed
+        });
+      });
+    }
+    attachSeeAllListeners();
+
+    async function showDisruptNFTsModal() {
+      console.log('showDisruptNFTsModal called');
+      document.getElementById('nftDetailsModalTitle').textContent = 'Your Disrupt NFTs';
+      document.getElementById('nftLiquidateBar').style.display = 'block';
+      document.getElementById('liquidateStatus').textContent = '';
+      const modalBody = document.getElementById('nftDetailsModalBody');
+      modalBody.innerHTML = '<div>Loading...</div>';
+      nftDetailsModal.style.display = 'block';
+      document.body.classList.add('modal-open');
+      console.log('Modal display set to block:', nftDetailsModal.style.display);
+      // Check for duplicate modals
+      const modals = document.querySelectorAll('#nftDetailsModal');
+      if (modals.length > 1) {
+        console.warn('Duplicate #nftDetailsModal elements found:', modals.length);
+      }
+      // MutationObserver to detect if modal is being hidden
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            console.log('Modal style changed:', nftDetailsModal.style.display);
+          }
+        });
+      });
+      observer.observe(nftDetailsModal, { attributes: true });
+      // Fetch owned IDs
+      let walletAddress = null;
+      if (typeof window.ethereum !== 'undefined') {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' }).catch(() => []);
+        if (accounts && accounts.length > 0) walletAddress = accounts[0];
+      }
+      if (!walletAddress) { modalBody.innerHTML = '<div>Connect wallet to view your NFTs</div>'; return; }
+      const web3 = new Web3(window.ethereum || new Web3.providers.HttpProvider('https://rpc.api.moonbeam.network'));
+      const contract = new web3.eth.Contract([
+        {"inputs":[{"internalType":"address[]","name":"accounts","type":"address[]"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"}
+      ], disruptContractAddress);
+      const tokenIds = Array.from({length: 8500}, (_, i) => i + 1);
+      const accounts = Array(tokenIds.length).fill(walletAddress);
+      let balances;
+      try {
+        balances = await contract.methods.balanceOfBatch(accounts, tokenIds).call();
+      } catch (e) { modalBody.innerHTML = '<div>Error loading NFTs</div>'; return; }
+      const ownedIds = tokenIds.filter((id, idx) => parseInt(balances[idx]) > 0);
+      if (ownedIds.length === 0) { modalBody.innerHTML = '<div>No Disrupt NFTs found.</div>'; return; }
+      // Render checkboxes
+      modalBody.innerHTML = `<div style='margin-bottom: 10px; min-height: 40px; display: flex; align-items: center;'><button id='liquidateSelectedBtn' class='button-view-all' style='visibility:hidden; margin-bottom: 16px;'>Liquidate Selected for 20 DIODE each</button><span id='liquidateStatus' style='margin-left: 20px; color: #D73E53;'></span></div><div style="max-height:300px;overflow:auto;"><table class="table"><thead><tr><th><input type='checkbox' id='selectAllNftCheckbox'></th><th>NFT ID</th></tr></thead><tbody>${ownedIds.map(id => `<tr><td><input type='checkbox' class='nft-id-checkbox' value='${id}'></td><td>${id}</td></tr>`).join('')}</tbody></table></div>`;
+      // Add event listeners to checkboxes to show/hide the button
+      setTimeout(() => {
+        const checkboxes = modalBody.querySelectorAll('.nft-id-checkbox');
+        const liquidateBtn = modalBody.querySelector('#liquidateSelectedBtn');
+        const liquidateStatus = modalBody.querySelector('#liquidateStatus');
+        const selectAll = modalBody.querySelector('#selectAllNftCheckbox');
+        if (selectAll) {
+          selectAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => { cb.checked = selectAll.checked; });
+            updateLiquidateBtn();
+          });
+          // If any individual checkbox is unchecked, uncheck selectAll
+          checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+              if (!cb.checked) selectAll.checked = false;
+              else if (Array.from(checkboxes).every(c => c.checked)) selectAll.checked = true;
+              updateLiquidateBtn();
+            });
+          });
+        }
+        function updateLiquidateBtn() {
+          const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+          liquidateBtn.style.visibility = anyChecked ? 'visible' : 'hidden';
+          if (!anyChecked) liquidateStatus.textContent = '';
+        }
+        updateLiquidateBtn();
+        // Re-attach click handler
+        liquidateBtn.onclick = async function() {
+          const selected = Array.from(checkboxes).filter(cb => cb.checked);
+          const ids = selected.map(cb => parseInt(cb.value));
+          if (ids.length === 0) { liquidateStatus.textContent = 'Select at least one NFT.'; return; }
+          let walletAddress = null;
+          if (typeof window.ethereum !== 'undefined') {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' }).catch(() => []);
+            if (accounts && accounts.length > 0) walletAddress = accounts[0];
+          }
+          if (!walletAddress) { liquidateStatus.textContent = 'Connect wallet.'; return; }
+          const web3 = new Web3(window.ethereum || new Web3.providers.HttpProvider('https://rpc.api.moonbeam.network'));
+          const contract = new web3.eth.Contract(liquidatorABI, liquidatorContractAddress);
+          liquidateStatus.textContent = 'Processing...';
+          try {
+            await contract.methods.liquidateNFTs(ids).call({ from: walletAddress });
+            const tx = await contract.methods.liquidateNFTs(ids).send({ from: walletAddress });
+            liquidateStatus.textContent = `Success! TX Hash: ${tx.transactionHash}`;
+            await showDisruptNFTsModal();
+          } catch (error) {
+            let msg = error.message || error.toString();
+            if (msg.includes('out of gas')) msg = 'Transaction ran out of gas.';
+            else if (msg.includes('Not owner') || msg.includes('not owner')) msg = 'You are not the owner of this NFT.';
+            else if (msg.includes('No mint timestamp')) msg = 'This NFT does not have a mint timestamp set.';
+            else if (msg.includes('Held < 90 days')) msg = 'This NFT must be held for at least 90 days before liquidation.';
+            else if (msg.includes('Insufficient DIODE')) msg = 'The contract does not have enough DIODE tokens to pay out.';
+            else if (msg.includes('reverted by the EVM')) msg = 'Transaction reverted. Possible reasons: not the owner, not held long enough, or contract lacks funds.';
+            liquidateStatus.textContent = msg;
+          }
+        };
+      }, 0);
+    }
   });
 </script>
 
