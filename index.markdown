@@ -6,7 +6,10 @@ title: "Home"
 <!-- HERO SECTION -->
 <div id="hero-section" class="hero-section">
   
-  <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Launch App</a>
+  <div class="hero-button-container">
+    <a href="{{ '/wallet/' | relative_url }}" class="launch-app-btn">Points App</a>
+    <a href="{{ 'https://network.docs.diode.io/docs' }}" target="_blank" class="launch-node-btn">Run a Node</a>
+  </div>
 
   <h1 class="hero-heading">Not your keys, not your data</h1>
   <p class="hero-subtext">

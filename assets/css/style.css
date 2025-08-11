@@ -212,10 +212,16 @@ a:hover {
   text-align: center;
 }
 
-.launch-app-btn {
-  position: fixed; 
+.hero-button-container {
+  display: flex;
+  justify-content: center; /* center buttons horizontally */
+  gap: 20px;               /* space between buttons */
+  position: fixed;
   top: 20px;
-  right: 100px; 
+  right: 50px;
+}
+
+.launch-app-btn, .launch-node-btn {
   z-index: 3; 
   padding: 0.75rem 1.5rem;
   border-radius: 20px;
@@ -229,7 +235,7 @@ a:hover {
   transition: opacity 0.2s ease;
 }
 
-.launch-app-btn:hover {
+.launch-app-btn, .launch-node-btn:hover {
   opacity: 0.85;
 }
 
@@ -933,12 +939,6 @@ a:hover {
     padding: 0 16px;
   }
 
-  .hero-section {
-    height: auto;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
   .hero-heading {
     font-weight: bold;
     font-size: 54px;
@@ -956,14 +956,13 @@ a:hover {
     font-size: 16px;
   }
 
-  .launch-app-btn {
-    top: 20px;
-    left: 20px;
-    margin: 0;
-  }
 }
 
 @media screen and (max-width: 992px) {
+  .hero-section {
+   justify-content: flex-start;
+  }
+
   .layout-container {
     flex-direction: column;
   }
@@ -999,8 +998,14 @@ a:hover {
     height: 100px;
   }
 
-
-
+  .hero-button-container {
+    display: flex;
+    justify-content: center; /* center buttons horizontally */
+    gap: 20px;               /* space between buttons */
+    position: relative;
+    right: 0px;
+    top: 50px;
+  }
   
   .row {
     flex-direction: column;
@@ -1013,6 +1018,11 @@ a:hover {
 }
 
 @media screen and (max-width: 768px) {
+  .hero-heading {
+    font-size: 36px;
+  }
+
+
   .tech-card {
     flex: 0 1 100%;
   }
@@ -1042,16 +1052,15 @@ a:hover {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .launch-app-btn {
-    position: relative;
-    top: 100px;
-    right: 0;
-    left: 0;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center;
+  .hero-button-container {
     display: flex;
+    justify-content: center; /* center buttons horizontally */
+    gap: 20px;               /* space between buttons */
+    position: relative;
+    right: 0px;
+    top: 50px;
   }
+
   .hero-section {
    justify-content: flex-start;
   }
@@ -1148,15 +1157,7 @@ a:hover {
     height: 10px;
     padding: 0px;
   }
-  .scroll-down-arrow-hero {
-    position: absolute;
-    bottom: 30vh;
-    left: 50%;
-    transform: translateX(-50%);
-    cursor: pointer;
-    animation: bounce 2s infinite;
-    transition: opacity 0.3s ease;
-  }
+
   .scroll-down-arrow-map {
     position: absolute;
     bottom: 20vh;
@@ -1347,6 +1348,16 @@ a:hover {
   padding: 15px;
 }
 /* Responsive adjustments for countdown */
+@media screen and (max-width: 992px) {
+  .hero-section {
+    aspect-ratio: 12 / 9;        
+    width: 100vw;                /* Use full viewport width */
+    height: auto;                /* Height adjusts by ratio */
+    max-height: 100vh;           /* But don't exceed viewport height */
+  }
+}
+
+
 @media screen and (max-width: 768px) {
   .countdown-container {
     top: 20%;
@@ -1370,13 +1381,18 @@ a:hover {
   }
   
   .hero-heading {
-    top: 35%;
+    top: 25%;
   }
   
   .hero-subtext {
-    top: 50%;
+    top: 40%;
+  }
+
+  .hero-section {
+    aspect-ratio: 10 / 9;        
   }
 }
+
 
 @media screen and (max-width: 480px) {
   .countdown-container {
@@ -1391,4 +1407,18 @@ a:hover {
   .countdown-item span:first-child {
     font-size: 18px;
   }
+
+  .hero-heading {
+    top: 25%;
+    font-size:24px;
+  }
+  
+  .hero-subtext {
+    top: 40%;
+  }
+
+  .hero-section {
+    aspect-ratio: 6 / 9;        
+  }
+
 }
