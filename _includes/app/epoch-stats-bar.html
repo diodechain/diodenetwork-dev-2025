@@ -294,7 +294,12 @@
 
         let epoch_days_to_stake = 10 - (30 - Math.floor(epoch_days_remaining));
 
-        if (epoch_days_to_stake > 0) {
+        // The original logic: let epoch_days_to_stake = 10 - (30 - Math.floor(epoch_days_remaining));
+        // This is equivalent to: epoch_days_to_stake = Math.floor(epoch_days_remaining) - 20
+        // So, if epoch_days_remaining is 20.9, Math.floor(epoch_days_remaining) = 20, so epoch_days_to_stake = 0
+        // This means the window closes when there are still almost a full day left, i.e., it closes at the start of the last day, not the end.
+        // To fix this, we should check if epoch_days_remaining > 20, not >= 20, so that the window closes only after the last full day has passed.
+        if (epoch_days_remaining > 20) {
           window.epochStakeWindow = `${epoch_days_to_stake}D ${Math.floor(epoch_extra_hours_remaining)}H ${Math.floor(epoch_extra_minutes_remaining)}M left to stake your nodes!`;
         } else {
           window.epochStakeWindow = "Staking window is closed for this Epoch"
