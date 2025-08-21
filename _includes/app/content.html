@@ -673,6 +673,15 @@
 
     }
 
+    .boosted-indicator {
+      display: none;
+      font-size: 14px;
+      color: #A04992;
+      text-align: left;
+      margin-top: 2px;
+      margin-left: 2px;
+    }
+
     @media (max-width: 480px) {
       .dashboard {
         padding: 0 10px;
@@ -777,9 +786,14 @@
           <span class="rank-title">&nbsp;&nbsp;&nbsp;of</span>
           <span class="rank-value participants-view-all" id="epochParticipantsValue">-</span>
         </div>
-        <div class="rank-box epoch-points">
-          <span class="rank-title">Total Points: </span>
-          <span class="rank-value" id="epochPointsValue">-</span>
+        <div class="rank-box epoch-points" style="display: flex; flex-direction: column; align-items: center;">
+          <div style="display: flex; align-items: center;">
+            <span class="rank-title">Total Points: </span>
+            <span class="rank-value" id="epochPointsValue">-</span>
+          </div>
+          <div id="boostedIndicator" class="boosted-indicator">
+            Boosted!
+          </div>
         </div>
         <div class="boost-box">
           <div class="boost">
@@ -1164,7 +1178,7 @@
         const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
         document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
-        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points || 0), 0);
+        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points ? Math.floor(n.points * 10) / 10 : 0), 0);
         document.getElementById("nodePoints").textContent = Math.ceil(totalNodePoints);
 
         sortedNodes.forEach(node => {
@@ -1173,7 +1187,7 @@
           tr.onclick = () => window.open(`https://diode.io/network/#/node/${node.address}`, '_blank');
           tr.innerHTML = `
               <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
-              <td>${typeof node.points === 'number' ? node.points.toFixed(2) : '0.00'}</td>
+              <td>${typeof node.points === 'number' ? Math.floor(node.points * 10) / 10 : '0.00'}</td>
               <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${formatAddress(node.address)}</a></td>
               <td class="description-col">${node.meta}</td>
             `;
@@ -1305,7 +1319,7 @@
           document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
               <tr>
                 <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
-                <td>${typeof node.points === 'number' ? node.points.toFixed(2) : '0.00'}</td>
+                <td>${typeof node.points === 'number' ? Math.floor(node.points * 10) / 10 : '0.00'}</td>
                 <td>${formatBandwidth(node.bandwidth)} GB</td>
                 <td>${typeof node.balance === 'number' ? node.balance.toFixed(1) : '0.0'} DIODE</td>
                 <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
@@ -1650,7 +1664,16 @@
             };
           });
 
-        document.getElementById('boostValue').textContent = `${calculateTotalBoost(updatedNftBalances) || 0}%`;
+        const updatedBoosts = calculateTotalBoost(updatedNftBalances);
+        document.getElementById('boostValue').textContent = `${updatedBoosts || 0}%`;
+
+        const boostedPoints = typeof rankData.points !== "undefined" ? Math.ceil(rankData.points * (updatedBoosts / 100)) : 0;
+        if (boostedPoints > 0) {
+          document.getElementById('boostedIndicator').textContent = `Will boost by ${boostedPoints} ${boostedPoints === 1 ? 'point' : 'points'}!`;
+          document.getElementById('boostedIndicator').style.display = 'block';
+        } else {
+          document.getElementById('boostedIndicator').style.display = 'none';
+        }
 
         // Find which boosts are new (not already in boostsTbody)
         // We'll use contractAddress as a unique key
