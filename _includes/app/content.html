@@ -309,7 +309,7 @@
 
     .boost-p-number {
       font-weight: 700;
-      font-size: 32px;
+      font-size: 24px;
       background: linear-gradient(to right, #D73E53, #A04992, #615BA8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -1093,6 +1093,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       function formatAddress(address) {
@@ -1354,39 +1356,54 @@
         }
       ];
 
-      const NFT_BOOSTS = [
+      const NORMAL_NFT_BOOSTS = [
         {
           contractAddress: "0x85f6cf42aa318602131bfef9778e164af7b387a6",
           name: "Ambassador Pre Launch",
           standard: "ERC721",
-          baseBoost: 2
+          baseBoost: 2,
+          maxBoost: 50
         },
         {
           contractAddress: "0xF79E90E148b19F63ECbe7f2e2F846730122ae881",
           name: "OG Ambassador",
           standard: "ERC721",
-          baseBoost: 5
+          baseBoost: 5,
+          maxBoost: 50
         },
         {
           contractAddress: "0xa147524963dF676e06b8C846aBD13d884568570b",
           name: "OG Node",
           standard: "ERC1155",
           tokenId: 0,
-          baseBoost: 3
+          baseBoost: 3,
+          maxBoost: 50
         },
         {
           contractAddress: "0x0d91a07763B292c8651272f5EA9663cF6849B7f0",
           name: "Common Guardian",
           standard: "ERC1155",
           tokenId: "6CA90C2C335764772D88DAFE1E1AD7AE64639EDE000000000000000000000001",
-          baseBoost: 1
+          baseBoost: 1,
+          maxBoost: 50
         },
         {
           contractAddress: "0x57ccaF287d1C6635D73E81DC48755Ea26326F111",
           name: "Rare Guardian",
           standard: "ERC1155",
           tokenId: "6CA90C2C335764772D88DAFE1E1AD7AE64639EDE000000000000000000000001",
-          baseBoost: 4
+          baseBoost: 4,
+          maxBoost: 50
+        }
+      ];
+
+      const SLOTTED_NFT_BOOSTS = [
+        {
+          contractAddress: "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7",
+          name: "Diode Disrupt",
+          standard: "ERC1155",
+          baseBoost: 0.25,
+          maxBoost: 50
         }
       ];
 
@@ -1408,33 +1425,127 @@
 */
 
 
-      const nftBalances = await Promise.all(NFT_BOOSTS.map(async (nft) => {
+      // Helper to fetch ERC1155 balanceOf(address, tokenId)
+      async function fetchERC1155Balance(contractAddress, walletAddress, tokenId) {
+        const walletHex = walletAddress.substring(2).padStart(64, '0');
+        const tokenIdHex = tokenId.toString(16).padStart(64, '0');
+        const data = '0x00fdd58e' + walletHex + tokenIdHex;
+        const response = await fetch(moonbeamRPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "eth_call",
+            params: [{
+              to: contractAddress,
+              data: data,
+            }, "latest"]
+          })
+        });
+        const result = await response.json();
+        return result.result ? parseInt(result.result, 16) : 0;
+      }
+
+      // Helper to fetch ERC721 balanceOf(address)
+      async function fetchERC721Balance(contractAddress, walletAddress) {
+        const data = '0x70a08231' + walletAddress.substring(2).padStart(64, '0');
+        const response = await fetch(moonbeamRPC, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "eth_call",
+            params: [{
+              to: contractAddress,
+              data: data,
+            }, "latest"]
+          })
+        });
+        const result = await response.json();
+        return result.result ? parseInt(result.result, 16) : 0;
+      }
+
+      // First, handle all NFTs except Slotted NFTs
+      const otherNFTs = NORMAL_NFT_BOOSTS;
+      const otherNFTsBalances = await Promise.all(otherNFTs.map(async (nft) => {
         try {
-          let data;
-
           if (nft.standard === 'ERC1155') {
-            // balanceOf(address, uint256)
-            const walletHex = walletAddress.substring(2).padStart(64, '0');
-            let tokenIdHex;
-            
-            if (typeof nft.tokenId === 'string' && nft.tokenId.match(/^(0x)?[0-9a-fA-F]+$/)) {
-              tokenIdHex = nft.tokenId.replace(/^0x/, '').padStart(64, '0');
-            } else {
-              tokenIdHex = nft.tokenId.toString(16).padStart(64, '0');
+            // Only one tokenId (not Diode Disrupt)
+            let tokenId = nft.tokenId || 0;
+            if (typeof tokenId === 'string' && tokenId.match(/^(0x)?[0-9a-fA-F]+$/)) {
+              tokenId = BigInt('0x' + tokenId.replace(/^0x/, ''));
             }
-            
-            data = '0x00fdd58e' + walletHex + tokenIdHex;
+            const balance = await fetchERC1155Balance(nft.contractAddress, walletAddress, tokenId);
+            return {
+              name: nft.name,
+              balance: balance,
+              totalBalance: Math.min((balance || 0) * (nft.baseBoost || 0), nft.maxBoost),
+              baseBoost: nft.baseBoost,
+              contractAddress: nft.contractAddress,
+              standard: nft.standard
+            };
           } else {
-            // ERC721 or ERC20: balanceOf(address)
-            data = '0x70a08231' + walletAddress.substring(2).padStart(64, '0');
+            // ERC721
+            const balance = await fetchERC721Balance(nft.contractAddress, walletAddress);
+            return {
+              name: nft.name,
+              balance: balance,
+              totalBalance: Math.min((balance || 0) * (nft.baseBoost || 0), nft.maxBoost),
+              baseBoost: nft.baseBoost,
+              contractAddress: nft.contractAddress,
+              standard: nft.standard
+            };
           }
+        } catch (err) {
+          console.error("Failed to fetch", nft.name, "normal NFT balance:", err);
+          return {
+            name: nft.name,
+            balance: 0,
+            totalBalance: 0,
+            baseBoost: nft.baseBoost,
+            contractAddress: nft.contractAddress,
+            standard: nft.standard
+          };
+        }
+      })).catch(err => {
+        console.error("Failed to fetch NFTs", err);
+        return [];
+      });
 
 
+      // Start fetching slotted NFT balances (e.g. Diode Disrupt) in the background, don't await here
+      let slottedNFTsBalancesPromise = Promise.all(SLOTTED_NFT_BOOSTS.map(async (nft) => {
+        try {
+          // Only fetch for Diode Disrupt (or other slotted NFTs)
+          const balanceOfBatchABI = [{
+            "constant": true,
+            "inputs": [
+              { "name": "accounts", "type": "address[]" },
+              { "name": "ids", "type": "uint256[]" }
+            ],
+            "name": "balanceOfBatch",
+            "outputs": [{ "name": "", "type": "uint256[]" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+          }];
+
+          const web3 = new Web3(new Web3.providers.HttpProvider(moonbeamRPC));
+          const contract = new web3.eth.Contract(balanceOfBatchABI, nft.contractAddress);
+
+          // Prepare tokenIds and accounts arrays
+          const tokenIds = Array.from({ length: 8500 }, (_, i) => i + 1);
+          const accounts = Array(tokenIds.length).fill(walletAddress);
+
+          // Encode the call data for eth_call
+          const data = contract.methods.balanceOfBatch(accounts, tokenIds).encodeABI();
+
+          // Make the POST request to the RPC endpoint
           const response = await fetch(moonbeamRPC, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               jsonrpc: "2.0",
               id: 1,
@@ -1445,36 +1556,45 @@
               }, "latest"]
             })
           });
+
           const result = await response.json();
-          const balance = result.result ? parseInt(result.result, 16) : 0;
+          if (!result || !result.result) throw new Error("No result from eth_call");
+
+          // Decode the result using web3
+          const decoded = web3.eth.abi.decodeParameter('uint256[]', result.result);
+          const balances = Array.from(decoded).map(val => val.toString());
+          const balance = balances.reduce((sum, val) => sum + parseInt(val), 0);
+
           return {
             name: nft.name,
             balance: balance,
+            totalBalance: Math.min((balance || 0) * (nft.baseBoost || 0), nft.maxBoost),
             baseBoost: nft.baseBoost,
-            contractAddress: nft.contractAddress,
-            standard: nft.standard
+            contractAddress: nft.contractAddress
           };
         } catch (err) {
-          console.error("Failed to fetch NFT balance:", err);
+          console.error("Failed to fetch", nft.name, "slotted NFT balance:", err);
           return {
             name: nft.name,
             balance: 0,
+            totalBalance: 0,
             baseBoost: nft.baseBoost,
-            contractAddress: nft.contractAddress,
-            standard: nft.standard
+            contractAddress: nft.contractAddress
           };
         }
-      })).catch(err => {
-        console.error("Failed to fetch NFTs", err);
-        return [];
-      });
-      
-      const totalBoost = nftBalances.reduce((sum, nft) => {
-        const boost = (nft.balance || 0) * (nft.baseBoost || 0);
-        return sum + boost;
-      }, 0);
+      }));
 
-      document.getElementById('boostValue').textContent = `${totalBoost || 0}%`;
+      // Compose initial NFT balances (without slotted NFTs yet)
+      let nftBalances = [...otherNFTsBalances];
+
+      function calculateTotalBoost(nftBalances) {
+        return nftBalances.reduce((sum, nft) => {
+          const boost = (nft.totalBalance || 0);
+          return sum + boost;
+        }, 0);
+      }
+
+      document.getElementById('boostValue').textContent = `${calculateTotalBoost(nftBalances) || 0}%`;
 
       const boostsTbody = document.getElementById("boostsTableBody");
       let userBoosts = [];
@@ -1483,7 +1603,7 @@
           .filter(item => item.balance > 0)
           .map(item => {
             const quantity = item.balance;
-            const totalBoostForNft = item.baseBoost * quantity;
+            const totalBoostForNft = item.totalBalance;
             return {
               nft: item.name,
               quantity,
@@ -1504,6 +1624,7 @@
           `;
       }
 
+      // Initial population of boostsTbody with userBoosts (from otherNFTs only)
       if (userBoosts.length > 0) {
         userBoosts.forEach(item => {
           boostsTbody.innerHTML += createNFTRow(item);
@@ -1511,6 +1632,42 @@
       } else {
         boostsTbody.innerHTML = `<tr><td colspan="3">No NFT Found</td></tr>`;
       }
+
+      // After slottedNFTsBalancesPromise resolves, add any new rows to boostsTbody
+      slottedNFTsBalancesPromise.then(slottedNFTsBalances => {
+        // Recompute userBoosts with the updated nftBalances
+        const updatedNftBalances = [...otherNFTsBalances, ...slottedNFTsBalances];
+        const updatedUserBoosts = updatedNftBalances
+          .filter(item => item.balance > 0)
+          .map(item => {
+            const quantity = item.balance;
+            const totalBoostForNft = item.totalBalance;
+            return {
+              nft: item.name,
+              quantity,
+              totalBoost: `${totalBoostForNft}%`,
+              contractAddress: item.contractAddress
+            };
+          });
+
+        document.getElementById('boostValue').textContent = `${calculateTotalBoost(updatedNftBalances) || 0}%`;
+
+        // Find which boosts are new (not already in boostsTbody)
+        // We'll use contractAddress as a unique key
+        const existingAddresses = new Set();
+        userBoosts.forEach(item => existingAddresses.add(item.contractAddress));
+        const newBoosts = updatedUserBoosts.filter(item => !existingAddresses.has(item.contractAddress));
+
+        if (newBoosts.length > 0) {
+          // Remove "No NFT Found" row if present
+          if (boostsTbody.innerHTML.includes("No NFT Found")) {
+            boostsTbody.innerHTML = "";
+          }
+          newBoosts.forEach(item => {
+            boostsTbody.innerHTML += createNFTRow(item);
+          });
+        }
+      });
 
       document.querySelector('.content-box:first-of-type .button-view-all').onclick = function () {
         const boostsModalBody = document.getElementById('boostsModalBody');
