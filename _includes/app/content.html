@@ -898,18 +898,18 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <img src="{{ 'assets/images/icons/reffer.png' | relative_url }}" alt="Referral Icon" />
             <div>
-              <p class="card-main-title"><span id="childrenCount">0</span> CHILDREN</p>
+              <p class="card-main-title"><span id="childrenCount">0</span> REFERRALS</p>
             </div>
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
             <p><span class="card-number" id="childrenPoints">0</span> Points</p>
-            <p style="font-size: 12px; color: #5E5E5E;" id="referralCount"></p>
+            <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
           </div>
         </div>
         <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="table-title">Your Children</h3>
+            <h3 class="table-title">Your Referral Tree</h3>
             <button class="button-view-all">View All</button>
           </div>
           <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
@@ -918,10 +918,9 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Rank</th>
-                  <th>New Referrals</th>
+                  <th>Tree Points</th>
                   <th>Username</th>
-                  <th>Descendants</th>
+                  <th>Descendants</th> 
                 </tr>
               </thead>
               <tbody id="referralsTableBody">
@@ -1046,15 +1045,15 @@
   <div id="referralsModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">All Children</h3>
+        <h3 class="modal-title">All Referrals</h3>
         <span class="close-modal">&times;</span>
       </div>
       <table class="table">
         <thead>
           <tr>
-            <th>Epoch Rank</th>
-            <th>Referrals ETD</th>
             <th>Username</th>
+            <th>Tree Points</th>
+            <th>Epoch Rank</th>
             <th>Descendants</th>
             <th>Nodes</th>
             <th>Zones</th>
@@ -1143,7 +1142,7 @@
       const walletAddress = (accounts && accounts[0]) ? accounts[0] : null;
       if (!walletAddress) return;
 
-      const baseURL = "https://registrar-prod.diode.link:8008/v1";
+      const baseURL = "https://0x77cc2702af7176f3110ab6f5d3cadcb20e00e8e5.diode.link:8008/v1";
 
       async function getData(endpoint) {
         try {
@@ -1178,7 +1177,7 @@
         const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
         document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
-        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (n.points ? Math.floor(n.points * 10) / 10 : 0), 0);
+        const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (typeof n.points === 'number' ? n.points : 0), 0).toFixed(1);
         document.getElementById("nodePoints").textContent = Math.ceil(totalNodePoints);
 
         sortedNodes.forEach(node => {
@@ -1187,7 +1186,7 @@
           tr.onclick = () => window.open(`https://diode.io/network/#/node/${node.address}`, '_blank');
           tr.innerHTML = `
               <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
-              <td>${typeof node.points === 'number' ? Math.floor(node.points * 10) / 10 : '0.00'}</td>
+              <td>${typeof node.points === 'number' ? node.points.toFixed(1) : '0.0'}</td>
               <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${formatAddress(node.address)}</a></td>
               <td class="description-col">${node.meta}</td>
             `;
@@ -1237,16 +1236,16 @@
       }
 
 
-      const childrenData = await getData("/children/list");
+      const childrenData = await getData("/tree/list");
       const referralsTbody = document.getElementById("referralsTableBody");
       if (Array.isArray(childrenData) && childrenData.length > 0) {
-        const sortedChildren = [...childrenData].sort((a, b) => (a.rank || Infinity) - (b.rank || Infinity));
+        const sortedChildren = [...childrenData].sort((a, b) => (b.tree_points_to_parent || -Infinity) - (a.tree_points_to_parent || -Infinity));
 
         referralsTbody.innerHTML = "";
         document.getElementById("childrenCount").textContent = sortedChildren.length;
-        const totalReferrals = sortedChildren.reduce((sum, c) => sum + (c.registrations || 0), 0);
-        document.getElementById("referralCount").textContent = `from ${totalReferrals} Referral${totalReferrals == 1 ? "" : "s"}`;
-        const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.points || 0), 0);
+        const totalDescendants = sortedChildren.length + sortedChildren.reduce((sum, c) => sum + (c.descendants || 0), 0);
+        document.getElementById("descendantCount").textContent = `from ${totalDescendants} Total Descendant${totalDescendants == 1 ? "" : "s"}`;
+        const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.tree_points_to_parent || 0), 0);
         document.getElementById("childrenPoints").textContent = Math.ceil(totalChildPoints);
 
         sortedChildren.forEach(child => {
@@ -1254,8 +1253,7 @@
           tr.style.backgroundColor = "#ffffff";
           tr.style.color = "#5E5E5E";
           tr.innerHTML = `
-              <td>${child.banned === 1 ? "BANNED" : child.rank || '-'}</td>
-              <td>${child.registrations || "-"}</td>
+              <td>${child.banned === 1 ? "BANNED" : child.tree_points_to_parent ? Number(child.tree_points_to_parent).toFixed(1) : '0.0'}</td>
               <td>@${child.username.split('.')[0]}</td>
               <td>${child.descendants !== undefined ? child.descendants || "-" : '-'}</td>
             `;
@@ -1264,7 +1262,7 @@
       } else {
         referralsTbody.innerHTML = `<tr><td colspan="5">No Referrals Found</td></tr>`;
         document.getElementById("childrenCount").textContent = "0";
-        document.getElementById("referralCount").textContent = `from 0 Referrals`;
+        document.getElementById("descendantCount").textContent = `from 0 Total Descendants`;
       }
 
       const participantData = await getData("/users_by_rank");
@@ -1319,7 +1317,7 @@
           document.getElementById('nodesModalBody').innerHTML = sortedModalNodes.map(node => `
               <tr>
                 <td>${node.banned === 1 ? "BANNED" : node.rank}</td>
-                <td>${typeof node.points === 'number' ? Math.floor(node.points * 10) / 10 : '0.00'}</td>
+                <td>${typeof node.points === 'number' ? node.points.toFixed(1) : '0.0'}</td>
                 <td>${formatBandwidth(node.bandwidth)} GB</td>
                 <td>${typeof node.balance === 'number' ? node.balance.toFixed(1) : '0.0'} DIODE</td>
                 <td class="address-col"><a href="https://diode.io/network/#/node/${node.address}" target="_blank" style="text-decoration: none; color: inherit;">${node.address}</a></td>
@@ -1345,14 +1343,20 @@
       }
       if (currentData.referrals.length) {
         document.querySelector('#referralsCard .button-view-all').onclick = function () {
-          document.getElementById('referralsModalBody').innerHTML = currentData.referrals.map(child => `
+          const sortedReferrals = [...currentData.referrals].sort((a, b) => {
+            // Sort by tree_points_to_parent descending, treating undefined/null/NaN as 0
+            const aPoints = Number(a.tree_points_to_parent) || 0;
+            const bPoints = Number(b.tree_points_to_parent) || 0;
+            return bPoints - aPoints;
+          });
+          document.getElementById('referralsModalBody').innerHTML = sortedReferrals.map(child => `
               <tr>
-                <td>${child.banned === 1 ? "BANNED" : child.rank || '-'}</td>
-                <td>${child.registrations || "-"}</td>
                 <td>@${child.username.split('.')[0]}</td>
+                <td>${child.banned === 1 ? "BANNED" : child.tree_points_to_parent ? Number(child.tree_points_to_parent).toFixed(1) : '0.0'}</td>
+                <td>${child.banned === 1 ? "BANNED" : child.rank || '-'}</td>
                 <td>${child.descendants !== undefined ? child.descendants || "-" : '-' }</td>
                 <td>${child.nodes !== undefined ? child.nodes || "-" : '-' }</td>
-                <td>${child.zones || "-"}</td>
+                <td>${child.zones !== undefined ? child.zones || "-" : '-' }</td>
               </tr>
             `).join('');
           showModal('referralsModal');
