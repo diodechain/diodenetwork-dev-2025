@@ -903,7 +903,10 @@
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p style="color: #DDDDDD;"><span class="card-number" id="childrenPoints" style="color: #DDDDDD;">0</span> Coming Soon!</p>
+            <p><span class="card-number" id="childrenPoints">0</span> Points</p>
+            <p id="affiliateWarning" style="display: none; color: red; font-size: 12px; margin: 4px 0 0 0;">
+              You must be an <a href="https://diode.foundation/docs/programs/diode_affiliate_program.html" target="_blank" style="text-decoration: underline; color: red;">active Affiliate</a> to realize these points!
+            </p>
             <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
           </div>
         </div>
@@ -946,7 +949,7 @@
           <tr>
             <th>NFT</th>
             <th>Quantity</th>
-            <th>Total Boost</th>
+            <th>Boost %</th>
           </tr>
           <tbody id="boostsTableBody"></tbody>
         </table>
@@ -1076,7 +1079,7 @@
           <tr>
             <th>NFT</th>
             <th>Quantity</th>
-            <th>Total Boost</th>
+            <th>Boost %</th>
           </tr>
         </thead>
         <tbody id="boostsModalBody">
@@ -1142,7 +1145,7 @@
       const walletAddress = (accounts && accounts[0]) ? accounts[0] : null;
       if (!walletAddress) return;
 
-      const baseURL = "https://registrar-prod.diode.link:8008/v1";
+      const baseURL = "https://0x77cc2702af7176f3110ab6f5d3cadcb20e00e8e5.diode.link:8008/v1";
 
       async function getData(endpoint) {
         try {
@@ -1181,6 +1184,8 @@
           }
         }
       }
+
+      const referralTreeActive = typeof rankData.active_referral_tree !== "undefined" ? rankData.active_referral_tree : 0;
 
       const nodesData = await getData("/nodes/list");
       const nodesTbody = document.getElementById("nodesTableBody");
@@ -1253,7 +1258,18 @@
         const totalDescendants = sortedChildren.length + sortedChildren.reduce((sum, c) => sum + (c.descendants || 0), 0);
         document.getElementById("descendantCount").textContent = `from ${totalDescendants} Total Descendant${totalDescendants == 1 ? "" : "s"}`;
         const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.tree_points_to_parent || 0), 0);
-        document.getElementById("childrenPoints").textContent = Math.ceil(totalChildPoints);
+        referralTreePoints = Math.ceil(totalChildPoints);
+
+        if (!referralTreeActive) {
+          const childrenPointsElem = document.getElementById("childrenPoints");
+          childrenPointsElem.textContent = referralTreePoints;
+          childrenPointsElem.style.color = "red";
+          childrenPointsElem.style.textDecoration = "line-through";
+          document.getElementById("affiliateWarning").style.display = "block";
+        } else {
+          document.getElementById("childrenPoints").textContent = referralTreePoints;
+          document.getElementById("affiliateWarning").style.display = "none";
+        }
 
         sortedChildren.forEach(child => {
           const tr = document.createElement("tr");
@@ -1271,6 +1287,8 @@
         document.getElementById("childrenCount").textContent = "0";
         document.getElementById("descendantCount").textContent = `from 0 Total Descendants`;
       }
+
+      const participantData = await getData("/users_by_rank");
 
       // Fetch boostsData and parse the JSON string inside the "boosts" field
       let boostsData = await getData("/boosts/list");
@@ -1303,8 +1321,7 @@
         
       }
 
-      const participantData = await getData("/users_by_rank");
-
+      
       let currentData = {
         participants: Array.isArray(participantData) ? participantData : [],
         nodes: Array.isArray(nodesData) ? nodesData : [],
