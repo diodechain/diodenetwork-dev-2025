@@ -1179,7 +1179,7 @@
           if (rankData.boost_percent > 0) {
             document.getElementById("boostValue").textContent = Number(rankData.boost_percent).toFixed(2) + "%";
             if (rankData.points > 0) {
-              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * rankData.points)} points!`;
+              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * (rankData.points - rankData.tree_points))} points!`;
               document.getElementById('boostedIndicator').style.display = 'block';
             } 
           }
