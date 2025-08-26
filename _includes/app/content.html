@@ -903,9 +903,13 @@
           </div>
           <div
             style="margin-top: -40px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <p><span class="card-number" id="childrenPoints">0</span> Points</p>
+              <p>
+                  <span class="card-number" id="potentialChildrenPoints" style="color: red; visibility: hidden;">0</span>
+                  <span class="card-number" id="childrenPoints">0</span>
+                <span> Points</span>
+              </p>
             <p id="affiliateWarning" style="display: none; color: red; font-size: 12px; margin: 4px 0 0 0;">
-              You must be an <a href="https://diode.foundation/docs/programs/diode_affiliate_program.html" target="_blank" style="text-decoration: underline; color: red;">active Affiliate</a> to realize these points!
+              You must be an <a href="https://diode.foundation/docs/programs/diode_affiliate_program.html" target="_blank" style="text-decoration: underline; color: red;">active Affiliate</a> to get Referral Tree points!
             </p>
             <p style="font-size: 12px; color: #5E5E5E;" id="descendantCount"></p>
           </div>
@@ -1179,7 +1183,10 @@
           if (rankData.boost_percent > 0) {
             document.getElementById("boostValue").textContent = Number(rankData.boost_percent).toFixed(2) + "%";
             if (rankData.points > 0) {
-              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * (rankData.points - rankData.tree_points))} points!`;
+              // boost increases both tree points and direct points
+              // total points (points) is a sum of boosted tree points and boosted direct points
+              // therefore, boosted points is simply boosted percent * total points
+              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * rankData.points)} points!`;
               document.getElementById('boostedIndicator').style.display = 'block';
             } 
           }
@@ -1259,17 +1266,31 @@
         const totalDescendants = sortedChildren.length + sortedChildren.reduce((sum, c) => sum + (c.descendants || 0), 0);
         document.getElementById("descendantCount").textContent = `from ${totalDescendants} Total Descendant${totalDescendants == 1 ? "" : "s"}`;
         const totalChildPoints = sortedChildren.reduce((sum, c) => sum + (c.tree_points_to_parent || 0), 0);
-        referralTreePoints = Math.ceil(totalChildPoints);
+        possibleReferralTreePoints = Math.ceil(totalChildPoints);
+        actualReferralTreePoints = Math.floor(rankData.tree_points / (1+rankData.boost_percent/100)); // calculate base tree_points to display
 
         if (!referralTreeActive) {
           const childrenPointsElem = document.getElementById("childrenPoints");
-          childrenPointsElem.textContent = referralTreePoints;
+          childrenPointsElem.textContent = possibleReferralTreePoints;
           childrenPointsElem.style.color = "red";
           childrenPointsElem.style.textDecoration = "line-through";
           document.getElementById("affiliateWarning").style.display = "block";
         } else {
-          document.getElementById("childrenPoints").textContent = referralTreePoints;
-          document.getElementById("affiliateWarning").style.display = "none";
+          if (actualReferralTreePoints < possibleReferralTreePoints) {
+            document.getElementById("potentialChildrenPoints").textContent = possibleReferralTreePoints;
+            document.getElementById("potentialChildrenPoints").style.color = "red";
+            document.getElementById("potentialChildrenPoints").style.textDecoration = "line-through";
+            document.getElementById("potentialChildrenPoints").style.visibility = "visible";
+            const affiliateWarningElem = document.getElementById("affiliateWarning");
+            affiliateWarningElem.textContent = "Referral Tree points are a max of your direct points!";
+            affiliateWarningElem.style.display = "block";
+          } else {
+            document.getElementById("affiliateWarning").style.display = "none";
+          }
+
+          document.getElementById("childrenPoints").textContent = actualReferralTreePoints;
+          document.getElementById("childrenPoints").style.color = "black";
+          document.getElementById("childrenPoints").style.textDecoration = "none";
         }
 
         sortedChildren.forEach(child => {
