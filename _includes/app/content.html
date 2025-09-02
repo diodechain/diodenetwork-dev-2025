@@ -335,6 +335,12 @@
       transform: rotate(-45deg);
     }
 
+    .modal-stat {
+      overflow:hidden; 
+      text-overflow:ellipsis; 
+      white-space:nowrap;
+    }
+
     .coin {
       width: 24px;
       height: 24px;
@@ -998,6 +1004,7 @@
           <tr>
             <th>Epoch Rank</th>
             <th>Username</th>
+            <th>Badges</th>
             <th>Points</th>
           </tr>
         </thead>
@@ -1379,13 +1386,35 @@
           const sortedParticipants = [...currentData.participants].sort((a, b) => a.rank - b.rank);
           document.getElementById('participantsModalBody').innerHTML = sortedParticipants.map(user => `
               <tr>
-                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.rank}</td>
-                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${user.username.split('.')[0]}</td>
-                <td class="${user.username === curUsername ? `rank-highlight` : `` }">${Math.ceil(user.points)}</td>
+                <td class="modal-stat ${user.username === curUsername ? `rank-highlight` : `` }" style="width:10%;">${user.rank}</td>
+                <td class="modal-stat ${user.username === curUsername ? `rank-highlight` : `` }" style="width:10%;">
+                  ${user.username.split('.')[0]}
+                </td>
+                <td class="modal-stat ${user.username === curUsername ? `rank-highlight` : `` }" style="width:10%;">
+                  ${renderUserBadges(user)}
+                </td>
+                <td class="modal-stat ${user.username === curUsername ? `rank-highlight` : `` } style="width:10%;">${Math.ceil(user.points)}</td>
               </tr>
             `).join('');
           showModal('participantsModal');
         };
+      }
+
+      function renderUserBadges(user) {
+        if (!Array.isArray(user.badges)) return "";
+
+        // Check for the special case where badges is [""] (a single empty string)
+        if (
+          user.badges.length === 1 &&
+          (user.badges[0] === "" || user.badges[0] === "''" || user.badges[0] === "['']")
+        ) {
+          return "";
+        }
+
+        return user.badges.map(badge => `
+          <a href="../assets/images/badge-${badge}.png" target="_blank">
+            <img src="../assets/images/badge-${badge}.png" alt="badge-${badge}" style="height:22px;vertical-align:middle;margin-left:4px;">
+          </a>`).join('');
       }
 
       if (currentData.nodes.length) {
