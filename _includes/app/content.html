@@ -1185,15 +1185,15 @@
       if (rankData) {
         document.getElementById("epochRankValue").textContent = typeof rankData.rank !== "undefined" ? rankData.rank : "0";
         document.getElementById("epochParticipantsValue").textContent = typeof rankData.participants !== "undefined" ? rankData.participants : "-";
-        document.getElementById("epochPointsValue").textContent = typeof rankData.points !== "undefined" ? Math.ceil(rankData.points) : "-";
-        if (typeof rankData.boost_percent !== "undefined" && typeof rankData.points !== "undefined") {
+        document.getElementById("epochPointsValue").textContent = typeof rankData.total_points !== "undefined" ? Math.ceil(rankData.total_points) : "-";
+        if (typeof rankData.boost_percent !== "undefined" && typeof rankData.total_points !== "undefined") {
           if (rankData.boost_percent > 0) {
             document.getElementById("boostValue").textContent = Number(rankData.boost_percent).toFixed(2) + "%";
-            if (rankData.points > 0) {
+            if (rankData.total_points > 0) {
               // boost increases both tree points and direct points
               // total points (points) is a sum of boosted tree points and boosted direct points
               // therefore, boosted points is simply boosted percent * total points
-              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * rankData.points)} points!`;
+              document.getElementById('boostedIndicator').textContent = `Boosted by ${Math.ceil(rankData.boost_percent/100 * rankData.total_points)} points!`;
               document.getElementById('boostedIndicator').style.display = 'block';
             } 
           }
@@ -1286,7 +1286,7 @@
           // sometimes actualReferralTreePoints and possibleReferralTreePoints are within 1 point of each other,
           // so we just gut check against direct points - if possibleReferralTreePoints is greater than direct points,
           // then we show the strike through / warning
-          let directPoints = (rankData.points - rankData.tree_points)/(1+rankData.boost_percent/100);
+          let directPoints = (rankData.total_points - rankData.tree_points)/(1+rankData.boost_percent/100);
           if (actualReferralTreePoints < possibleReferralTreePoints && possibleReferralTreePoints > directPoints) {
             document.getElementById("potentialChildrenPoints").textContent = possibleReferralTreePoints;
             document.getElementById("potentialChildrenPoints").style.color = "red";

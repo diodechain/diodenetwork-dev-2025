@@ -929,39 +929,13 @@
             statsOutputDiv.appendChild(statsDiv);
             const parentStats = {
                 boost_percent: userRank.boost_percent,
-                points: userRank.points,
+                points: userRank.total_points,
                 active_referral_tree: userRank.active_referral_tree
             }
             const childrenDiv = await createChildrenDiv(selectedUsername, parentWallet, parentStats);
             const pointsFromChildrenDiv = document.createElement('div');
             childrenDiv.className = 'children-div';
             statsDiv.appendChild(childrenDiv);
-            // Find the total tree points in childrenDiv
-            const totaltreePointsDiv = childrenDiv.querySelector('.totaltree-points');
-            // Find the fromTreePointsSpan in statsDiv
-            const fromTreePointsSpan = statsDiv.querySelector('.from-tree-points');
-            if (totaltreePointsDiv && fromTreePointsSpan) {
-                console.log(totaltreePointsDiv.textContent);
-                console.log(fromTreePointsSpan.textContent);
-                // Extract the first number from each element's text
-                const totalTreePointsMatch = totaltreePointsDiv.textContent.match(/(\d+)/);
-                const fromTreePointsMatch = fromTreePointsSpan.textContent.match(/(\d+)/);
-                if (totalTreePointsMatch && fromTreePointsMatch) {
-                    const totalTreePoints = parseInt(totalTreePointsMatch[1], 10);
-                    const fromTreePoints = parseInt(fromTreePointsMatch[1], 10);
-                    if (totalTreePoints > fromTreePoints) {
-                        // Create a red alert div
-                        const alertDiv = document.createElement('div');
-                        alertDiv.textContent = 'Alert: Child tree points exceed parent tree points!';
-                        alertDiv.style.color = '#D73E53';
-                        alertDiv.style.fontWeight = 'bold';
-                        alertDiv.style.marginTop = '8px';
-                        statsDiv.appendChild(alertDiv);
-                    }
-                } else console.log("No numbers found");
-            } else {
-                console.log("No totaltreePointsDiv or fromTreePointsSpan found");
-            }
             addPlusButtonListeners(childrenDiv);
 
             hide_spinner(btn);
@@ -1032,7 +1006,7 @@
                 const childrenList = await getData("/tree/list", parentWallet);
                 if (Array.isArray(childrenList) && childrenList.length > 0) {
                     childrenList.forEach(async (child, idx) => {
-                        points_from_children += child.tree_points_to_parent;
+                        points_from_children += (typeof child.tree_points_to_parent === 'number' ? child.tree_points_to_parent : 0);
                         const childDiv = await createChildDiv(child, child.descendants > 0);
                         // Collect all child divs with their tree_points_to_parent
                         if (!childrenDiv._childDivs) childrenDiv._childDivs = [];
@@ -1075,17 +1049,22 @@
                 }
             }
             const treePointsSpan = document.createElement('span');
+
+            // if we are being called from the children tree, the "tree_points_to_parent" field will always
+            // be populated, even if it's 0.  However, if we are being called by the top level element,
+            // it will not be populated.  So we need to create it.
             if (child.active_referral_tree == 1) {
-                treePointstoParent = 0.5 * (child.points + child.tree_points);
+                treePointstoParent = child.tree_points_to_parent || 0.5 * (child.direct_points + child.tree_points);
             } else {
-                treePointstoParent = 0.5 * child.points;
+                treePointstoParent = child.tree_points_to_parent || 0.5 * child.direct_points;
             }
 
+            
             if (child.parent) {
                 // If child.parent is defined, make this a clickable element
                 const parentLink = document.createElement('a');
                 parentLink.href = '#';
-                parentLink.textContent = (child.tree_points_to_parent || (0.5 * (child.points + child.tree_points))) + " to " + child.parent;
+                parentLink.textContent = treePointstoParent + " to " + child.parent;
                 parentLink.style.cursor = 'pointer';
                 parentLink.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1093,7 +1072,7 @@
                 });
                 treePointsSpan.appendChild(parentLink);
             } else {
-                treePointsSpan.textContent = (child.tree_points_to_parent || (0.5 * (child.points + child.tree_points))) + " to parent";
+                treePointsSpan.textContent = treePointstoParent + " to parent";
             }
             treePointsSpan.className = 'tree-points';
             nestedDiv.appendChild(treePointsSpan);
@@ -1106,17 +1085,17 @@
 
             // Add a small "0" under the username, centered
             const pointsUnderUsername = document.createElement('span');
-            pointsUnderUsername.textContent = (child.points || 0) + " total";
+            pointsUnderUsername.textContent = (child.total_points || 0) + " total";
             pointsUnderUsername.className = 'points-under-username';
             usernameSpan.appendChild(document.createElement('br'));
             usernameSpan.appendChild(pointsUnderUsername);
 
             const fromTreePointsSpan = document.createElement('span');
             fromTreePointsSpan.className = 'tree-points';
-            if (child.active_referral_tree == 0) {
-                fromTreePointsSpan.innerHTML = "<s>" + (child.tree_points || 0) + " from tree</s>";
+            if (!child.active_referral_tree || child.active_referral_tree == 0) {
+                fromTreePointsSpan.innerHTML = "<s>" + (child.tree_points || 0) + " from tree</s> (not affiliate)<br>" + (child.direct_points || 0) + " direct";
             } else {
-                fromTreePointsSpan.textContent = (child.tree_points || 0) + " from tree";
+                fromTreePointsSpan.innerHTML = (child.tree_points || 0) + " from tree<br>" + (child.direct_points || 0) + " direct";
             }
             nestedDiv.appendChild(fromTreePointsSpan);
 
@@ -1190,7 +1169,7 @@
                 const parentWallet = await getWalletAddress(attributes.username, walletAddress);
                 const parentStats = {
                     boost_percent: attributes.boost_percent,
-                    points: attributes.points
+                    points: attributes.total_points
                 }
                 const childrenDiv = await createChildrenDiv(attributes.username, parentWallet, parentStats);
                 childrenDiv.className = 'children-div';
