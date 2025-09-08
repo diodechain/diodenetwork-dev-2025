@@ -1283,7 +1283,11 @@
           childrenPointsElem.style.textDecoration = "line-through";
           document.getElementById("affiliateWarning").style.display = "block";
         } else {
-          if (actualReferralTreePoints < possibleReferralTreePoints) {
+          // sometimes actualReferralTreePoints and possibleReferralTreePoints are within 1 point of each other,
+          // so we just gut check against direct points - if possibleReferralTreePoints is greater than direct points,
+          // then we show the strike through / warning
+          let directPoints = (rankData.points - rankData.tree_points)/(1+rankData.boost_percent/100);
+          if (actualReferralTreePoints < possibleReferralTreePoints && possibleReferralTreePoints > directPoints) {
             document.getElementById("potentialChildrenPoints").textContent = possibleReferralTreePoints;
             document.getElementById("potentialChildrenPoints").style.color = "red";
             document.getElementById("potentialChildrenPoints").style.textDecoration = "line-through";
