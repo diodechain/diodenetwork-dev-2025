@@ -1,78 +1,18 @@
-<!-- US Geo-restriction Modal -->
-<div id="geoRestrictionModal" class="transaction-modal">
-  <div class="popup" style="height: auto; padding: 40px 30px;">
-    <div class="popup-header" style="margin-bottom: 8px;">
-      <h2>Regional Access Restricted</h2>
-    </div>
-    <div style="text-align: center; margin-bottom: 30px;">
-           <p style="font-size: 18px; line-height: 1.5; margin-bottom: 50px;">
-        The Diode Utility Token is liquid on the <a href="https://moonscan.io/token/0x434116a99619f2B465A137199C38c1Aab0353913" target="_blank">Moonbeam Network</a> and can be swapped on <a href="https://app.stellaswap.com/exchange/swap?inputCurrency=0x434116a99619f2B465A137199C38c1Aab0353913&outputCurrency=0xFFfffffF7D2B0B761Af01Ca8e25242976ac0aD7D" target="_blank">Stellaswap</a><br><br>
-        <a href="{{ '/token/circulatingsupply/' | relative_url }}" target="_blank">Currently Circulating Supply</a>
-        <br><br>
-        Please connect with Diode directly for additional information about the <a href="https://diode.foundation/docs/token.html" target="_blank">Diode Token</a> and the <a href="https://diode.foundation/docs/programs/disrupt_nft.html" target="_blank">Disrupt NFT</a>.
-      </p>
-      <div style="display: flex; justify-content: center; gap: 15px;">
-        <button class="modal-back-btn" style="margin-top: 0;">Back</button>
-        <a href="https://diode.io/joinzone/#1MQKGI_TUYpNksoAAK6TSynBPpviy5MPgDRyTiO7YuGh5_H5sHDN9VIB1diC" target="_blank" style="display: inline-block;">
-          <button class="modal-close-btn" style="margin-top: 0;">Contact Diode</button>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="token-page">
     <div class="nft-container">
-      The Diode Utility Token is liquid on the <a href="https://moonscan.io/token/0x434116a99619f2B465A137199C38c1Aab0353913" target="_blank">Moonbeam Network</a> and can be swapped on <a href="https://app.stellaswap.com/exchange/swap?inputCurrency=0x434116a99619f2B465A137199C38c1Aab0353913&outputCurrency=0xFFfffffF7D2B0B761Af01Ca8e25242976ac0aD7D" target="_blank">Stellaswap</a><br><br>
-      <a href="{{ '/token/circulatingsupply/' | relative_url }}" target="_blank">Currently Circulating Supply</a>
-      <br><br>
-      Please connect with Diode directly for additional information about the <a href="https://diode.foundation/docs/token.html" target="_blank">Diode Token</a> and the <a href="https://diode.foundation/docs/programs/disrupt_nft.html" target="_blank">Disrupt NFT</a>.
-    </div>
-  
-    <div class="nft-container">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
+      <h2>Disrupt NFT v1 Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
+      <p>See <a href="{{ '/token' | relative_url }}" target="_blank">Disrupt NFT v2</a> for new purchases</p>
       <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="Disrupt NFT" />
       <ul class="dotted-list">
+        <li>• Disrupt NFT v1 was used for slots 1 - 1197</li>
+        <li>• Only purchasable with USDC.wh (on Moonbeam)</li>
+        <li>• Use v2 for slots 1198 and higher</li>
         <li>• REVENUE-ANCHORED QUARTERLY YIELD</li>
         <li>• EACH NFT REDEEMABLE FOR 20 DIODE</li>
         <li>• <a href="{{ 'https://diode.foundation/docs/programs/disrupt_nft.html' | relative_url }}" target="_blank">READ DETAILS HERE</a></li>
       </ul>
-      <div class="nft-number"><strong id="nft-number-display">NFT #-</strong> <span id="nft-range-display" style="display: none;">- #-</span></div>
-  
-      <div class="quantity-input">
-        <label for="quantity">QUANTITY
-          <input type="number" id="quantity" value="1" min="1" max="1000" class="always-show-arrows" />
-        </label>
-      </div>
-      <div class="total"><strong>TOTAL:</strong> 0.000 GLMR</div>
-  
-      <div class="terms-container">
-        <label class="terms-label"><input type="checkbox" /> I ACCEPT THE <a href="https://diode.foundation/docs/programs/disrupt_nft.html#terms" target="_blank" class="terms-link">TERMS</a></label>
-      </div>
-      <button class="purchase-btn" disabled>Purchase</button>
-      <div class="purchase-disclaimer" hidden>
-        <strong>DISCLAIMER:</strong> Purchasing Non-Fungible Tokens (NFTs) is highly speculative and carries significant risks. The value of an NFT may fluctuate or become worthless, and you may lose your entire purchase value. By purchasing, you assume all risks, including financial, legal, and regulatory risks, and acknowledge that the Diode Foundation makes no guarantees about the NFT’s value or future marketability. This offering is intended to comply with U.S. securities laws, including Regulation D exemptions, and is limited to eligible investors. Consult financial, legal, and tax advisors before purchasing. All sales are final, with no refunds unless stated otherwise.
-      </div>
     </div>
   
-    <div class="your-nfts">
-      <div class="table-header" style="background-color: #FAFAFA; padding: 10px 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <h3 class="table-title">YOUR NFTS</h3>
-        </div>
-        <hr style="border: 0.3px solid #E6E6E6; margin: 8px 0;">
-        <div class="table-box" style="overflow-y: auto; overflow-x: auto; max-height: 400px;">
-          <table class="table">
-            <thead>
-              <tr><th>NFT</th><th>QUANTITY</th></tr>
-            </thead>
-            <tbody>
-              <tr><td> Diode Disrupt</td><td id="disrupt-nft-qty">-</td><td><button class="button-view-all see-all-nft-btn" data-nft-type="disrupt">View All</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
 </div>
 
 <!-- Transaction Modals -->
@@ -80,7 +20,7 @@
   <div class="popup">
     <button class="close-btn">×</button>
     <div class="popup-header">
-      <h2>Disrupt NFT Limited Edition <span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
+      <h2>Disrupt NFT Limited Edition<span class="info-icon" title="Revenue-generating NFTs with quarterly yield distribution"></span></h2>
     </div>
     <div class="popup-image">
       <img class="nft" src="{{ '/assets/images/disrupt_nft.png' | relative_url }}" alt="NFT Artwork">
@@ -949,11 +889,8 @@
     updateNftNumber();
     
     function calculatePrice(slotId) {
-      // GLMR pricing: 228 GLMR base + (0.304 GLMR * (id - 1)) increment per slot
-      // Convert from wei to GLMR (divide by 1e18)
-      const basePriceGLMR = 228; // 228 GLMR
-      const incrementGLMR = 0.304; // 0.304 GLMR per slot
-      return basePriceGLMR + (slotId - 1) * incrementGLMR;
+      // $10 base + ($0.02 * (id - 1)) increment per slot
+      return (15e6 + (slotId - 1) * 0.02e6) / 1e6;
     }
     
     function updateTotal() {
@@ -971,9 +908,9 @@
           total += calculatePrice(slotId);
         }
         
-        totalDiv.innerHTML = `<strong>TOTAL:</strong> ${total.toFixed(3)} GLMR`;
+        totalDiv.innerHTML = `<strong>TOTAL:</strong> $${total.toFixed(2)} USDC`;
       } else {
-        totalDiv.innerHTML = `<strong>TOTAL:</strong> - GLMR`;
+        totalDiv.innerHTML = `<strong>TOTAL:</strong> $- USDC`;
       }
     }
     
@@ -1043,7 +980,7 @@
           throw new Error('Failed to initialize contract. Check console for details.');
         }
         
-        const { web3, contract, diodeContract } = contractData;
+        const { web3, contract, usdcContract } = contractData;
         
         const accounts = await window.ethereum.request({ 
           method: 'eth_requestAccounts' 
@@ -1061,7 +998,7 @@
         // Check slot availability
         const slotResult = await contract.methods.getNextSlot().call();
         const slotId = Number(slotResult.slotId);
-        const slotPriceGLMR = Number(slotResult.priceGLMR);
+        const slotPrice = Number(slotResult.priceUSDC);
         
         if (slotId === 0) {
           throw new Error('All NFTs are sold out');
@@ -1069,8 +1006,8 @@
         
         const quantity = parseInt(quantityInput.value) || 1;
         
-        // Calculate total price in GLMR (wei)
-        let totalPriceWei = 0;
+        // Calculate total price
+        let totalPrice = 0;
         const slotIds = [];
         
         for (let i = 0; i < quantity; i++) {
@@ -1079,24 +1016,24 @@
             throw new Error('Maximum slot ID is 8500');
           }
           slotIds.push(currentId);
-          // Calculate total price using the v2 formula: 228e18 + (id - 1) * 0.304e18
-          const basePriceWei = 228 * 1e18; // 228 GLMR in wei
-          const incrementWei = 304 * 1e15; // 0.304 GLMR in wei
-          totalPriceWei += basePriceWei + (currentId - 1) * incrementWei;
+          // Calculate total price using the formula: 0.01e6 + (id - 1) * 2e4
+          totalPrice += (15e6 + (currentId - 1) * 0.02e6);
         }
         
-        // Check GLMR balance
-        const glmrBalance = await web3.eth.getBalance(account);
-        if (Number(glmrBalance) < totalPriceWei) {
-          const totalPriceGLMR = totalPriceWei / 1e18;
-          throw new Error(`You need at least ${totalPriceGLMR.toFixed(3)} GLMR.\n\nYou can get GLMR on Moonbeam at various exchanges.\n\n`);
+        // Check USDC balance
+        const usdcBalance = await usdcContract.methods.balanceOf(account).call();
+        if (Number(usdcBalance) < totalPrice) {
+          throw new Error(`You need at least $${totalPrice/1e6} USDC.wh.\n\nYou can get USDC.wh (on Moonbeam) at https://portalbridge.com/.\n\n`);
         }
         
-        // Buy the slots with GLMR (payable function)
-        const buyTx = await contract.methods.buySlots(slotIds).send({ 
-          from: account, 
-          value: totalPriceWei 
-        });
+        // Approve USDC
+        const approveTx = await usdcContract.methods.approve(
+          contract.options.address, 
+          totalPrice
+        ).send({ from: account });
+        
+        // Buy the slots
+        const buyTx = await contract.methods.buySlots(slotIds).send({ from: account });
         
         confirmingModal.style.display = 'none';
         successModal.style.display = 'flex';
@@ -1200,16 +1137,9 @@
 
         const NFT_BOOSTS = [
           {
-            contractAddress: "0x094F63c2a04feBeA7aF1DCb4ebe526F9080A7d6d",
-            name: "Diode Disrupt (v2)",
-            baseBoost: 0,
-            version: "v2"
-          },
-          {
             contractAddress: "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7",
-            name: "Diode Disrupt (v1)",
-            baseBoost: 0,
-            version: "v1"
+            name: "Diode Disrupt",
+            baseBoost: 0
           }
         ];
 
@@ -1241,8 +1171,7 @@
               name: nft.name,
               balance: balance,
               baseBoost: nft.baseBoost,
-              contractAddress: nft.contractAddress,
-              version: nft.version
+              contractAddress: nft.contractAddress
             };
           } catch (err) {
             console.error("Failed to fetch NFT balance:", err);
@@ -1250,8 +1179,7 @@
               name: nft.name,
               balance: 0,
               baseBoost: nft.baseBoost,
-              contractAddress: nft.contractAddress,
-              version: nft.version
+              contractAddress: nft.contractAddress
             };
           }
         })).catch(err => {
@@ -1267,13 +1195,12 @@
             nftTableBody.innerHTML = '';
             userNfts.forEach(nft => {
               const tr = document.createElement('tr');
-              const nftType = nft.version === 'v2' ? 'disruptv2' : 'disruptv1';
-              tr.innerHTML = `<td>${nft.name}</td><td>${nft.balance}</td><td><button class="button-view-all see-all-nft-btn" data-nft-type="${nftType}" data-contract-address="${nft.contractAddress}">View All</button></td>`;
+              tr.innerHTML = `<td>${nft.name}</td><td>${nft.balance}</td><td><button class="button-view-all see-all-nft-btn" data-nft-type="${nft.name.toLowerCase().replace(/\s/g, '')}">View All</button></td>`;
               nftTableBody.appendChild(tr);
             });
             attachSeeAllListeners();
           } else {
-            nftTableBody.innerHTML = '<tr><td colspan="3">No NFTs Found</td></tr>';
+            nftTableBody.innerHTML = '<tr><td colspan="2">No NFTs Found</td></tr>';
           }
         }
       } catch (error) {
@@ -1288,8 +1215,8 @@
     // NFT Contract interaction
     async function initializeContract() {
       try {
-        const contractDataUrl = "{{ '/assets/contracts/contract_data-v2.json' | relative_url }}";
-        const abiUrl = "{{ '/assets/contracts/slotmarket_abi-v2.json' | relative_url }}";
+        const contractDataUrl = "{{ '/assets/contracts/contract_data.json' | relative_url }}";
+        const abiUrl = "{{ '/assets/contracts/slotmarket_abi.json' | relative_url }}";
         const moonbeamRPC = "https://rpc.api.moonbeam.network";
         
         let contractData, abi;
@@ -1298,7 +1225,7 @@
           const contractResponse = await fetch(contractDataUrl);
           if (!contractResponse.ok) {
             console.warn(`Failed to fetch contract data from ${contractDataUrl}. Status: ${contractResponse.status}`);
-            contractData = { "contract_address": "0x094F63c2a04feBeA7aF1DCb4ebe526F9080A7d6d" };
+            contractData = { "contract_address": "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7" };
           } else {
             contractData = await contractResponse.json();
           }
@@ -1333,7 +1260,25 @@
           web3,
           isReadOnly,
           contract: new web3.eth.Contract(abi, contractAddress),
-          // No diodeContract needed; using GLMR (native token) for payments
+          usdcContract: new web3.eth.Contract([
+            {
+              "constant": true,
+              "inputs": [{"name": "account", "type": "address"}],
+              "name": "balanceOf",
+              "outputs": [{"name": "", "type": "uint256"}],
+              "type": "function"
+            },
+            {
+              "constant": false,
+              "inputs": [
+                {"name": "spender", "type": "address"},
+                {"name": "amount", "type": "uint256"}
+              ],
+              "name": "approve",
+              "outputs": [{"name": "", "type": "bool"}],
+              "type": "function"
+            }
+          ], "0x931715FEE2d06333043d11F658C8CE934aC61D0c")
         };
       } catch (error) {
         console.error('Contract initialization error:', error);
@@ -1391,7 +1336,7 @@
         try {
           const result = await contract.methods.getNextSlot().call();
           const slotId = Number(result.slotId);
-          const priceGLMR = Number(result.priceGLMR) / 1e18;
+          const priceUSDC = Number(result.priceUSDC) / 1e6;
           if (slotId === 0) {
             document.querySelector('.nft-number').innerText = 'All slots sold!';
             purchaseBtn.disabled = true;
@@ -1452,7 +1397,7 @@
     checkSlotAvailability();
 
     // --- NFT Modal Logic ---
-    const disruptContractAddress = "0x094F63c2a04feBeA7aF1DCb4ebe526F9080A7d6d";
+    const disruptContractAddress = "0xe9a4aeDD9B50c0394Efc83332E98B6eB977f5ae7";
     const liquidatorContractAddress = "0x1C7d5Bab1E6ac806Cc56352519EE811D83E650Da";
     const liquidatorABI = [{"inputs":[{"internalType":"address","name":"_nftContract","type":"address"},{"internalType":"address","name":"_diodeToken","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"nftIds","type":"uint256[]"},{"indexed":false,"internalType":"uint256","name":"payout","type":"uint256"}],"name":"NFTsLiquidated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[],"name":"HOLD_PERIOD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PAYOUT_PER_NFT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"diodeToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"maxId","type":"uint256"}],"name":"getMintTimestamps","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"nftIds","type":"uint256[]"}],"name":"liquidateNFTs","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"mintTimestamps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nftContract","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"nftIds","type":"uint256[]"},{"internalType":"uint256[]","name":"timestamps","type":"uint256[]"}],"name":"setMintTimestamps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawTokens","outputs":[],"stateMutability":"nonpayable","type":"function"}];
 
@@ -1468,9 +1413,8 @@
         btn.addEventListener('click', async function() {
           console.log('View All clicked', this);
           const nftType = this.getAttribute('data-nft-type');
-          const contractAddress = this.getAttribute('data-contract-address');
           if (nftType && nftType.includes('disrupt')) {
-            await showDisruptNFTsModal(contractAddress, nftType);
+            await showDisruptNFTsModal();
           }
           // Add more types here if needed
         });
@@ -1478,10 +1422,9 @@
     }
     attachSeeAllListeners();
 
-    async function showDisruptNFTsModal(contractAddress, nftType) {
-      console.log('showDisruptNFTsModal called', contractAddress, nftType);
-      const version = nftType === 'disruptv2' ? 'v2' : 'v1';
-      document.getElementById('nftDetailsModalTitle').textContent = `Your Disrupt NFTs (${version.toUpperCase()})`;
+    async function showDisruptNFTsModal() {
+      console.log('showDisruptNFTsModal called');
+      document.getElementById('nftDetailsModalTitle').textContent = 'Your Disrupt NFTs';
       document.getElementById('nftLiquidateBar').style.display = 'block';
       document.getElementById('liquidateStatus').textContent = '';
       const modalBody = document.getElementById('nftDetailsModalBody');
@@ -1513,7 +1456,7 @@
       const web3 = new Web3(window.ethereum || new Web3.providers.HttpProvider('https://rpc.api.moonbeam.network'));
       const contract = new web3.eth.Contract([
         {"inputs":[{"internalType":"address[]","name":"accounts","type":"address[]"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"}
-      ], contractAddress);
+      ], disruptContractAddress);
       const tokenIds = Array.from({length: 8500}, (_, i) => i + 1);
       const accounts = Array(tokenIds.length).fill(walletAddress);
       let balances;
@@ -1526,9 +1469,6 @@
       modalBody.innerHTML = `<div style='margin-bottom: 10px; min-height: 40px; display: flex; align-items: center;'><button id='liquidateSelectedBtn' class='button-view-all' style='visibility:hidden; margin-bottom: 16px;'>Liquidate Selected for 20 DIODE each</button><span id='liquidateStatus' style='margin-left: 20px; color: #D73E53;'></span></div><div style="max-height:300px;overflow:auto;"><table class="table"><thead><tr><th><input type='checkbox' id='selectAllNftCheckbox'></th><th>NFT ID</th></tr></thead><tbody>${ownedIds.map(id => `<tr><td><input type='checkbox' class='nft-id-checkbox' value='${id}'></td><td>${id}</td></tr>`).join('')}</tbody></table></div>`;
       // Add event listeners to checkboxes to show/hide the button
       setTimeout(() => {
-        // Capture contractAddress and nftType for use in liquidation
-        const currentContractAddress = contractAddress;
-        const currentNftType = nftType;
         const checkboxes = modalBody.querySelectorAll('.nft-id-checkbox');
         const liquidateBtn = modalBody.querySelector('#liquidateSelectedBtn');
         const liquidateStatus = modalBody.querySelector('#liquidateStatus');
@@ -1565,39 +1505,19 @@
           }
           if (!walletAddress) { liquidateStatus.textContent = 'Connect wallet.'; return; }
           const web3 = new Web3(window.ethereum || new Web3.providers.HttpProvider('https://rpc.api.moonbeam.network'));
+          const contract = new web3.eth.Contract(liquidatorABI, liquidatorContractAddress);
           liquidateStatus.textContent = 'Processing...';
-          
           try {
-            if (currentNftType === 'disruptv2') {
-              // Use built-in liquidateSlots function from v2 contract
-              const v2Contract = new web3.eth.Contract([
-                {
-                  "inputs": [{"internalType": "uint256[]", "name": "slotIds", "type": "uint256[]"}],
-                  "name": "liquidateSlots",
-                  "outputs": [],
-                  "stateMutability": "nonpayable",
-                  "type": "function"
-                }
-              ], currentContractAddress);
-              
-              await v2Contract.methods.liquidateSlots(ids).call({ from: walletAddress });
-              const tx = await v2Contract.methods.liquidateSlots(ids).send({ from: walletAddress });
-              liquidateStatus.textContent = `Success! TX Hash: ${tx.transactionHash}`;
-            } else {
-              // Use external liquidator contract for v1
-              const contract = new web3.eth.Contract(liquidatorABI, liquidatorContractAddress);
-              await contract.methods.liquidateNFTs(ids).call({ from: walletAddress });
-              const tx = await contract.methods.liquidateNFTs(ids).send({ from: walletAddress });
-              liquidateStatus.textContent = `Success! TX Hash: ${tx.transactionHash}`;
-            }
-            
-            await showDisruptNFTsModal(currentContractAddress, currentNftType);
+            await contract.methods.liquidateNFTs(ids).call({ from: walletAddress });
+            const tx = await contract.methods.liquidateNFTs(ids).send({ from: walletAddress });
+            liquidateStatus.textContent = `Success! TX Hash: ${tx.transactionHash}`;
+            await showDisruptNFTsModal();
           } catch (error) {
             let msg = error.message || error.toString();
             if (msg.includes('out of gas')) msg = 'Transaction ran out of gas.';
             else if (msg.includes('Not owner') || msg.includes('not owner')) msg = 'You are not the owner of this NFT.';
             else if (msg.includes('No mint timestamp')) msg = 'This NFT does not have a mint timestamp set.';
-            else if (msg.includes('Held < 90 days') || msg.includes('Slot liquidation cooldown not met')) msg = 'This NFT must be held for at least 90 days before liquidation.';
+            else if (msg.includes('Held < 90 days')) msg = 'This NFT must be held for at least 90 days before liquidation.';
             else if (msg.includes('Insufficient DIODE')) msg = 'The contract does not have enough DIODE tokens to pay out.';
             else if (msg.includes('reverted by the EVM')) msg = 'Transaction reverted. Possible reasons: not the owner, not held long enough, or contract lacks funds.';
             liquidateStatus.textContent = msg;
