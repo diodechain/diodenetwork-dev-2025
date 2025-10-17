@@ -28,8 +28,10 @@ module Jekyll
 
     def fetch_circulating_supply
       # Return as float with 18 decimals (187834.000000000000000000)
-      "187834.000000000000000000"
+      "5515965.210000000000000000"
 
+      # Adding other non locked wallets (despite managed): 5,515,965.21
+      #  This includes the previous 187,834, the liquidity management pool, corp multisig, and foundation multisig
       # Epoch 678 + 2930 on 2025-10-15 + 45103.5 vestings = 187,834 -->
       # Epoch 677 + 3443 on 2025-09-15 = 139,800.5 -->
       # Epoch 676 + 2956.5 on 2025-08-18 = 136,357.5 -->
