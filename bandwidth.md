@@ -8,8 +8,8 @@ permalink: /bandwidth/
   {% include app/navbar.html %}
   {% include app/epoch-stats-bar.html %}
   
-  <div id="bandwidth-content-wrapper" style="background-color: #FAFAFA; height: calc(100vh - 140px); padding: 0; margin-top: 0; display: flex; flex-direction: column; width: 100%;">
-    <div style="width: 100%; margin: 0; padding: 20px; flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+  <div id="bandwidth-content-wrapper" style="background-color: #FAFAFA; height: calc(100vh - 120px); padding: 20px; margin-top: 0; display: flex; flex-direction: column; width: 100%; box-sizing: border-box;">
+    <div style="margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box;">
       <!-- Error State -->
       <div id="error-state" style="display: none; text-align: center; padding: 20px; margin-bottom: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <div style="font-family: 'Poppins', sans-serif; color: #e74c3c; font-size: 18px; margin-bottom: 15px;">
@@ -21,9 +21,9 @@ permalink: /bandwidth/
       </div>
 
       <!-- Main Content -->
-      <div id="bandwidth-content" style="width: 100%;">
+      <div id="bandwidth-content" style="box-sizing: border-box;">
         <!-- Stats and Graph Layout -->
-        <div style="display: flex; gap: 20px; flex: 1; align-items: flex-start; min-height: 0; width: 100%;">
+        <div style="display: flex; gap: 20px; flex: 1; align-items: flex-start; min-height: 0; box-sizing: border-box;">
           <!-- Stats Cards (stacked vertically) -->
           <div style="display: flex; flex-direction: column; gap: 20px; min-width: 300px; flex-shrink: 0;">
             <div class="bandwidth-stat-card" style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
@@ -53,11 +53,11 @@ permalink: /bandwidth/
           </div>
 
           <!-- Graph Container -->
-          <div style="background: white; padding: 32px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column; min-height: 0; min-width: 0; width: 100%;">
-            <h2 style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600; color: #333; margin-bottom: 24px; flex-shrink: 0;">
+          <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column; min-width: 0; box-sizing: border-box;">
+            <div style="font-family: 'Poppins', sans-serif; font-size: 14px; color: #666; margin-bottom: 8px; flex-shrink: 0;">
               Bandwidth Over Time
-            </h2>
-            <div id="bandwidth-chart" style="width: 100%; flex: 1; min-height: 400px; display: flex; align-items: center; justify-content: center; color: #999; font-family: 'Poppins', sans-serif; overflow: hidden;">
+            </div>
+            <div id="bandwidth-chart" style="width: 100%; display: flex; align-items: center; justify-content: center; color: #999; font-family: 'Poppins', sans-serif; overflow: hidden;">
               <div id="chart-loading">Loading bandwidth data...</div>
             </div>
           </div>
@@ -75,6 +75,11 @@ permalink: /bandwidth/
   }
   .dashboard-header {
     margin-bottom: 0 !important;
+  }
+  /* Chart height: viewport - header (180px) - container padding (20px) - graph title padding (60px) - bottom margin and container spacing (40px) */
+  #bandwidth-chart {
+    height: calc(100vh - 300px) !important;
+    min-height: 200px;
   }
   @media (max-width: 768px) {
     #bandwidth-content-wrapper {
