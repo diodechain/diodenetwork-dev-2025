@@ -10,9 +10,11 @@
 
   // State
   let currentEpoch = null;
+  let daysElapsedInCurrentEpoch = null; // Actual days elapsed in current epoch
   let bandwidthData = [];
   let chart = null;
   let epochVisibility = {}; // Track which epochs are visible
+  let yAxisMax = null; // Calculated y-axis maximum based on current epoch
 
   // Color palette for epochs
   const epochColors = [
@@ -32,8 +34,15 @@
     const epochStart = currentEpoch * EPOCH_DURATION;
     
     // Calculate days elapsed in current epoch (from epoch start to now)
-    const daysElapsed = Math.floor((now - epochStart) / 86400) + 1; // +1 because day 1 starts at epoch start
-    const daysText = `(${daysElapsed} ${daysElapsed === 1 ? 'day' : 'days'})`;
+    daysElapsedInCurrentEpoch = Math.floor((now - epochStart) / 86400) + 1; // +1 because day 1 starts at epoch start
+    console.log('initializePage epoch calculation:', {
+      now: now,
+      currentEpoch: currentEpoch,
+      epochStart: epochStart,
+      secondsElapsed: now - epochStart,
+      daysElapsedInCurrentEpoch: daysElapsedInCurrentEpoch
+    });
+    const daysText = `(${daysElapsedInCurrentEpoch} ${daysElapsedInCurrentEpoch === 1 ? 'day' : 'days'})`;
     
     // Update days labels immediately
     const totalBwDaysEl = document.getElementById('total-bandwidth-days');
@@ -79,29 +88,50 @@
       }
 
       bandwidthData = [currentData];
+      epochVisibility[currentData.epoch] = true;
       updateStats(currentData);
 
-      // Fetch past 5 epochs
-      const pastEpochs = [];
+      // Calculate y-axis max from current epoch data (only set once, never change)
+      // Use the same days-elapsed calculation as the Total Bandwidth stat (client-side, not from API)
+      if (currentData.daily_bandwidth && currentData.daily_bandwidth.length > 0 && !yAxisMax && daysElapsedInCurrentEpoch) {
+        const lastDay = currentData.daily_bandwidth[currentData.daily_bandwidth.length - 1];
+        // Use the same daysElapsedInCurrentEpoch that's used for the "(N days)" label in Total Bandwidth stat
+        // This is calculated client-side in initializePage(), not from the API
+        const daysElapsed = daysElapsedInCurrentEpoch;
+        // Calculate average daily bandwidth: total_bandwidth / days_elapsed
+        // Then project to full epoch: average * 30
+        // Then multiply by 1.5x for safety margin in case current epoch is a down-epoch
+        const averageDailyBandwidth = lastDay.total_bandwidth / daysElapsed;
+        const projectedFullEpoch = averageDailyBandwidth * 30;
+        yAxisMax = projectedFullEpoch * 1.5;
+        console.log('Y-axis max calculation (using client-side days elapsed):', {
+          total_bandwidth: lastDay.total_bandwidth,
+          total_bandwidth_TB: (lastDay.total_bandwidth / (1024**4)).toFixed(2),
+          daysElapsed: daysElapsed, // Same value as shown in "(N days)" label
+          averageDaily: averageDailyBandwidth,
+          projected: projectedFullEpoch,
+          projected_TB: (projectedFullEpoch / (1024**4)).toFixed(2),
+          final: yAxisMax,
+          final_TB: (yAxisMax / (1024**4)).toFixed(2)
+        });
+      }
+
+      // Render chart immediately with current epoch
+      renderChart();
+      updateLegend();
+
+      // Fetch past 5 epochs and add them incrementally
       for (let i = 1; i <= 5; i++) {
         const epoch = currentEpoch - i;
         const data = await fetchBandwidthData(epoch);
         if (data) {
-          pastEpochs.push(data);
+          bandwidthData.push(data);
+          epochVisibility[data.epoch] = true;
+          // Re-render chart with new epoch added
+          renderChart();
+          updateLegend();
         }
       }
-
-      // Combine data (current first, then historical)
-      bandwidthData = [currentData, ...pastEpochs.reverse()];
-
-      // Initialize visibility state - all epochs visible by default
-      bandwidthData.forEach(epochData => {
-        epochVisibility[epochData.epoch] = true;
-      });
-
-      // Render chart
-      renderChart();
-      updateLegend();
     } catch (error) {
       console.error('Error loading bandwidth data:', error);
       showError();
@@ -180,8 +210,8 @@
             node_count: day.node_count,
             nodes_reporting_today: day.nodes_reporting_today,
             epochIndex: epochIndex,
-            // Create a continuous x-axis value
-            xValue: (epochData.epoch - currentEpoch) * 30 + day.day
+            // Use day number directly so epochs overlay on same axis
+            xValue: day.day
           });
         });
       }
@@ -207,13 +237,25 @@
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    // Scales
+    // Scales - x-axis uses day numbers (1-30), all epochs overlay
+    const maxDay = d3.max(allDataPoints, d => d.day) || 30;
     const xScale = d3.scale.linear()
-      .domain(d3.extent(allDataPoints, d => d.xValue))
+      .domain([1, maxDay])
       .range([0, width]);
 
+    // Use calculated y-axis max if available (never change it once set), otherwise use data max with 1.1x padding
+    const dataMax = d3.max(allDataPoints, d => d.total_bandwidth) || 0;
+    const yMax = yAxisMax || (dataMax * 1.1);
+    console.log('renderChart y-axis:', {
+      yAxisMax: yAxisMax,
+      yAxisMax_TB: yAxisMax ? (yAxisMax / (1024**4)).toFixed(2) : null,
+      dataMax: dataMax,
+      dataMax_TB: (dataMax / (1024**4)).toFixed(2),
+      yMax: yMax,
+      yMax_TB: (yMax / (1024**4)).toFixed(2)
+    });
     const yScale = d3.scale.linear()
-      .domain([0, d3.max(allDataPoints, d => d.total_bandwidth) * 1.1])
+      .domain([0, yMax])
       .range([height, 0]);
 
     // Create line generator
@@ -328,7 +370,7 @@
       .style('font-family', 'Poppins, sans-serif')
       .style('font-size', '14px')
       .style('fill', '#333')
-      .text('Epoch & Day');
+      .text('Day');
 
     // Grid lines
     svg.selectAll('.grid-line')
