@@ -104,3 +104,13 @@
     }
   }  
   </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const gotoBandwidthBtn = document.getElementById('goto-bandwidth-token-btn');
+      if (gotoBandwidthBtn) {
+        gotoBandwidthBtn.addEventListener('click', () => {
+          window.location.href = "{{ '/bandwidth/' | relative_url }}";
+        });
+      }
+    });
+  </script>

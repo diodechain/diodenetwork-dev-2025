@@ -1210,7 +1210,8 @@
         nodesTbody.innerHTML = "";
         const totalBandwidth = sortedNodes.reduce((sum, node) => sum + (parseFloat(node.bandwidth) || 0), 0);
         const roundedTotalBandwidth = (totalBandwidth / 1000000000).toFixed(1);
-        document.getElementById("nodesBandwidth").textContent = `from ${roundedTotalBandwidth} GB Bandwidth`;
+        const bandwidthLink = `{{ '/bandwidth/' | relative_url }}`;
+        document.getElementById("nodesBandwidth").innerHTML = `from ${roundedTotalBandwidth} GB <a href="${bandwidthLink}" style="color: inherit; text-decoration: underline;">Bandwidth</a>`;
         document.getElementById("nodesCount").textContent = sortedNodes.length;
         const totalNodePoints = sortedNodes.reduce((sum, n) => sum + (typeof n.points === 'number' ? n.points : 0), 0).toFixed(1);
         document.getElementById("nodePoints").textContent = Math.ceil(totalNodePoints);
@@ -1229,7 +1230,8 @@
         });
       } else {
         nodesTbody.innerHTML = `<tr><td colspan="4">No Nodes Found</td></tr>`;
-        document.getElementById("nodesBandwidth").textContent = `from 0 GB Bandwidth`;
+        const bandwidthLink = `{{ '/bandwidth/' | relative_url }}`;
+        document.getElementById("nodesBandwidth").innerHTML = `from 0 GB <a href="${bandwidthLink}" style="color: inherit; text-decoration: underline;">Bandwidth</a>`;
         document.getElementById("nodesCount").textContent = "0";
       }
 

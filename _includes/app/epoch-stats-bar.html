@@ -62,6 +62,11 @@
       color: white;
       border: 1px solid #fff !important;
     }
+    .goto-bandwidth {
+      background: linear-gradient(to right, #D73E53 0%, #A04992 48%, #615BA8 100%);
+      color: white;
+      border: 1px solid #fff !important;
+    }
     @media (max-width: 768px) {
       .dashboard {
         padding: 0 20px;
@@ -305,9 +310,11 @@
           window.epochStakeWindow = "Staking window is closed for this Epoch"
         }
 
-        document.getElementById("epochTitle").textContent = `Epoch ${epoch} Stats`;
+        // Check if we're on the bandwidth page
+        const isBandwidthPage = window.location.pathname.includes('/bandwidth');
+        const titleText = isBandwidthPage ? `Epoch ${epoch} Network Bandwidth` : `Epoch ${epoch} Stats`;
+        document.getElementById("epochTitle").textContent = titleText;
         document.getElementById("epochRemaining").textContent = `${Math.floor(epoch_days_remaining)}D ${Math.floor(epoch_extra_hours_remaining)}H ${Math.floor(epoch_extra_minutes_remaining)}M remaining`;
-
 
         window.addEventListener('click', (e) => {
           if (e.target === readMoreModal) {
@@ -332,8 +339,14 @@
 
         const gotoTokenBtn = document.querySelector('.goto-token');
         if (gotoTokenBtn) {
+          // Update button text based on page
+          gotoTokenBtn.textContent = isBandwidthPage ? 'Goto Points' : 'Goto Token';
           gotoTokenBtn.addEventListener('click', () => {
-            window.location.href = "{{ '/token/' | relative_url }}";
+            if (isBandwidthPage) {
+              window.location.href = "{{ '/app/' | relative_url }}";
+            } else {
+              window.location.href = "{{ '/token/' | relative_url }}";
+            }
           });
         }
 
