@@ -12,8 +12,10 @@ permalink: /token/totalsupply/
 </head><body><span id="value">{{ site.data.token_supply.total_supply }}</span>
 <script>
   const value = document.getElementById('value');
-  const num = parseFloat(value.textContent);
-  value.textContent = num.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const num = parseFloat(value.textContent.replace(/,/g, '').trim());
+  if (!Number.isNaN(num)) {
+    value.textContent = num.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  }
 </script>
 </body>
 </html>
