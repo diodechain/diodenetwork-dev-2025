@@ -86,11 +86,13 @@ permalink: /bandwidth/
   .dashboard-header {
     margin-bottom: 0 !important;
   }
-  .bandwidth-stat-card-body {
+  .bandwidth-stat-card {
+    overflow: hidden;
+  }
+  .bandwidth-stat-card .bandwidth-stat-card-body {
     padding: 16px;
     background-color: #ffffff;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: 10px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
