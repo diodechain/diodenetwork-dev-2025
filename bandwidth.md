@@ -26,22 +26,24 @@ permalink: /bandwidth/
         <div style="display: flex; gap: 20px; flex: 1; align-items: flex-start; min-height: 0; box-sizing: border-box;">
           <!-- Stats Cards (stacked vertically) -->
           <div style="display: flex; flex-direction: column; gap: 20px; min-width: 300px; flex-shrink: 0;">
-            <div class="bandwidth-stat-card" style="background: #FAFAFA; border: 1px solid #D73E53; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
-              <div class="card-title" style="padding: 20px 16px; background-color: #ffffff; border-top-left-radius: 10px; border-top-right-radius: 10px; height: 100px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-                <div style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 500; color: #141414; margin-bottom: 8px;">
-                  Network Bandwidth <span id="total-bandwidth-days" style="font-size: 12px;">(Loading...)</span>
+            <div class="bandwidth-stat-card" style="background: #FAFAFA; border: 1px solid #D73E53; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+              <div class="card-title bandwidth-stat-card-body">
+                <div class="bandwidth-stat-heading">
+                  Network Bandwidth
+                  <span id="total-bandwidth-days" class="bandwidth-stat-subtitle">Loading...</span>
                 </div>
-                <div id="total-bandwidth-stat" style="font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: #151515; height: 38px; display: flex; align-items: center;">
+                <div id="total-bandwidth-stat" class="bandwidth-stat-value">
                   <span id="total-bandwidth-loading" style="color: #999; font-size: 14px;">Loading...</span>
                 </div>
               </div>
             </div>
-            <div class="bandwidth-stat-card" style="background: #FAFAFA; border: 1px solid #D73E53; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
-              <div class="card-title" style="padding: 20px 16px; background-color: #ffffff; border-top-left-radius: 10px; border-top-right-radius: 10px; height: 100px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-                <div style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 500; color: #141414; margin-bottom: 8px;">
-                  Active Nodes <span id="active-nodes-days" style="font-size: 12px;">(Loading...)</span>
+            <div class="bandwidth-stat-card" style="background: #FAFAFA; border: 1px solid #D73E53; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+              <div class="card-title bandwidth-stat-card-body">
+                <div class="bandwidth-stat-heading">
+                  Nodes Reported Today
+                  <span id="active-nodes-days" class="bandwidth-stat-subtitle">Loading...</span>
                 </div>
-                <div id="active-nodes-stat" style="font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: bold; color: #151515; height: 38px; display: flex; align-items: center;">
+                <div id="active-nodes-stat" class="bandwidth-stat-value">
                   <span id="active-nodes-loading" style="color: #999; font-size: 14px;">Loading...</span>
                 </div>
               </div>
@@ -83,6 +85,41 @@ permalink: /bandwidth/
   }
   .dashboard-header {
     margin-bottom: 0 !important;
+  }
+  .bandwidth-stat-card-body {
+    padding: 16px;
+    background-color: #ffffff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bandwidth-stat-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #141414;
+    line-height: 1.3;
+  }
+  .bandwidth-stat-subtitle {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: #666;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .bandwidth-stat-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #151515;
+    line-height: 1.2;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
   }
   /* Chart height: viewport - header (180px) - container padding (20px) - graph title padding (60px) - bottom margin and container spacing (40px) */
   #bandwidth-chart {
@@ -133,7 +170,7 @@ permalink: /bandwidth/
       box-sizing: border-box;
     }
     .bandwidth-stat-card .card-title {
-      padding: 20px 10px !important;
+      padding: 16px 10px !important;
     }
     #bandwidth-chart {
       overflow-x: hidden;

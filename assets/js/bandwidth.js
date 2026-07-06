@@ -48,17 +48,17 @@
       secondsElapsed: now - epochStart,
       daysElapsedInCurrentEpoch: daysElapsedInCurrentEpoch
     });
-    const daysText = `(${daysElapsedInCurrentEpoch} ${daysElapsedInCurrentEpoch === 1 ? 'day' : 'days'})`;
-    
-    // Update days labels immediately
+    const epochDayLabel = formatEpochDayLabel(currentEpoch, daysElapsedInCurrentEpoch);
+
+    // Update stat card subtitles immediately
     const totalBwDaysEl = document.getElementById('total-bandwidth-days');
     if (totalBwDaysEl) {
-      totalBwDaysEl.textContent = daysText;
+      totalBwDaysEl.textContent = epochDayLabel;
     }
-    
+
     const nodesDaysEl = document.getElementById('active-nodes-days');
     if (nodesDaysEl) {
-      nodesDaysEl.textContent = daysText;
+      nodesDaysEl.textContent = epochDayLabel;
     }
 
     // Initialize visibility state for all epochs we'll display
@@ -105,23 +105,21 @@
 
       // Calculate y-axis max from current epoch data (only set once, never change)
       // Use the same days-elapsed calculation as the Total Bandwidth stat (client-side, not from API)
-      if (currentData.daily_bandwidth && currentData.daily_bandwidth.length > 0 && daysElapsedInCurrentEpoch) {
-        const lastDay = currentData.daily_bandwidth[currentData.daily_bandwidth.length - 1];
-        // Use the same daysElapsedInCurrentEpoch that's used for the "(N days)" label in Total Bandwidth stat
-        // This is calculated client-side in initializePage(), not from the API
+      const currentDay = getCurrentDayData(currentData);
+      if (currentDay && daysElapsedInCurrentEpoch) {
         const daysElapsed = daysElapsedInCurrentEpoch;
-        
+
         // Calculate bandwidth y-axis max
         if (!yAxisMax) {
           // Calculate average daily bandwidth: total_bandwidth / days_elapsed
           // Then project to full epoch: average * 30
           // Then multiply by 1.5x for safety margin in case current epoch is a down-epoch
-          const averageDailyBandwidth = lastDay.total_bandwidth / daysElapsed;
+          const averageDailyBandwidth = currentDay.total_bandwidth / daysElapsed;
           const projectedFullEpoch = averageDailyBandwidth * 30;
           yAxisMax = projectedFullEpoch * 1.5;
           console.log('Y-axis max calculation (bandwidth):', {
-            total_bandwidth: lastDay.total_bandwidth,
-            total_bandwidth_TB: (lastDay.total_bandwidth / (1024**4)).toFixed(2),
+            total_bandwidth: currentDay.total_bandwidth,
+            total_bandwidth_TB: (currentDay.total_bandwidth / (1024**4)).toFixed(2),
             daysElapsed: daysElapsed,
             averageDaily: averageDailyBandwidth,
             projected: projectedFullEpoch,
@@ -175,27 +173,55 @@
     }
   }
 
+  function getCurrentDayData(epochData) {
+    if (!epochData.daily_bandwidth || !daysElapsedInCurrentEpoch) return null;
+    const dayIndex = daysElapsedInCurrentEpoch - 1;
+    return epochData.daily_bandwidth[dayIndex] || null;
+  }
+
+  function formatEpochDayLabel(epoch, day) {
+    const epochStart = epoch * EPOCH_DURATION;
+    const dayTimestamp = epochStart + (day - 1) * 86400;
+    const date = new Date(dayTimestamp * 1000);
+    const dateString = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+    return `Epoch ${epoch}, Day ${day} (${dateString})`;
+  }
+
   function updateStats(currentData) {
-    // Total Bandwidth (last day's total_bandwidth)
+    const currentDay = getCurrentDayData(currentData);
+    const epochDayLabel = formatEpochDayLabel(currentEpoch, daysElapsedInCurrentEpoch);
+
+    const totalBwDaysEl = document.getElementById('total-bandwidth-days');
+    if (totalBwDaysEl) {
+      totalBwDaysEl.textContent = epochDayLabel;
+    }
+
+    const nodesDaysEl = document.getElementById('active-nodes-days');
+    if (nodesDaysEl) {
+      nodesDaysEl.textContent = epochDayLabel;
+    }
+
+    // Cumulative epoch bandwidth through the current day
     const totalBwEl = document.getElementById('total-bandwidth-stat');
     const totalBwLoading = document.getElementById('total-bandwidth-loading');
-    if (totalBwEl && currentData.daily_bandwidth && currentData.daily_bandwidth.length > 0) {
-      const lastDay = currentData.daily_bandwidth[currentData.daily_bandwidth.length - 1];
+    if (totalBwEl && currentDay) {
       if (totalBwLoading) {
         totalBwLoading.remove();
       }
-      totalBwEl.textContent = formatBytes(lastDay.total_bandwidth);
+      totalBwEl.textContent = formatBytes(currentDay.total_bandwidth);
     }
 
-    // Active Nodes (last day's node_count)
+    // Nodes that reported bandwidth today (not cumulative epoch total)
     const nodesEl = document.getElementById('active-nodes-stat');
     const nodesLoading = document.getElementById('active-nodes-loading');
-    if (nodesEl && currentData.daily_bandwidth && currentData.daily_bandwidth.length > 0) {
-      const lastDay = currentData.daily_bandwidth[currentData.daily_bandwidth.length - 1];
+    if (nodesEl && currentDay) {
       if (nodesLoading) {
         nodesLoading.remove();
       }
-      nodesEl.textContent = lastDay.node_count.toLocaleString();
+      nodesEl.textContent = currentDay.nodes_reporting_today.toLocaleString();
     }
   }
 
@@ -661,10 +687,21 @@
         .attr('x2', currentDayX)
         .attr('y1', 0)
         .attr('y2', height)
-        .attr('stroke', '#FF6B6B')
+        .attr('stroke', '#FF0000')
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', '5,5')
-        .attr('opacity', 0.7);
+        .attr('opacity', 0.9);
+
+      svg.append('text')
+        .attr('class', 'current-day-label')
+        .attr('x', currentDayX)
+        .attr('y', -8)
+        .attr('text-anchor', 'middle')
+        .style('font-family', 'Poppins, sans-serif')
+        .style('font-size', '11px')
+        .style('font-weight', '600')
+        .style('fill', '#FF0000')
+        .text('Today');
     }
 
     // Y Axis - format based on view mode
